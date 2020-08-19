@@ -35,6 +35,7 @@ export function Flex({
 
   flexDirection,
   flexDir,
+  dir,
 
   alignContent,
   alignItems,
@@ -64,6 +65,8 @@ export function Flex({
 }: FlexProps) {
   const flexProps: YogaFlexProps = {
     flexDirection,
+    flexDir,
+    dir,
     alignContent,
     alignItems,
     alignSelf,

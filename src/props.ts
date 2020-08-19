@@ -12,6 +12,8 @@ declare class Value {
   valueOf(): number
 }
 
+export type FlexDirection = 'row' | 'column' | 'row-reverse' | 'column-reverse' | 'count'
+
 export type YogaFlexProps = Partial<{
   // Align
   alignContent: YogaAlign
@@ -24,8 +26,9 @@ export type YogaFlexProps = Partial<{
   justify: YogaJustifyContent
 
   // Direction
-  flexDirection: YogaFlexDirection
+  flexDirection: YogaFlexDirection | FlexDirection
   flexDir: YogaFlexDirection
+  dir: YogaFlexDirection
 
   // Wrap
   flexWrap: YogaFlexWrap

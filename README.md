@@ -14,6 +14,19 @@ npm i yoga-layout react-three-flex
 npm i yoga-layout-prebuilt react-three-flex
 ```
 
+## Example
+
+```jsx
+import React from 'react'
+import { Flex, Box } from 'react-three-flex'
+
+const Layout = () => (
+  <Flex justify="center" align="center">
+    <Box>{/* Your 3D component*/}</Box>
+  </Flex>
+)
+```
+
 ## Usage
 
 Coming soon...
