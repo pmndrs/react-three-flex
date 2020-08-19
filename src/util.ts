@@ -8,7 +8,7 @@ export const setYogaProperties = (node: YogaNode, props: YogaFlexProps) => {
   return Object.keys(props).forEach((name) => {
     const prop = props[name]
 
-    if (typeof name === 'string') {
+    if (typeof prop === 'string') {
       switch (name) {
         case 'flexDir':
         case 'dir':

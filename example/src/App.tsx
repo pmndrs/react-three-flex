@@ -5,6 +5,7 @@ import { Flex, Box } from '../../src/index'
 import { Mesh, BoxHelper, Group } from 'three'
 import Yoga from 'yoga-layout-prebuilt'
 import { Controls, useControl } from 'react-three-gui'
+import { Axis } from '../../src/util'
 
 function Sphere({ width = 50, color = 'white', flexProps = {} }) {
   const mesh = useRef<Mesh>()
@@ -32,7 +33,7 @@ function Scene({ grow, shrink }: { grow: number; shrink: number }) {
       <Sphere />
       <Box>
         {/* nested flex container */}
-        <Flex flexDir={Yoga.FLEX_DIRECTION_COLUMN} flexWrap={Yoga.WRAP_NO_WRAP} size={[20, 20, 20]}>
+        <Flex flexDirection="column" flexWrap={Yoga.WRAP_NO_WRAP} size={[20, 20, 20]}>
           <Sphere width={20} color="gold" />
           <Sphere width={20} color="tomato" />
           <Sphere width={20} color="#474750" />
@@ -44,8 +45,8 @@ function Scene({ grow, shrink }: { grow: number; shrink: number }) {
 
 const FlexDemo = () => {
   const containerWidth = useControl('containerWidth', { type: 'number', min: 50, max: 500, value: 200 })
-  const mainAxis = useControl('mainAxis', { type: 'select', items: ['x', 'y', 'z'], value: 'x' })
-  const crossAxis = useControl('crossAxis', { type: 'select', items: ['x', 'y', 'z'], value: 'y' })
+  const mainAxis: Axis = useControl('mainAxis', { type: 'select', items: ['x', 'y', 'z'], value: 'x' })
+  const crossAxis: Axis = useControl('crossAxis', { type: 'select', items: ['x', 'y', 'z'], value: 'y' })
   const flexDirection = useControl('flexDirection', {
     type: 'select',
     items: ['FLEX_DIRECTION_ROW', 'FLEX_DIRECTION_ROW_REVERSE', 'FLEX_DIRECTION_COLUMN', 'FLEX_DIRECTION_COLUMN_REVERSE'],
