@@ -22,3 +22,5 @@ export const setYogaProperties = (node: YogaNode, props: YogaFlexProps) => {
 export const vectorFromObject = ({ x, y, z }: { x: number; y: number; z: number }) => new Vector3(x, y, z)
 
 export type Axis = 'x' | 'y' | 'z'
+
+export const rmUndefFromObj = (obj: Record<string, any>) => Object.keys(obj).forEach((key) => (obj[key] === undefined ? delete obj[key] : {}))

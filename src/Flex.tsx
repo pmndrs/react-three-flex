@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useMemo, useState, ReactNode } from 'react'
 import Yoga from 'yoga-layout'
 import { Vector3 } from 'three'
-import { setYogaProperties } from './util'
+import { setYogaProperties, rmUndefFromObj } from './util'
 
 import { boxContext, flexContext } from './context'
 
@@ -25,12 +25,14 @@ type FlexProps = Partial<{
  * Flex component
  */
 export function Flex({
+  // Non flex props
   size = [1, 1, 1],
   direction = Yoga.DIRECTION_LTR,
   mainAxis = 'x',
   crossAxis = 'y',
   children,
   position = [0, 0, 0],
+
   flexDirection,
   flexDir,
 
@@ -80,6 +82,9 @@ export function Flex({
     padding,
   }
 
+  // Remove undefined properties
+  rmUndefFromObj(flexProps)
+
   const [rootNode] = useState(() => Yoga.Node.create())
   useMemo(() => setYogaProperties(rootNode, flexProps), [rootNode, flexProps])
 
@@ -92,7 +97,7 @@ export function Flex({
     return { rootNode, depthAxis, mainAxis, crossAxis, sizeVec3, flexWidth, flexHeight, rootStart }
   }, [rootNode, mainAxis, crossAxis, position, size])
 
-  // Layouteffect because it must compute *before* its children render
+  // Layout effect because it must compute *before* its children render
   useLayoutEffect(() => {
     rootNode.calculateLayout(state.flexWidth, state.flexHeight, direction)
   }, [rootNode, children, state, direction])
