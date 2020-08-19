@@ -23,4 +23,4 @@ export const vectorFromObject = ({ x, y, z }: { x: number; y: number; z: number 
 
 export type Axis = 'x' | 'y' | 'z'
 
-export const rmUndefFromObj = (obj: Record<string, any>) => Object.keys(obj).forEach((key) => (obj[key] === undefined ? delete obj[key] : {}))
+export const rmUndefFromObj = (obj) => Object.keys(obj).forEach((key) => (obj[key] === undefined ? delete obj[key] : {}))
