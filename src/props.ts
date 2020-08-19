@@ -1,4 +1,4 @@
-import { YogaFlexDirection, YogaAlign, YogaJustifyContent, YogaFlexWrap, YogaUnit } from 'yoga-layout'
+import { YogaFlexDirection, YogaAlign, YogaJustifyContent, YogaFlexWrap, YogaUnit } from 'yoga-layout-prebuilt'
 
 declare class Value {
   readonly unit: YogaUnit | number

@@ -9,8 +9,11 @@
     "esModuleInterop": true,
     "declaration": true,
     "declarationDir": "dist",
-    "emitDeclarationOnly": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "react-three-flex": ["./src/index.ts"]
+    }
   },
 
   "include": ["src"]
