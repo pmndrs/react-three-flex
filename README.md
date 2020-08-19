@@ -8,12 +8,6 @@
 npm i react-three-flex
 ```
 
-> Note: In case yoga-layout fails to build on your machine, try `yoga-layout-prebuilt`
-
-```sh
-npm i react-three-flex
-```
-
 ## Example
 
 ```jsx
