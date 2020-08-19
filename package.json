@@ -4,7 +4,8 @@
   "description": "`<Flex />` component for the 3D World. Inspired by the [yoga-r3f demo](https://codesandbox.io/s/yoga-r3f-lgl0j).",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "rollup -c",
+    "postbuild": "tsc --emitDeclarationOnly"
   },
   "repository": {
     "type": "git",
@@ -21,16 +22,19 @@
     "@types/node": "^14.6.0",
     "@types/react": "^16.9.46",
     "@types/yoga-layout": "^1.9.3",
+    "esbuild": "^0.6.26",
     "react": "^16.13.1",
     "react-three-fiber": "^4.2.20",
     "rollup": "^2.26.4",
     "rollup-plugin-esbuild": "^2.4.2",
     "three": "^0.119.1",
-    "typescript": "^3.9.7"
+    "typescript": "^3.9.7",
+    "yoga-layout-prebuilt": "^1.9.6"
   },
   "peerDependencies": {
     "react": "^16.13.1",
     "react-three-fiber": "^4.2.20",
-    "three": "^0.119.1"
+    "three": "^0.119.1",
+    "yoga-layout-prebuilt": "^1.9.6"
   }
 }

@@ -1,6 +1,17 @@
 import esbuild from 'rollup-plugin-esbuild'
 
 export default {
+  input: 'src/index.ts',
+  output: [
+    {
+      file: 'dist/index.js',
+      format: 'esm',
+    },
+    {
+      file: 'dist/index.cjs',
+      format: 'cjs',
+    },
+  ],
   plugins: [
     esbuild({
       // All options are optional
@@ -9,10 +20,8 @@ export default {
       watch: process.argv.includes('--watch'),
       sourceMap: false, // default
       minify: process.env.NODE_ENV === 'production',
-      target: 'es2018', // default, or 'es20XX', 'esnext'
-      jsxFactory: 'React.createElement',
-      jsxFragment: 'React.Fragment',
-      // Like @rollup/plugin-replace
+      tsconfig: 'tsconfig.json',
     }),
   ],
+  external: ['react', 'three', 'react-three-fiber', 'yoga-layout'],
 }

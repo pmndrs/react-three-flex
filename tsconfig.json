@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "es2018",
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react",
+    "preserveSymlinks": true,
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "declaration": true,
+    "declarationDir": "dist",
+    "emitDeclarationOnly": true,
+    "skipLibCheck": true
+  },
+
+  "include": ["src"]
+}
