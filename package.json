@@ -1,6 +1,6 @@
 {
   "name": "react-three-flex",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "`<Flex />` component for the 3D World. Inspired by the [yoga-r3f demo](https://codesandbox.io/s/yoga-r3f-lgl0j).",
   "main": "dist/index.cjs",
   "module": "dist/index.js",

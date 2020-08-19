@@ -48,7 +48,9 @@ export function Flex({
   flexBasis,
   flexGrow,
   flexShrink,
+
   flexWrap,
+  wrap,
 
   margin,
   padding,
@@ -67,22 +69,32 @@ export function Flex({
     flexDirection,
     flexDir,
     dir,
+
     alignContent,
     alignItems,
     alignSelf,
+    align,
+
     justifyContent,
+    justify,
+
     flexBasis,
     flexGrow,
     flexShrink,
+
     flexWrap,
+    wrap,
+
     margin,
+    padding,
+
+    height,
+    width,
+
     maxHeight,
     maxWidth,
     minHeight,
     minWidth,
-    height,
-    width,
-    padding,
   }
 
   // Remove undefined properties

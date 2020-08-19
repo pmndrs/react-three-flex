@@ -23,5 +23,5 @@ export default {
       tsconfig: 'tsconfig.json',
     }),
   ],
-  external: ['react', 'three', 'react-three-fiber', 'yoga-layout'],
+  external: ['react', 'three', 'react-three-fiber', 'yoga-layout-prebuilt'],
 }

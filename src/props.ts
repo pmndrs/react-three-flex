@@ -32,6 +32,7 @@ export type YogaFlexProps = Partial<{
 
   // Wrap
   flexWrap: YogaFlexWrap
+  wrap: YogaFlexWrap
 
   // Flex basis
   flexBasis: number
