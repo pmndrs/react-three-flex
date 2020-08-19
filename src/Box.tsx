@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useContext, useRef, useState, useEffect, useMemo } from 'react'
-import { Vector3, Box3, Group } from 'three'
+import * as THREE from 'three'
 import Yoga from 'yoga-layout'
 import { useThree } from 'react-three-fiber'
 import { setYogaProperties, vectorFromObject } from './util'
@@ -8,9 +8,9 @@ import { boxContext, flexContext } from './context'
 export function Box({ children, flexProps = {} }) {
   const { rootNode, rootStart, depthAxis, mainAxis, crossAxis, sizeVec3 } = useContext(flexContext)
   const parent = useContext(boxContext) || rootNode
-  const group = useRef<Group>()
-  const [vec] = useState(() => new Vector3())
-  const [boundingBox] = useState(() => new Box3())
+  const group = useRef<THREE.Group>()
+  const [vec] = useState(() => new THREE.Vector3())
+  const [boundingBox] = useState(() => new THREE.Box3())
   const [node] = useState(() => Yoga.Node.create())
   const { invalidate } = useThree()
   useMemo(() => setYogaProperties(node, flexProps), [flexProps, node])

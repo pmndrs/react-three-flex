@@ -2,27 +2,84 @@ import React, { useLayoutEffect, useMemo, useState, ReactNode } from 'react'
 import Yoga from 'yoga-layout'
 import { Vector3 } from 'three'
 import { setYogaProperties } from './util'
-import type { Axis } from './util'
+
 import { boxContext, flexContext } from './context'
 
+import type { Axis } from './util'
+import type { YogaFlexProps } from './props'
+
+type FlexProps = Partial<{
+  position: [number, number, number]
+  children: ReactNode
+  size: [number, number, number]
+  /**
+   * Direction - right to left or right to left
+   */
+  direction: Yoga.YogaDirection
+  mainAxis: Axis
+  crossAxis: Axis
+}> &
+  YogaFlexProps
+
+/**
+ * Flex component
+ */
 export function Flex({
   size = [1, 1, 1],
   direction = Yoga.DIRECTION_LTR,
-  flexProps = {},
   mainAxis = 'x',
   crossAxis = 'y',
   children,
   position = [0, 0, 0],
+  flexDirection,
+  flexDir,
+
+  alignContent,
+  alignItems,
+  alignSelf,
+  align,
+
+  justifyContent,
+  justify,
+
+  flexBasis,
+  flexGrow,
+  flexShrink,
+  flexWrap,
+
+  margin,
+  padding,
+
+  height,
+  width,
+
+  maxHeight,
+  maxWidth,
+  minHeight,
+  minWidth,
+
   ...props
-}: {
-  position: [number, number, number]
-  children: ReactNode
-  size: [number, number, number]
-  direction: Yoga.YogaDirection
-  flexProps: any
-  mainAxis: Axis
-  crossAxis: Axis
-}) {
+}: FlexProps) {
+  const flexProps: YogaFlexProps = {
+    flexDirection,
+    alignContent,
+    alignItems,
+    alignSelf,
+    justifyContent,
+    flexBasis,
+    flexGrow,
+    flexShrink,
+    flexWrap,
+    margin,
+    maxHeight,
+    maxWidth,
+    minHeight,
+    minWidth,
+    height,
+    width,
+    padding,
+  }
+
   const [rootNode] = useState(() => Yoga.Node.create())
   useMemo(() => setYogaProperties(rootNode, flexProps), [rootNode, flexProps])
 
