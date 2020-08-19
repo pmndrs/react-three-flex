@@ -5,13 +5,13 @@
 ## Installation
 
 ```sh
-npm i yoga-layout react-three-flex
+npm i react-three-flex
 ```
 
 > Note: In case yoga-layout fails to build on your machine, try `yoga-layout-prebuilt`
 
 ```sh
-npm i yoga-layout-prebuilt react-three-flex
+npm i react-three-flex
 ```
 
 ## Example
