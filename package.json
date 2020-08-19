@@ -1,8 +1,20 @@
 {
   "name": "react-three-flex",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "`<Flex />` component for the 3D World. Inspired by the [yoga-r3f demo](https://codesandbox.io/s/yoga-r3f-lgl0j).",
-  "main": "index.js",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json",
+    "./": "./"
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "rollup -c",
     "postbuild": "tsc --emitDeclarationOnly"
@@ -11,9 +23,19 @@
     "type": "git",
     "url": "git+https://github.com/react-spring/react-three-flex.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "react",
+    "three",
+    "r3f",
+    "react-three-fiber",
+    "3d",
+    "flex",
+    "flexbox",
+    "yoga",
+    "yoga-layout"
+  ],
+  "author": "v1rtl",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/react-spring/react-three-flex/issues"
   },
