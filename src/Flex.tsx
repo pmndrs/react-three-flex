@@ -22,7 +22,7 @@ type FlexProps = Partial<{
   YogaFlexProps
 
 /**
- * Flex component
+ * Flex container. Can contain <Box />'es or other <Flex />'es
  */
 export function Flex({
   // Non flex props

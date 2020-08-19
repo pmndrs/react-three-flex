@@ -19,7 +19,7 @@ export default {
       exclude: /node_modules/, // default
       watch: process.argv.includes('--watch'),
       sourceMap: false, // default
-      minify: process.env.NODE_ENV === 'production',
+      minify: true,
       tsconfig: 'tsconfig.json',
     }),
   ],
