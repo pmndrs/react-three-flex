@@ -72,7 +72,27 @@ const Layout = () => (
 
 ### Nesting
 
-Since a `<Flex />` component works the same way a DOM one, you can easily make complex layouts by nesting flex containers.
+Since a `<Flex />` component works the same way as a DOM one, you can easily make complex layouts by nesting flex containers.
+
+```jsx
+const Layout = () => (
+  <Flex flexDirection="row" flexWrap="wrap" size={[50, 0, 0]}>
+    <Box>
+      <Sphere />
+    </Box>
+    <Box>
+      <Flex flexDirection="column" flexWrap="no-wrap">
+        <Sphere />
+        <Sphere />
+        <Sphere />
+      </Flex>
+    </Box>
+    <Box>
+      <Icosahedron />
+    </Box>
+  </Flex>
+)
+```
 
 ### Containers
 
