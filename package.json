@@ -1,6 +1,6 @@
 {
   "name": "react-three-flex",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "`<Flex />` component for the 3D World.",
   "main": "dist/index.cjs",
   "module": "dist/index.js",

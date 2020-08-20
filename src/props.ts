@@ -12,10 +12,10 @@ export type FlexWrap = YogaFlexWrap | 'no-wrap' | 'wrap' | 'wrap-reverse'
 
 export type R3FlexProps = Partial<{
   // Align
-  alignContent: YogaAlign
-  alignItems: YogaAlign
-  alignSelf: YogaAlign
-  align: YogaAlign
+  alignContent: Align
+  alignItems: Align
+  alignSelf: Align
+  align: Align
 
   // Justify
   justifyContent: JustifyContent
