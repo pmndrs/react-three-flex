@@ -13,10 +13,21 @@ npm i react-three-flex
 ```jsx
 import React from 'react'
 import { Flex, Box } from 'react-three-flex'
+import { Sphere, Torus, Icosahedron } from 'drei'
 
 const Layout = () => (
   <Flex justifyContent="center" alignItems="center">
-    <Box>{/* Your 3D component*/}</Box>
+    <Box>
+      <Sphere />
+    </Box>
+
+    <Box flexGrow={1}>
+      <Torus />
+    </Box>
+
+    <Box>
+      <Icosahedron />
+    </Box>
   </Flex>
 )
 ```
@@ -28,28 +39,14 @@ The layout works with two components, `<Flex />` as container and `<Box />` as a
 You simply wrap your 3D objects in different `<Box />` instances inside a flex container. This way they will be automatically placed in the 3D space like a DOM Flexbox.
 
 ```jsx
-import React from 'react'
-import { Flex, Box } from 'react-three-flex'
-import { Sphere, TorusKnot, Icosahedron } from 'drei'
-
 const Layout = () => (
   <Flex justifyContent="center" alignItems="center">
-    <Box>
-      <Sphere />
-    </Box>
-
-    <Box flexGrow={1}>
-      <TorusKnot />
-    </Box>
-
-    <Box>
-      <Icosahedron />
-    </Box>
+    <Box>{/* Your 3D component*/}</Box>
   </Flex>
 )
 ```
 
-You can tweak the container and the boxes using standard CSS flex properties, like `flexDirection`, `justifyContent` for the container and `flexGrow` for the items. See props docs below for more info.
+You can tweak the container and the boxes using standard CSS flex properties, like `flexDirection`, `justifyContent` for the container and `flexGrow` for the boxes. There are also _shorthands_, like `align` and `justify`. See props docs below for more info.
 
 ### Sizing
 
@@ -65,15 +62,17 @@ const Layout = () => (
 
 ### Axis Orientation
 
-Another difference with standard DOM Flexbox is that you can specify the direction of the container in 3D, using an axis and its normal.
+Another important difference with DOM Flexbox is that you can specify the direction of the container in 3D, using an axis and its normal. The elements will be positioned in the 2D plane given by the axis and normal.
 
 ```jsx
 const Layout = () => (
-  <Flex mainAxis="z" crossAxis="y">
+  <Flex mainAxis="x" crossAxis="y">
     {/* many <Box /> items */}
   </Flex>
 )
 ```
+
+![Axes Orientation](./docs/axes_orientation.png)
 
 ### Nesting
 
@@ -82,7 +81,7 @@ Since a `<Flex />` component works the same way as a DOM one, you can easily mak
 ```jsx
 import React from 'react'
 import { Flex, Box } from 'react-three-flex'
-import { Sphere, TorusKnot, Icosahedron } from 'drei'
+import { Sphere, Torus, Icosahedron } from 'drei'
 
 const Layout = () => (
   <Flex flexDirection="row" flexWrap="wrap" size={[50, 0, 0]}>
