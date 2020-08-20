@@ -90,6 +90,26 @@ const Layout = () => (
 
 ### Margin and Padding
 
+For every `<Flex />` and `<Box />` component you can specify the margin and padding like in DOM flexbox.
+
+```jsx
+const Layout = () => (
+  <Flex flexDirection="row" size={[300, 200, 0]} padding={30}>
+    <Box>
+      <Sphere args={[50]} />
+    </Box>
+    <Box>
+      <Torus args={[50, 10]} />
+    </Box>
+    <Box>
+      <Icosahedron args={[50]} />
+    </Box>
+  </Flex>
+)
+```
+
+![Margin](./docs/margin.png)
+
 ### Nesting
 
 Since a `<Flex />` component works the same way as a DOM one, you can easily make complex layouts by nesting flex containers.
