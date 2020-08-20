@@ -16,7 +16,7 @@ import { Flex, Box } from 'react-three-flex'
 import { Sphere, Torus, Icosahedron } from 'drei'
 
 const Layout = () => (
-  <Flex justifyContent="center" alignItems="center" flexDirection="row" flexWrap="wrap" size={[300, 200, 0]}>
+  <Flex justifyContent="center" alignItems="center" flexDirection="row" size={[500, 200, 0]}>
     <Box>
       <Sphere args={[50]} />
     </Box>
@@ -68,7 +68,7 @@ const Layout = () => (
 )
 ```
 
-**WATCH OUT!** Yoga flexbox engine uses integer numbers to perform layout calculation, so to preserve precision make sure you choose big enough numbers for sizes.
+**⚠️ WATCH OUT!** Yoga flexbox engine uses integer numbers to perform layout calculation, so to preserve precision make sure you choose big enough numbers for sizes.
 
 ![Bounds](./docs/bounds.png)
 
@@ -87,6 +87,8 @@ const Layout = () => (
 ```
 
 ![Axes Orientation](./docs/axes_orientation.png)
+
+### Margin and Padding
 
 ### Nesting
 
@@ -118,9 +120,126 @@ const Layout = () => (
 )
 ```
 
-### Props
+## API
 
-...
+Both `<Flex/>` and `<Box />` components shares the same props API:
+
+### Align
+
+```ts
+type Align =
+  | YogaAlign
+  | 'auto'
+  | 'baseline'
+  | 'center'
+  | 'flex-end'
+  | 'flex-start'
+  | 'space-around'
+  | 'space-between'
+  | 'stretch'
+
+{
+  alignContent: Align
+  alignItems: Align
+  alignSelf: Align
+  align: Align
+}
+```
+
+### Justify
+
+```ts
+type JustifyContent =
+  | YogaJustifyContent
+  | 'center'
+  | 'flex-end'
+  | 'flex-start'
+  | 'space-between'
+  | 'space-evenly'
+  | 'space-around'
+
+{
+  justifyContent: JustifyContent
+  justify: JustifyContent
+}
+```
+
+### Direction
+
+```ts
+type FlexDirection = YogaFlexDirection | 'row' | 'column' | 'row-reverse' | 'column-reverse'
+
+{
+  flexDirection: FlexDirection
+  flexDir: FlexDirection
+  dir: FlexDirection
+}
+```
+
+### Wrap
+
+```ts
+type FlexWrap = YogaFlexWrap | 'no-wrap' | 'wrap' | 'wrap-reverse'
+
+{
+  flexWrap: FlexWrap
+  wrap: FlexWrap
+}
+```
+
+### Flex basis
+
+```ts
+flexBasis: number
+```
+
+### Grow & shrink
+
+```ts
+flexGrow: number
+flexShrink: number
+```
+
+### Height & width
+
+```ts
+height: Value
+width: Value
+maxHeight: Value
+maxWidth: Value
+minHeight: Value
+minWidth: Value
+```
+
+### Padding
+
+```ts
+padding: Value
+p: Value
+paddingTop: Value
+pt: Value
+paddingBottom: Value
+pb: Value
+paddingLeft: Value
+pl: Value
+paddingRight: Value
+pr: Value
+```
+
+### Margin
+
+```ts
+margin: Value
+m: Value
+marginTop: Value
+mt: Value
+marginLeft: Value
+ml: Value
+marginRight: Value
+mr: Value
+marginBottom: Value
+mb: Value
+```
 
 ## License
 
