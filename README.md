@@ -15,7 +15,7 @@ import React from 'react'
 import { Flex, Box } from 'react-three-flex'
 
 const Layout = () => (
-  <Flex justify="center" align="center">
+  <Flex justifyItems="center" alignContent="center">
     <Box>{/* Your 3D component*/}</Box>
   </Flex>
 )
