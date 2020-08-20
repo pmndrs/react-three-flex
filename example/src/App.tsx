@@ -1,10 +1,9 @@
 import React, { useRef } from 'react'
 import { Canvas } from 'react-three-fiber'
 import { OrbitControls, useHelper } from 'drei'
-import { Flex, Box, R3FlexProps } from '../../src/index'
+import { Flex, Box, R3FlexProps, Axis } from '../../src/index'
 import { Mesh, BoxHelper, Group } from 'three'
 import { Controls, useControl } from 'react-three-gui'
-import { Axis } from '../../src/util'
 
 function Sphere({
   sphereWidth = 50,
@@ -80,8 +79,12 @@ const FlexDemo = () => {
   const grow = useControl('First item grow', { type: 'number', min: 0, max: 2, value: 0 })
   const shrink = useControl('Second item shrink', { type: 'number', min: 0, max: 10, value: 1 })
 
+  const margin = useControl('Margin', { type: 'number', min: 0, value: 0, max: 300 })
+
+  const padding = useControl('Padding', { type: 'number', min: 0, value: 0, max: 300 })
+
   return (
-    <Flex size={[containerWidth, 200, 200]} {...{ flexWrap, alignItems, justifyContent, mainAxis, crossAxis, flexDirection }}>
+    <Flex size={[containerWidth, 200, 200]} {...{ flexWrap, alignItems, justifyContent, mainAxis, crossAxis, flexDirection, margin, padding }}>
       <Scene grow={grow} shrink={shrink} />
     </Flex>
   )

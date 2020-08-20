@@ -1,16 +1,6 @@
 import { YogaFlexDirection, YogaAlign, YogaJustifyContent, YogaFlexWrap, YogaUnit } from 'yoga-layout-prebuilt'
 
-declare class Value {
-  readonly unit: YogaUnit | number
-  readonly value: number
-
-  constructor(unit: YogaUnit | number, value: number)
-
-  fromJS(expose: (unit: YogaUnit | number, value: number) => any): void
-
-  toString(): string
-  valueOf(): number
-}
+export type Value = string | number
 
 export type FlexDirection = YogaFlexDirection | 'row' | 'column' | 'row-reverse' | 'column-reverse'
 
@@ -55,7 +45,27 @@ export type R3FlexProps = Partial<{
   minHeight: Value
   minWidth: Value
 
-  // Padding & margin
+  // Padding
   padding: Value
+  p: Value
+  paddingTop: Value
+  pt: Value
+  paddingBottom: Value
+  pb: Value
+  paddingLeft: Value
+  pl: Value
+  paddingRight: Value
+  pr: Value
+
+  // Margin
   margin: Value
+  m: Value
+  marginTop: Value
+  mt: Value
+  marginLeft: Value
+  ml: Value
+  marginRight: Value
+  mr: Value
+  marginBottom: Value
+  mb: Value
 }>
