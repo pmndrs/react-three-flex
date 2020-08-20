@@ -15,7 +15,7 @@ import React from 'react'
 import { Flex, Box } from 'react-three-flex'
 
 const Layout = () => (
-  <Flex justifyItems="center" alignContent="center">
+  <Flex justifyContent="center" alignItems="center">
     <Box>{/* Your 3D component*/}</Box>
   </Flex>
 )
@@ -60,7 +60,7 @@ const Layout = () => (
     <Box>
       <Sphere />
     </Box>
-    <Box>
+    <Box flexGrow={1}>
       <TorusKnot />
     </Box>
     <Box>
@@ -69,6 +69,10 @@ const Layout = () => (
   </Flex>
 )
 ```
+
+### Nesting
+
+Since a `<Flex />` component works the same way a DOM one, you can easily make complex layouts by nesting flex containers.
 
 ### Containers
 
