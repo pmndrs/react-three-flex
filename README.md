@@ -122,9 +122,22 @@ const Layout = () => (
 
 ## API
 
-Both `<Flex/>` and `<Box />` components shares the same props API:
+```jsx
+<Flex
+  size={[1, 1, 1]} // Total size of the flex container, see above
+  position={[0, 0, 0]} // Default - position for the flex container in the scene
+  yogaDirection={Yoga.DIRECTION_LTR} // Default - right to left or right to left
+  mainAxis="x" // Default - plane axis, see above
+  crossAxis="y" // Default - plane normal axis, see above
+  {...R3FlexProps} // Standard Flexbox props, described below
+>
+  <Box>{/* Your 3D component*/}</Box>
+</Flex>
+```
 
-### Align
+### Flexbox props
+
+Both `<Flex/>` and `<Box />` components shares the same Flexbox props API from Yoga. The library also provides string and number inputs for convenience and shorthands.
 
 ```ts
 type Align =
@@ -138,17 +151,6 @@ type Align =
   | 'space-between'
   | 'stretch'
 
-{
-  alignContent: Align
-  alignItems: Align
-  alignSelf: Align
-  align: Align
-}
-```
-
-### Justify
-
-```ts
 type JustifyContent =
   | YogaJustifyContent
   | 'center'
@@ -158,87 +160,69 @@ type JustifyContent =
   | 'space-evenly'
   | 'space-around'
 
-{
-  justifyContent: JustifyContent
-  justify: JustifyContent
-}
-```
-
-### Direction
-
-```ts
 type FlexDirection = YogaFlexDirection | 'row' | 'column' | 'row-reverse' | 'column-reverse'
 
-{
-  flexDirection: FlexDirection
-  flexDir: FlexDirection
-  dir: FlexDirection
-}
-```
-
-### Wrap
-
-```ts
 type FlexWrap = YogaFlexWrap | 'no-wrap' | 'wrap' | 'wrap-reverse'
 
-{
+type R3FlexProps = {
+  // Align
+  alignContent: Align
+  alignItems: Align
+  alignSelf: Align
+  align: Align // Shorthand for alignItems
+
+  // Justify
+  justifyContent: JustifyContent
+  justify: JustifyContent // Shorthand for justifyContent
+
+  // Direction
+  flexDirection: FlexDirection
+  flexDir: FlexDirection // Shorthand for flexDirection
+  dir: FlexDirection // Shorthand for flexDirection
+
+  // Wrap
   flexWrap: FlexWrap
-  wrap: FlexWrap
+  wrap: FlexWrap // Shorthand for flexWrap
+
+  // Flex basis
+  flexBasis: number
+
+  // Grow & shrink
+  flexGrow: number
+  flexShrink: number
+
+  // Height & width
+  height: string | number
+  width: string | number
+  maxHeight: string | number
+  maxWidth: string | number
+  minHeight: string | number
+  minWidth: string | number
+
+  // Padding
+  padding: string | number
+  p: string | number // Shorthand
+  paddingTop: string | number
+  pt: string | number // Shorthand
+  paddingBottom: string | number
+  pb: string | number // Shorthand
+  paddingLeft: string | number
+  pl: string | number // Shorthand
+  paddingRight: string | number
+  pr: string | number // Shorthand
+
+  // Margin
+  margin: string | number
+  m: string | number // Shorthand
+  marginTop: string | number
+  mt: string | number // Shorthand
+  marginLeft: string | number
+  ml: string | number // Shorthand
+  marginRight: string | number
+  mr: string | number // Shorthand
+  marginBottom: string | number
+  mb: string | number // Shorthand
 }
-```
-
-### Flex basis
-
-```ts
-flexBasis: number
-```
-
-### Grow & shrink
-
-```ts
-flexGrow: number
-flexShrink: number
-```
-
-### Height & width
-
-```ts
-height: Value
-width: Value
-maxHeight: Value
-maxWidth: Value
-minHeight: Value
-minWidth: Value
-```
-
-### Padding
-
-```ts
-padding: Value
-p: Value
-paddingTop: Value
-pt: Value
-paddingBottom: Value
-pb: Value
-paddingLeft: Value
-pl: Value
-paddingRight: Value
-pr: Value
-```
-
-### Margin
-
-```ts
-margin: Value
-m: Value
-marginTop: Value
-mt: Value
-marginLeft: Value
-ml: Value
-marginRight: Value
-mr: Value
-marginBottom: Value
-mb: Value
 ```
 
 ## License
