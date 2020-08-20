@@ -23,7 +23,13 @@ const Layout = () => (
 
 ## Usage
 
-Coming soon...
+### Containers
+
+...
+
+### Props
+
+...
 
 ## License
 
