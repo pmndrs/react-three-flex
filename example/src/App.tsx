@@ -23,6 +23,7 @@ function Sphere({ width = 50, color = 'white', flexProps = {} }) {
 function Scene({ grow, shrink }: { grow: number; shrink: number }) {
   const group = useRef<Group>()
   useHelper(group, BoxHelper, '#272730')
+
   return (
     <group ref={group}>
       <Sphere flexProps={{ flexGrow: grow }} />
