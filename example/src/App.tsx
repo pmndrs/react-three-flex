@@ -1,18 +1,27 @@
 import React, { useRef } from 'react'
 import { Canvas } from 'react-three-fiber'
 import { OrbitControls, useHelper } from 'drei'
-import { Flex, Box } from '../../src/index'
+import { Flex, Box, R3FlexProps } from '../../src/index'
 import { Mesh, BoxHelper, Group } from 'three'
 import { Controls, useControl } from 'react-three-gui'
 import { Axis } from '../../src/util'
 
-function Sphere({ width = 50, color = 'white', flexProps = {} }) {
+function Sphere({
+  sphereWidth = 50,
+  color = 'white',
+  children,
+  ...props
+}: {
+  sphereWidth?: number
+  color?: string
+  children?: any
+} & R3FlexProps) {
   const mesh = useRef<Mesh>()
   useHelper(mesh, BoxHelper, 'red')
   return (
-    <Box flexProps={flexProps}>
+    <Box flexProps={props}>
       <mesh ref={mesh}>
-        <sphereBufferGeometry attach="geometry" args={[width / 2, 64, 64]} />
+        <sphereBufferGeometry attach="geometry" args={[(sphereWidth as number) / 2, 64, 64]} />
         <meshLambertMaterial attach="material" color={color} />
       </mesh>
     </Box>
@@ -25,18 +34,18 @@ function Scene({ grow, shrink }: { grow: number; shrink: number }) {
 
   return (
     <group ref={group}>
-      <Sphere flexProps={{ flexGrow: grow }} />
-      <Sphere flexProps={{ flexShrink: shrink }} />
-      <Sphere width={100} />
-      <Sphere width={75} color="darkred" />
+      <Sphere flexGrow={grow} />
+      <Sphere flexShrink={shrink} />
+      <Sphere sphereWidth={100} />
+      <Sphere sphereWidth={75} color="darkred" />
       <Sphere color="darkgreen" />
       <Sphere />
       <Box>
         {/* nested flex container */}
         <Flex flexDirection="column" flexWrap="no-wrap" size={[20, 20, 20]}>
-          <Sphere width={20} color="gold" />
-          <Sphere width={20} color="tomato" />
-          <Sphere width={20} color="#474750" />
+          <Sphere sphereWidth={20} color="gold" />
+          <Sphere sphereWidth={20} color="tomato" />
+          <Sphere sphereWidth={20} color="#474750" />
         </Flex>
       </Box>
     </group>
