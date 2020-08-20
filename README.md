@@ -57,15 +57,19 @@ The main difference between a DOM Flexbox and react-three-flex is that you don't
 ```jsx
 const Layout = () => (
   <Flex flexWrap="wrap" size={[50, 50, 50]}>
-    <Box>
-      <Sphere />
-    </Box>
-    <Box flexGrow={1}>
-      <TorusKnot />
-    </Box>
-    <Box>
-      <Icosahedron />
-    </Box>
+    {/* many <Box /> items */}
+  </Flex>
+)
+```
+
+### Axis Orientation
+
+Another difference with standard DOM Flexbox is that you can specify the direction of the container in 3D, using an axis and its normal.
+
+```jsx
+const Layout = () => (
+  <Flex mainAxis="z" crossAxis="y">
+    {/* many <Box /> items */}
   </Flex>
 )
 ```
@@ -80,6 +84,7 @@ const Layout = () => (
     <Box>
       <Sphere />
     </Box>
+
     <Box>
       <Flex flexDirection="column" flexWrap="no-wrap">
         <Sphere />
@@ -87,6 +92,7 @@ const Layout = () => (
         <Sphere />
       </Flex>
     </Box>
+
     <Box>
       <Icosahedron />
     </Box>
