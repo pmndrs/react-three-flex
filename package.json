@@ -1,6 +1,6 @@
 {
   "name": "react-three-flex",
-  "version": "0.0.7",
+  "version": "0.0.9",
   "description": "`<Flex />` component for the 3D World.",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
@@ -51,13 +51,14 @@
     "rollup": "^2.26.4",
     "rollup-plugin-esbuild": "^2.4.2",
     "three": "^0.119.1",
-    "typescript": "^3.9.7",
-    "yoga-layout-prebuilt": "^1.9.6"
+    "typescript": "^3.9.7"
   },
   "peerDependencies": {
     "react": "^16.13.1",
     "react-three-fiber": "^4.2.20",
-    "three": "^0.119.1",
+    "three": "^0.119.1"
+  },
+  "dependencies": {
     "yoga-layout-prebuilt": "^1.9.6"
   }
 }
