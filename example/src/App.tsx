@@ -1,9 +1,8 @@
 import React, { useRef } from 'react'
 import { Canvas } from 'react-three-fiber'
 import { OrbitControls, useHelper } from 'drei'
-import { Flex, Box, FlexDirection, JustifyContent } from '../../src/index'
+import { Flex, Box } from '../../src/index'
 import { Mesh, BoxHelper, Group } from 'three'
-import Yoga from 'yoga-layout-prebuilt'
 import { Controls, useControl } from 'react-three-gui'
 import { Axis } from '../../src/util'
 
@@ -56,8 +55,8 @@ const FlexDemo = () => {
   })
   const flexWrap = useControl('flexWrap', {
     type: 'select',
-    items: ['WRAP_NO_WRAP', 'WRAP_WRAP', 'WRAP_WRAP_REVERSE'],
-    value: 'WRAP_WRAP',
+    items: ['no-wrap', 'wrap', 'wrap-reverse'],
+    value: 'wrap',
   })
   const justifyContent = useControl('justifyContent', {
     type: 'select',
@@ -66,8 +65,8 @@ const FlexDemo = () => {
   })
   const alignItems = useControl('alignItems', {
     type: 'select',
-    items: ['ALIGN_FLEX_START', 'ALIGN_FLEX_END', 'ALIGN_AUTO', 'ALIGN_BASELINE', 'ALIGN_CENTER', 'ALIGN_SPACE_AROUND', 'ALIGN_SPACE_BETWEEN', 'ALIGN_STRETCH'],
-    value: 'ALIGN_CENTER',
+    items: ['flex-start', 'flex-end', 'auto', 'baseline', 'center', 'space-around', 'space-between', 'stretch'],
+    value: 'center',
   })
   const grow = useControl('First item grow', { type: 'number', min: 0, max: 2, value: 0 })
   const shrink = useControl('Second item shrink', { type: 'number', min: 0, max: 10, value: 1 })

@@ -16,6 +16,8 @@ export type FlexDirection = YogaFlexDirection | 'row' | 'column' | 'row-reverse'
 
 export type JustifyContent = YogaJustifyContent | 'center' | 'flex-end' | 'flex-start' | 'space-between' | 'space-evenly' | 'space-around'
 
+export type Align = YogaAlign | 'auto' | 'baseline' | 'center' | 'flex-end' | 'flex-start' | 'space-around' | 'space-between' | 'stretch'
+
 export type FlexWrap = YogaFlexWrap | 'no-wrap' | 'wrap' | 'wrap-reverse'
 
 export type R3FlexProps = Partial<{
