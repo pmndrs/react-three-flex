@@ -23,13 +23,14 @@ const Layout = () => (
 
 ## Usage
 
-The layout works with two components, `<Flex />` as container and `<Box />` for items.
+The layout works with two components, `<Flex />` as container and `<Box />` as a wrapper for 3D objects.
 
 You simply wrap your 3D objects in different `<Box />` instances inside a flex container. This way they will be automatically placed in the 3D space like a DOM Flexbox.
 
 ```jsx
 import React from 'react'
 import { Flex, Box } from 'react-three-flex'
+import { Sphere, TorusKnot, Icosahedron } from 'drei'
 
 const Layout = () => (
   <Flex justifyContent="center" alignItems="center">
@@ -79,6 +80,10 @@ const Layout = () => (
 Since a `<Flex />` component works the same way as a DOM one, you can easily make complex layouts by nesting flex containers.
 
 ```jsx
+import React from 'react'
+import { Flex, Box } from 'react-three-flex'
+import { Sphere, TorusKnot, Icosahedron } from 'drei'
+
 const Layout = () => (
   <Flex flexDirection="row" flexWrap="wrap" size={[50, 0, 0]}>
     <Box>
