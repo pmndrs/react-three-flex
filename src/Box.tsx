@@ -1,15 +1,89 @@
 import React, { useLayoutEffect, useContext, useRef, useState, useEffect, useMemo } from 'react'
 import * as THREE from 'three'
 import Yoga from 'yoga-layout-prebuilt'
-import { useThree } from 'react-three-fiber'
-import { setYogaProperties, vectorFromObject } from './util'
+import { useThree, ReactThreeFiber } from 'react-three-fiber'
+import { setYogaProperties, vectorFromObject, rmUndefFromObj } from './util'
 import { boxContext, flexContext } from './context'
+import { R3FlexProps } from './props'
 
 /**
  * Box container for 3D Objects.
  * For containing Boxes use `<Flex />`.
  */
-export function Box({ children, flexProps = {} }) {
+export function Box({
+  // Non-flex props
+  children,
+
+  flexDirection,
+  flexDir,
+  dir,
+
+  alignContent,
+  alignItems,
+  alignSelf,
+  align,
+
+  justifyContent,
+  justify,
+
+  flexBasis,
+  flexGrow,
+  flexShrink,
+
+  flexWrap,
+  wrap,
+
+  margin,
+  padding,
+
+  height,
+  width,
+
+  maxHeight,
+  maxWidth,
+  minHeight,
+  minWidth,
+
+  ...props
+}: {
+  children: any
+} & R3FlexProps &
+  ReactThreeFiber.Object3DNode<THREE.Group, typeof THREE.Group>) {
+  const flexProps: R3FlexProps = {
+    flexDirection,
+    flexDir,
+    dir,
+
+    alignContent,
+    alignItems,
+    alignSelf,
+    align,
+
+    justifyContent,
+    justify,
+
+    flexBasis,
+    flexGrow,
+    flexShrink,
+
+    flexWrap,
+    wrap,
+
+    margin,
+    padding,
+
+    height,
+    width,
+
+    maxHeight,
+    maxWidth,
+    minHeight,
+    minWidth,
+  }
+
+  // Remove undefined properties
+  rmUndefFromObj(flexProps)
+
   const { rootNode, rootStart, depthAxis, mainAxis, crossAxis, sizeVec3 } = useContext(flexContext)
   const parent = useContext(boxContext) || rootNode
   const group = useRef<THREE.Group>()
@@ -46,7 +120,7 @@ export function Box({ children, flexProps = {} }) {
   })
 
   return (
-    <group ref={group}>
+    <group ref={group} {...props}>
       <boxContext.Provider value={node}>{children}</boxContext.Provider>
     </group>
   )

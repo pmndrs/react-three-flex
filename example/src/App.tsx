@@ -19,7 +19,7 @@ function Sphere({
   const mesh = useRef<Mesh>()
   useHelper(mesh, BoxHelper, 'red')
   return (
-    <Box flexProps={props}>
+    <Box {...props}>
       <mesh ref={mesh}>
         <sphereBufferGeometry attach="geometry" args={[(sphereWidth as number) / 2, 64, 64]} />
         <meshLambertMaterial attach="material" color={color} />

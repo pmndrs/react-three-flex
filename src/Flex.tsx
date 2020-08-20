@@ -105,7 +105,7 @@ export function Flex({
 
   const state = useMemo(() => {
     const sizeVec3 = new Vector3(...size)
-    const depthAxis = ['x', 'y', 'z'].filter((axis) => ![mainAxis, crossAxis].includes(axis as Axis))
+    const depthAxis = ['x', 'y', 'z'].find((axis) => ![mainAxis, crossAxis].includes(axis as Axis))
     const flexWidth = sizeVec3[mainAxis]
     const flexHeight = sizeVec3[crossAxis]
     const rootStart = new Vector3(...position).addScaledVector(new Vector3(size[0], size[1], size[2]), 0.5)
