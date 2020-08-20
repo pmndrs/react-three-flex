@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import { Canvas } from 'react-three-fiber'
 import { OrbitControls, useHelper } from 'drei'
-import { Flex, Box } from '../../src/index'
+import { Flex, Box, FlexDirection, JustifyContent } from '../../src/index'
 import { Mesh, BoxHelper, Group } from 'three'
 import Yoga from 'yoga-layout-prebuilt'
 import { Controls, useControl } from 'react-three-gui'
@@ -34,7 +34,7 @@ function Scene({ grow, shrink }: { grow: number; shrink: number }) {
       <Sphere />
       <Box>
         {/* nested flex container */}
-        <Flex flexDirection="column" flexWrap={Yoga.WRAP_NO_WRAP} size={[20, 20, 20]}>
+        <Flex flexDirection="column" flexWrap="no-wrap" size={[20, 20, 20]}>
           <Sphere width={20} color="gold" />
           <Sphere width={20} color="tomato" />
           <Sphere width={20} color="#474750" />
@@ -48,10 +48,11 @@ const FlexDemo = () => {
   const containerWidth = useControl('containerWidth', { type: 'number', min: 50, max: 500, value: 200 })
   const mainAxis: Axis = useControl('mainAxis', { type: 'select', items: ['x', 'y', 'z'], value: 'x' })
   const crossAxis: Axis = useControl('crossAxis', { type: 'select', items: ['x', 'y', 'z'], value: 'y' })
+
   const flexDirection = useControl('flexDirection', {
     type: 'select',
-    items: ['FLEX_DIRECTION_ROW', 'FLEX_DIRECTION_ROW_REVERSE', 'FLEX_DIRECTION_COLUMN', 'FLEX_DIRECTION_COLUMN_REVERSE'],
-    value: 'FLEX_DIRECTION_ROW',
+    items: ['row', 'row-reverse', 'column', 'column-reverse'],
+    value: 'row',
   })
   const flexWrap = useControl('flexWrap', {
     type: 'select',
@@ -60,8 +61,8 @@ const FlexDemo = () => {
   })
   const justifyContent = useControl('justifyContent', {
     type: 'select',
-    items: ['JUSTIFY_SPACE_EVENLY', 'JUSTIFY_SPACE_AROUND', 'JUSTIFY_SPACE_BETWEEN', 'JUSTIFY_CENTER', 'JUSTIFY_FLEX_END', 'JUSTIFY_FLEX_START'],
-    value: 'JUSTIFY_SPACE_BETWEEN',
+    items: ['space-evenly', 'space-around', 'space-between', 'center', 'flex-end', 'flex-start'],
+    value: 'space-between',
   })
   const alignItems = useControl('alignItems', {
     type: 'select',
@@ -72,15 +73,7 @@ const FlexDemo = () => {
   const shrink = useControl('Second item shrink', { type: 'number', min: 0, max: 10, value: 1 })
 
   return (
-    <Flex
-      size={[containerWidth, 200, 200]}
-      mainAxis={mainAxis}
-      crossAxis={crossAxis}
-      flexDirection={Yoga[flexDirection]}
-      justify={Yoga[justifyContent]}
-      align={Yoga[alignItems]}
-      flexWrap={Yoga[flexWrap]}
-    >
+    <Flex size={[containerWidth, 200, 200]} {...{ flexWrap, alignItems, justifyContent, mainAxis, crossAxis, flexDirection }}>
       <Scene grow={grow} shrink={shrink} />
     </Flex>
   )

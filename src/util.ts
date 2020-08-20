@@ -1,10 +1,12 @@
 import { Vector3 } from 'three'
 import Yoga, { YogaNode } from 'yoga-layout-prebuilt'
-import { YogaFlexProps } from './props'
+import { R3FlexProps } from './props'
 
-export const capitalize = (s) => s[0].toUpperCase() + s.slice(1)
+export const capitalize = (s: string) => s[0].toUpperCase() + s.slice(1)
 
-export const setYogaProperties = (node: YogaNode, props: YogaFlexProps) => {
+export const jsxPropToYogaProp = (s: string) => s.toUpperCase().replace('-', '_')
+
+export const setYogaProperties = (node: YogaNode, props: R3FlexProps) => {
   return Object.keys(props).forEach((name) => {
     const prop = props[name]
 
@@ -13,7 +15,16 @@ export const setYogaProperties = (node: YogaNode, props: YogaFlexProps) => {
         case 'flexDir':
         case 'dir':
         case 'flexDirection':
-          return node.setFlexDirection(Yoga[`FLEX_DIRECTION_${prop.toUpperCase()}`])
+          return node.setFlexDirection(Yoga[`FLEX_DIRECTION_${jsxPropToYogaProp(prop)}`])
+        case 'align':
+        case 'alignItems':
+          return node.setAlignItems(Yoga[`ALIGN_${jsxPropToYogaProp(prop)}`])
+        case 'justify':
+        case 'justifyContent':
+          return node.setAlignItems(Yoga[`JUSTIFY_${jsxPropToYogaProp(prop)}`])
+        case 'wrap':
+        case 'flexWrap':
+          return node.setFlexWrap(Yoga[`WRAP_${jsxPropToYogaProp(prop)}`])
       }
     } else {
       switch (name) {

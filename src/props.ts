@@ -12,9 +12,13 @@ declare class Value {
   valueOf(): number
 }
 
-export type FlexDirection = 'row' | 'column' | 'row-reverse' | 'column-reverse' | 'count'
+export type FlexDirection = YogaFlexDirection | 'row' | 'column' | 'row-reverse' | 'column-reverse'
 
-export type YogaFlexProps = Partial<{
+export type JustifyContent = YogaJustifyContent | 'center' | 'flex-end' | 'flex-start' | 'space-between' | 'space-evenly' | 'space-around'
+
+export type FlexWrap = YogaFlexWrap | 'no-wrap' | 'wrap' | 'wrap-reverse'
+
+export type R3FlexProps = Partial<{
   // Align
   alignContent: YogaAlign
   alignItems: YogaAlign
@@ -22,17 +26,17 @@ export type YogaFlexProps = Partial<{
   align: YogaAlign
 
   // Justify
-  justifyContent: YogaJustifyContent
-  justify: YogaJustifyContent
+  justifyContent: JustifyContent
+  justify: JustifyContent
 
   // Direction
-  flexDirection: YogaFlexDirection | FlexDirection
-  flexDir: YogaFlexDirection
-  dir: YogaFlexDirection
+  flexDirection: FlexDirection
+  flexDir: FlexDirection
+  dir: FlexDirection
 
   // Wrap
-  flexWrap: YogaFlexWrap
-  wrap: YogaFlexWrap
+  flexWrap: FlexWrap
+  wrap: FlexWrap
 
   // Flex basis
   flexBasis: number

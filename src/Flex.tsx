@@ -1,12 +1,12 @@
 import React, { useLayoutEffect, useMemo, useState, ReactNode } from 'react'
-import Yoga from 'yoga-layout'
+import Yoga from 'yoga-layout-prebuilt'
 import { Vector3 } from 'three'
 import { setYogaProperties, rmUndefFromObj } from './util'
 
 import { boxContext, flexContext } from './context'
 
 import type { Axis } from './util'
-import type { YogaFlexProps } from './props'
+import type { R3FlexProps } from './props'
 
 type FlexProps = Partial<{
   position: [number, number, number]
@@ -15,11 +15,11 @@ type FlexProps = Partial<{
   /**
    * Direction - right to left or right to left
    */
-  direction: Yoga.YogaDirection
+  yogaDirection: Yoga.YogaDirection
   mainAxis: Axis
   crossAxis: Axis
 }> &
-  YogaFlexProps
+  R3FlexProps
 
 /**
  * Flex container. Can contain <Box />'es or other <Flex />'es
@@ -27,7 +27,7 @@ type FlexProps = Partial<{
 export function Flex({
   // Non flex props
   size = [1, 1, 1],
-  direction = Yoga.DIRECTION_LTR,
+  yogaDirection = Yoga.DIRECTION_LTR,
   mainAxis = 'x',
   crossAxis = 'y',
   children,
@@ -65,7 +65,7 @@ export function Flex({
 
   ...props
 }: FlexProps) {
-  const flexProps: YogaFlexProps = {
+  const flexProps: R3FlexProps = {
     flexDirection,
     flexDir,
     dir,
@@ -114,8 +114,8 @@ export function Flex({
 
   // Layout effect because it must compute *before* its children render
   useLayoutEffect(() => {
-    rootNode.calculateLayout(state.flexWidth, state.flexHeight, direction)
-  }, [rootNode, children, state, direction])
+    rootNode.calculateLayout(state.flexWidth, state.flexHeight, yogaDirection)
+  }, [rootNode, children, state, yogaDirection])
 
   return (
     <group position={position} {...props}>
