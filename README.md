@@ -16,17 +16,17 @@ import { Flex, Box } from 'react-three-flex'
 import { Sphere, Torus, Icosahedron } from 'drei'
 
 const Layout = () => (
-  <Flex justifyContent="center" alignItems="center">
+  <Flex justifyContent="center" alignItems="center" flexDirection="row" flexWrap="wrap" size={[300, 200, 0]}>
     <Box>
-      <Sphere />
+      <Sphere args={[50]} />
     </Box>
 
     <Box flexGrow={1}>
-      <Torus />
+      <Torus args={[50, 10]} />
     </Box>
 
     <Box>
-      <Icosahedron />
+      <Icosahedron args={[50]} />
     </Box>
   </Flex>
 )
@@ -46,7 +46,7 @@ const Layout = () => (
 )
 ```
 
-You can tweak the container and the boxes using standard CSS flex properties, like `flexDirection`, `justifyContent` for the container and `flexGrow` for the boxes. There are also _shorthands_, like `align` and `justify`. See props docs below for more info.
+You can tweak the container and the boxes using standard CSS flex properties, like `flexDirection` or `justifyContent` for the container and `flexGrow` for the boxes. There are also _shorthands_, like `align` and `justify`. See props docs below for more info.
 
 ### Sizing
 
@@ -54,19 +54,33 @@ The main difference between a DOM Flexbox and react-three-flex is that you don't
 
 ```jsx
 const Layout = () => (
-  <Flex flexWrap="wrap" size={[50, 50, 50]}>
-    {/* many <Box /> items */}
+  <Flex flexDirection="row" flexWrap="wrap" size={[300, 200, 0]}>
+    <Box>
+      <Sphere args={[50]} />
+    </Box>
+    <Box>
+      <Torus args={[50, 10]} />
+    </Box>
+    <Box>
+      <Icosahedron args={[50]} />
+    </Box>
   </Flex>
 )
 ```
+
+**WATCH OUT!** Yoga flexbox engine uses integer numbers to perform layout calculation, so to preserve precision make sure you choose big enough numbers for sizes.
+
+![Bounds](./docs/bounds.png)
 
 ### Axis Orientation
 
 Another important difference with DOM Flexbox is that you can specify the direction of the container in 3D, using an axis and its normal. The elements will be positioned in the 2D plane given by the axis and normal.
 
+In fact, the 2D flex container width and height will be calculated looking at the `size` prop with respect of the chosen axes (200 and 100 in this example).
+
 ```jsx
 const Layout = () => (
-  <Flex mainAxis="x" crossAxis="y">
+  <Flex mainAxis="z" crossAxis="y" size={[0, 100, 200]}>
     {/* many <Box /> items */}
   </Flex>
 )
@@ -103,10 +117,6 @@ const Layout = () => (
   </Flex>
 )
 ```
-
-### Containers
-
-...
 
 ### Props
 
