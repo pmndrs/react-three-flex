@@ -14,6 +14,7 @@ export function Box({
   // Non-flex props
   children,
 
+  // flex props
   flexDirection,
   flexDir,
   dir,
@@ -44,45 +45,72 @@ export function Box({
   minHeight,
   minWidth,
 
+  // other
   ...props
 }: {
   children: any
 } & R3FlexProps &
   ReactThreeFiber.Object3DNode<THREE.Group, typeof THREE.Group>) {
-  const flexProps: R3FlexProps = {
-    flexDirection,
-    flexDir,
-    dir,
+  // must memoize or the object literal will cause every dependent of flexProps to rerender everytime
+  const flexProps: R3FlexProps = useMemo(() => {
+    const _flexProps = {
+      flexDirection,
+      flexDir,
+      dir,
 
+      alignContent,
+      alignItems,
+      alignSelf,
+      align,
+
+      justifyContent,
+      justify,
+
+      flexBasis,
+      flexGrow,
+      flexShrink,
+
+      flexWrap,
+      wrap,
+
+      margin,
+      padding,
+
+      height,
+      width,
+
+      maxHeight,
+      maxWidth,
+      minHeight,
+      minWidth,
+    }
+
+    rmUndefFromObj(_flexProps)
+    return _flexProps
+  }, [
+    align,
     alignContent,
     alignItems,
     alignSelf,
-    align,
-
-    justifyContent,
-    justify,
-
+    dir,
     flexBasis,
+    flexDir,
+    flexDirection,
     flexGrow,
     flexShrink,
-
     flexWrap,
-    wrap,
-
-    margin,
-    padding,
-
     height,
-    width,
-
+    justify,
+    justifyContent,
+    margin,
     maxHeight,
     maxWidth,
     minHeight,
     minWidth,
-  }
-
-  // Remove undefined properties
-  rmUndefFromObj(flexProps)
+    padding,
+    width,
+    wrap,
+  ])
 
   const { rootNode, rootStart, depthAxis, mainAxis, crossAxis, sizeVec3 } = useContext(flexContext)
   const parent = useContext(boxContext) || rootNode
@@ -91,14 +119,16 @@ export function Box({
   const [boundingBox] = useState(() => new THREE.Box3())
   const [node] = useState(() => Yoga.Node.create())
   const { invalidate } = useThree()
-  useMemo(() => setYogaProperties(node, flexProps), [flexProps, node])
+  useLayoutEffect(() => {
+    setYogaProperties(node, flexProps)
+  }, [flexProps, node])
 
   // Make child known to the parents yoga instance *before* it calculates layout
   useLayoutEffect(() => {
     parent.insertChild(node, parent.getChildCount())
     // Remove child on unmount
     return () => parent.removeChild(node)
-  }, [])
+  }, [node, parent])
 
   // Measure view *before* the parent has calculated layout
   useLayoutEffect(() => {

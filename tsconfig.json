@@ -15,6 +15,5 @@
       "react-three-flex": ["./src/index.ts"]
     }
   },
-
   "include": ["src"]
 }

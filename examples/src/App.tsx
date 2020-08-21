@@ -84,7 +84,10 @@ const FlexDemo = () => {
   const padding = useControl('Padding', { type: 'number', min: 0, value: 0, max: 300 })
 
   return (
-    <Flex size={[containerWidth, 200, 200]} {...{ flexWrap, alignItems, justifyContent, mainAxis, crossAxis, flexDirection, margin, padding }}>
+    <Flex
+      size={[containerWidth, 200, 200]}
+      {...{ flexWrap, alignItems, justifyContent, mainAxis, crossAxis, flexDirection, margin, padding }}
+    >
       <Scene grow={grow} shrink={shrink} />
     </Flex>
   )
@@ -92,7 +95,13 @@ const FlexDemo = () => {
 
 const App = () => (
   <>
-    <Canvas colorManagement pixelRatio={window.devicePixelRatio} invalidateFrameloop orthographic camera={{ position: [0, 0, 200], zoom: 2 }}>
+    <Canvas
+      colorManagement
+      pixelRatio={window.devicePixelRatio}
+      invalidateFrameloop
+      orthographic
+      camera={{ position: [0, 0, 200], zoom: 2 }}
+    >
       <FlexDemo />
       <pointLight position={[200, 200, 200]} />
       <pointLight position={[-200, -200, -200]} color="red" intensity={0.5} />

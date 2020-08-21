@@ -33,6 +33,7 @@ export function Flex({
   children,
   position = [0, 0, 0],
 
+  // flex props
   flexDirection,
   flexDir,
   dir,
@@ -82,41 +83,95 @@ export function Flex({
   minHeight,
   minWidth,
 
+  // other
   ...props
 }: FlexProps) {
-  const flexProps: R3FlexProps = {
-    flexDirection,
-    flexDir,
-    dir,
+  // must memoize or the object literal will cause every dependent of flexProps to rerender everytime
+  const flexProps: R3FlexProps = useMemo(() => {
+    const _flexProps = {
+      flexDirection,
+      flexDir,
+      dir,
 
+      alignContent,
+      alignItems,
+      alignSelf,
+      align,
+
+      justifyContent,
+      justify,
+
+      flexBasis,
+      flexGrow,
+      flexShrink,
+
+      flexWrap,
+      wrap,
+
+      margin,
+      m,
+      marginBottom,
+      marginLeft,
+      marginRight,
+      marginTop,
+      mb,
+      ml,
+      mr,
+      mt,
+
+      padding,
+      p,
+      paddingBottom,
+      paddingLeft,
+      paddingRight,
+      paddingTop,
+      pb,
+      pl,
+      pr,
+      pt,
+
+      height,
+      width,
+
+      maxHeight,
+      maxWidth,
+      minHeight,
+      minWidth,
+    }
+
+    rmUndefFromObj(_flexProps)
+    return _flexProps
+  }, [
+    align,
     alignContent,
     alignItems,
     alignSelf,
-    align,
-
-    justifyContent,
-    justify,
-
+    dir,
     flexBasis,
+    flexDir,
+    flexDirection,
     flexGrow,
     flexShrink,
-
     flexWrap,
-    wrap,
-
-    margin,
+    height,
+    justify,
+    justifyContent,
     m,
+    margin,
     marginBottom,
     marginLeft,
     marginRight,
     marginTop,
+    maxHeight,
+    maxWidth,
     mb,
+    minHeight,
+    minWidth,
     ml,
     mr,
     mt,
-
-    padding,
     p,
+    padding,
     paddingBottom,
     paddingLeft,
     paddingRight,
@@ -125,21 +180,14 @@ export function Flex({
     pl,
     pr,
     pt,
-
-    height,
     width,
-
-    maxHeight,
-    maxWidth,
-    minHeight,
-    minWidth,
-  }
-
-  // Remove undefined properties
-  rmUndefFromObj(flexProps)
+    wrap,
+  ])
 
   const [rootNode] = useState(() => Yoga.Node.create())
-  useMemo(() => setYogaProperties(rootNode, flexProps), [rootNode, flexProps])
+  useLayoutEffect(() => {
+    setYogaProperties(rootNode, flexProps)
+  }, [rootNode, flexProps])
 
   const state = useMemo(() => {
     const sizeVec3 = new Vector3(...size)
