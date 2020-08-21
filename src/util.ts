@@ -21,7 +21,7 @@ export const setYogaProperties = (node: YogaNode, props: R3FlexProps) => {
           return node.setAlignItems(Yoga[`ALIGN_${jsxPropToYogaProp(value)}`])
         case 'justify':
         case 'justifyContent':
-          return node.setAlignItems(Yoga[`JUSTIFY_${jsxPropToYogaProp(value)}`])
+          return node.setJustifyContent(Yoga[`JUSTIFY_${jsxPropToYogaProp(value)}`])
         case 'wrap':
         case 'flexWrap':
           return node.setFlexWrap(Yoga[`WRAP_${jsxPropToYogaProp(value)}`])
