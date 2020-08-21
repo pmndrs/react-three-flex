@@ -1,3 +1,5 @@
+# react-three-flex
+
 [![Travis CI](https://img.shields.io/travis/react-spring/react-three-flex?style=flat-square)](https://travis-ci.org/react-spring/react-three-flex) [![npm](https://img.shields.io/npm/v/react-three-flex?style=flat-square)](https://www.npmjs.com/package/react-three-flex) ![npm](https://img.shields.io/npm/dt/react-three-flex.svg?style=flat-square) [![Discord Shield](https://discordapp.com/api/guilds/740090768164651008/widget.png?style=shield)](https://discord.gg/ZZjjNvJ)
 
 **`react-three-flex`** brings the web flexbox spec to [react-three-fiber](https://github.com/react-spring/react-three-fiber). 
@@ -130,88 +132,13 @@ Since a `<Flex />` component works the same way as a DOM one, you can easily mak
 
 Both `<Flex/>` and `<Box />` components shares the same Flexbox props API from Yoga. The library also provides string and number inputs for convenience and shorthands.
 
-```ts
-type Align =
-  | YogaAlign
-  | 'auto'
-  | 'baseline'
-  | 'center'
-  | 'flex-end'
-  | 'flex-start'
-  | 'space-around'
-  | 'space-between'
-  | 'stretch'
+Example:
 
-type JustifyContent =
-  | YogaJustifyContent
-  | 'center'
-  | 'flex-end'
-  | 'flex-start'
-  | 'space-between'
-  | 'space-evenly'
-  | 'space-around'
-
-type FlexDirection = YogaFlexDirection | 'row' | 'column' | 'row-reverse' | 'column-reverse'
-
-type FlexWrap = YogaFlexWrap | 'no-wrap' | 'wrap' | 'wrap-reverse'
-
-type R3FlexProps = {
-  // Align
-  alignContent: Align
-  alignItems: Align
-  alignSelf: Align
-  align: Align // Shorthand for alignItems
-
-  // Justify
-  justifyContent: JustifyContent
-  justify: JustifyContent // Shorthand for justifyContent
-
-  // Direction
-  flexDirection: FlexDirection
-  flexDir: FlexDirection // Shorthand for flexDirection
-  dir: FlexDirection // Shorthand for flexDirection
-
-  // Wrap
-  flexWrap: FlexWrap
-  wrap: FlexWrap // Shorthand for flexWrap
-
-  // Flex basis
-  flexBasis: number
-
-  // Grow & shrink
-  flexGrow: number
-  flexShrink: number
-
-  // Height & width
-  height: string | number
-  width: string | number
-  maxHeight: string | number
-  maxWidth: string | number
-  minHeight: string | number
-  minWidth: string | number
-
-  // Padding
-  padding: string | number
-  p: string | number // Shorthand
-  paddingTop: string | number
-  pt: string | number // Shorthand
-  paddingBottom: string | number
-  pb: string | number // Shorthand
-  paddingLeft: string | number
-  pl: string | number // Shorthand
-  paddingRight: string | number
-  pr: string | number // Shorthand
-
-  // Margin
-  margin: string | number
-  m: string | number // Shorthand
-  marginTop: string | number
-  mt: string | number // Shorthand
-  marginLeft: string | number
-  ml: string | number // Shorthand
-  marginRight: string | number
-  mr: string | number // Shorthand
-  marginBottom: string | number
-  mb: string | number // Shorthand
-}
+```jsx
+// Flex with padding top set to 10, alignItems to 'center', justifyContent to 'space-around' and flexWrap to 'wrap'
+<Flex pt={10} align="center" justify="space-around" wrap="wrap">
+  <Box />
+</Flex>
 ```
+
+You can find a full list of props inside [`R3FlexProps` type](https://github.com/react-spring/react-three-flex/blob/d6dbd7fd5501d1122f7eb121d620affd1af24988/src/props.ts#L29).

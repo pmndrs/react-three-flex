@@ -10,6 +10,7 @@
     "declaration": true,
     "declarationDir": "dist",
     "skipLibCheck": true,
+    "removeComments": false,
     "baseUrl": ".",
     "paths": {
       "react-three-flex": ["./src/index.ts"]

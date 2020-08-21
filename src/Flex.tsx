@@ -8,32 +8,35 @@ import { boxContext, flexContext } from './context'
 import type { Axis } from './util'
 import type { R3FlexProps } from './props'
 
+type FlexYogaDirection = Yoga.YogaDirection | 'ltr' | 'rtl'
+
 type FlexProps = Partial<{
+  /**
+   * Root container position
+   */
   position: [number, number, number]
   children: any
   size: [number, number, number]
-  /**
-   * Direction - right to left or right to left
-   */
-  direction: Yoga.YogaDirection | 'ltr' | 'rtl'
+  yogaDirection: FlexYogaDirection
   mainAxis: Axis
   crossAxis: Axis
 }> &
   R3FlexProps
 
 /**
- * Flex container. Can contain <Box />'es or other <Flex />'es
+ * Flex container. Can contain Boxes or other Flexes
  */
 export function Flex({
   // Non flex props
   size = [1, 1, 1],
-  direction = 'ltr',
+  yogaDirection = 'ltr',
   mainAxis = 'x',
   crossAxis = 'y',
   children,
   position = [0, 0, 0],
 
   // flex props
+
   flexDirection,
   flexDir,
   dir,
@@ -200,10 +203,10 @@ export function Flex({
 
   // Layout effect because it must compute *before* its children render
   useLayoutEffect(() => {
-    const yogaDirection =
-      direction === 'ltr' ? Yoga.DIRECTION_LTR : direction === 'rtl' ? Yoga.DIRECTION_RTL : direction
-    rootNode.calculateLayout(state.flexWidth, state.flexHeight, yogaDirection)
-  }, [rootNode, children, state, direction])
+    const yogaDirection_ =
+      yogaDirection === 'ltr' ? Yoga.DIRECTION_LTR : yogaDirection === 'rtl' ? Yoga.DIRECTION_RTL : yogaDirection
+    rootNode.calculateLayout(state.flexWidth, state.flexHeight, yogaDirection_)
+  }, [rootNode, children, state, yogaDirection])
 
   return (
     <group position={position} {...props}>

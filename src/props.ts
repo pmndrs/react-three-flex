@@ -31,19 +31,34 @@ export type R3FlexProps = Partial<{
   alignContent: Align
   alignItems: Align
   alignSelf: Align
+  /**
+   * Shorthand for alignItems
+   */
   align: Align
 
   // Justify
   justifyContent: JustifyContent
+  /**
+   * Shorthand for justifyContent
+   */
   justify: JustifyContent
 
   // Direction
   flexDirection: FlexDirection
+  /**
+   * Shorthand for flexDirection
+   */
   flexDir: FlexDirection
+  /**
+   * Shorthand for flexDirection
+   */
   dir: FlexDirection
 
   // Wrap
   flexWrap: FlexWrap
+  /**
+   * Shorthand for flexWrap
+   */
   wrap: FlexWrap
 
   // Flex basis
@@ -63,25 +78,64 @@ export type R3FlexProps = Partial<{
 
   // Padding
   padding: Value
+  /**
+   * Shorthand for padding
+   */
   p: Value
+
   paddingTop: Value
+  /**
+   * Shorthand for paddingTop
+   */
   pt: Value
+
   paddingBottom: Value
+  /**
+   * Shorthand for paddingBottom
+   */
   pb: Value
+
   paddingLeft: Value
+  /**
+   * Shorthand for paddingLeft
+   */
   pl: Value
+
   paddingRight: Value
+  /**
+   * Shorthand for paddingRight
+   */
   pr: Value
 
   // Margin
   margin: Value
+
+  /**
+   * Shorthand for margin
+   */
   m: Value
+
   marginTop: Value
+  /**
+   * Shorthand for marginTop
+   */
   mt: Value
   marginLeft: Value
+
+  /**
+   * Shorthand for marginLeft
+   */
   ml: Value
+
   marginRight: Value
+  /**
+   * Shorthand for marginRight
+   */
   mr: Value
+
   marginBottom: Value
+  /**
+   * Shorthand for marginBottom
+   */
   mb: Value
 }>
