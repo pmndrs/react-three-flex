@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useMemo, useState, ReactNode } from 'react'
+import React, { useLayoutEffect, useMemo, useState } from 'react'
 import Yoga from 'yoga-layout-prebuilt'
 import { Vector3 } from 'three'
 import { setYogaProperties, rmUndefFromObj } from './util'
@@ -10,7 +10,7 @@ import type { R3FlexProps } from './props'
 
 type FlexProps = Partial<{
   position: [number, number, number]
-  children: ReactNode
+  children: any
   size: [number, number, number]
   /**
    * Direction - right to left or right to left
@@ -27,7 +27,7 @@ type FlexProps = Partial<{
 export function Flex({
   // Non flex props
   size = [1, 1, 1],
-  direction = "ltr",
+  direction = 'ltr',
   mainAxis = 'x',
   crossAxis = 'y',
   children,
@@ -200,8 +200,7 @@ export function Flex({
 
   // Layout effect because it must compute *before* its children render
   useLayoutEffect(() => {
-    const yogaDirection =
-      direction === 'ltr' ? Yoga.DIRECTION_LTR : direction === 'rtl' ? Yoga.DIRECTION_RTL : direction
+    const yogaDirection = direction === 'ltr' ? Yoga.DIRECTION_LTR : direction === 'rtl' ? Yoga.DIRECTION_RTL : direction
     rootNode.calculateLayout(state.flexWidth, state.flexHeight, yogaDirection)
   }, [rootNode, children, state, direction])
 
