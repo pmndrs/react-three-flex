@@ -113,12 +113,12 @@ Since a `<Flex />` component works the same way as a DOM one, you can easily mak
 
 ```jsx
 <Flex
-  size={[1, 1, 1]}                    // Total size of the flex container, see above
-  position={[0, 0, 0]}                // Default - position for the flex container in the scene
-  yogaDirection={Yoga.DIRECTION_LTR}  // Default - right to left or right to left
-  mainAxis="x"                        // Default - plane axis, see above
-  crossAxis="y"                       // Default - plane normal axis, see above
-  {...R3FlexProps}                    // Standard Flexbox props, described below
+  size={[1, 1, 1]}        // Total size of the flex container, see above
+  position={[0, 0, 0]}    // Default - position for the flex container in the scene
+  direction="ltr"         // Default - right to left or right to left
+  mainAxis="x"            // Default - plane axis, see above
+  crossAxis="y"           // Default - plane normal axis, see above
+  {...R3FlexProps}        // Standard Flexbox props, described below
 >
   <Box>
     {/* ... */}
