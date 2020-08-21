@@ -11,7 +11,6 @@ npm install react-three-flex
 ## Example
 
 ```jsx
-import React from 'react'
 import { Flex, Box } from 'react-three-flex'
 import { Sphere, Torus, Icosahedron } from 'drei'
 
@@ -20,11 +19,9 @@ const Layout = () => (
     <Box>
       <Sphere args={[50]} />
     </Box>
-
     <Box flexGrow={1}>
       <Torus args={[50, 10]} />
     </Box>
-
     <Box>
       <Icosahedron args={[50]} />
     </Box>
@@ -115,7 +112,6 @@ const Layout = () => (
 Since a `<Flex />` component works the same way as a DOM one, you can easily make complex layouts by nesting flex containers.
 
 ```jsx
-import React from 'react'
 import { Flex, Box } from 'react-three-flex'
 import { Sphere, Torus, Icosahedron } from 'drei'
 
@@ -124,7 +120,6 @@ const Layout = () => (
     <Box>
       <Sphere />
     </Box>
-
     <Box>
       <Flex flexDirection="column" flexWrap="no-wrap">
         <Sphere />
@@ -132,7 +127,6 @@ const Layout = () => (
         <Sphere />
       </Flex>
     </Box>
-
     <Box>
       <Icosahedron />
     </Box>
@@ -149,9 +143,10 @@ const Layout = () => (
   yogaDirection={Yoga.DIRECTION_LTR} // Default - right to left or right to left
   mainAxis="x" // Default - plane axis, see above
   crossAxis="y" // Default - plane normal axis, see above
-  {...R3FlexProps} // Standard Flexbox props, described below
->
-  <Box>{/* Your 3D component*/}</Box>
+  {...R3FlexProps}> // Standard Flexbox props, described below
+  <Box>
+    {/* Your 3D component*/}
+  </Box>
 </Flex>
 ```
 
