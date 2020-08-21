@@ -8,37 +8,26 @@ You can try a live demo here: ...
 npm install react-three-flex
 ```
 
-## Example
-
-```jsx
-import { Flex, Box } from 'react-three-flex'
-import { Sphere, Torus, Icosahedron } from 'drei'
-
-const Layout = () => (
-  <Flex justifyContent="center" alignItems="center" flexDirection="row" size={[500, 200, 0]}>
-    <Box>
-      <Sphere args={[50]} />
-    </Box>
-    <Box flexGrow={1}>
-      <Torus args={[50, 10]} />
-    </Box>
-    <Box>
-      <Icosahedron args={[50]} />
-    </Box>
-  </Flex>
-)
-```
-
 ## Usage
 
 The layout works with two components, `<Flex />` as container and `<Box />` as a wrapper for 3D objects.
 
-You simply wrap your 3D objects in different `<Box />` instances inside a flex container. This way they will be automatically placed in the 3D space like a DOM Flexbox.
+You simply wrap your 3D objects in different `<Box />` instances inside a flex container. This way they will be automatically placed in the 3D space, just like a DOM Flexbox.
 
 ```jsx
+import { Flex, Box } from 'react-three-flex'
+
 const Layout = () => (
   <Flex justifyContent="center" alignItems="center">
-    <Box>{/* Your 3D component*/}</Box>
+    <Box>
+      <mesh geometry={box} />
+    </Box>
+    <Box flexGrow={1}>
+      <mesh geometry={torus} />
+    </Box>
+    <Box>
+      <mesh geometry={sphere} />
+    </Box>
   </Flex>
 )
 ```
@@ -50,19 +39,17 @@ You can tweak the container and the boxes using standard CSS flex properties, li
 The main difference between a DOM Flexbox and react-three-flex is that you don't have a parent container for the root flex, so you'll need to specify its dimensions using `size` prop, if you want it to be centered and perform grows or wrapping.
 
 ```jsx
-const Layout = () => (
-  <Flex flexDirection="row" flexWrap="wrap" size={[300, 200, 0]}>
-    <Box>
-      <Sphere args={[50]} />
-    </Box>
-    <Box>
-      <Torus args={[50, 10]} />
-    </Box>
-    <Box>
-      <Icosahedron args={[50]} />
-    </Box>
-  </Flex>
-)
+<Flex flexDirection="row" flexWrap="wrap" size={[300, 200, 0]}>
+  <Box>
+    <mesh geometry={sphere} />
+  </Box>
+  <Box>
+    <mesh geometry={torus} />
+  </Box>
+  <Box>
+    <mesh geometry={icosahedron} />
+  </Box>
+</Flex>
 ```
 
 **⚠️ WATCH OUT!** Yoga flexbox engine uses integer numbers to perform layout calculation, so to preserve precision make sure you choose big enough numbers for sizes.
@@ -76,11 +63,9 @@ Another important difference with DOM Flexbox is that you can specify the direct
 In fact, the 2D flex container width and height will be calculated looking at the `size` prop with respect of the chosen axes (200 and 100 in this example).
 
 ```jsx
-const Layout = () => (
-  <Flex mainAxis="z" crossAxis="y" size={[0, 100, 200]}>
-    {/* many <Box /> items */}
-  </Flex>
-)
+<Flex mainAxis="z" crossAxis="y" size={[0, 100, 200]}>
+  {/* ... */}
+</Flex>
 ```
 
 ![Axes Orientation](./docs/axes_orientation.png)
@@ -90,19 +75,14 @@ const Layout = () => (
 For every `<Flex />` and `<Box />` component you can specify the margin and padding like in DOM flexbox.
 
 ```jsx
-const Layout = () => (
-  <Flex flexDirection="row" size={[300, 200, 0]} padding={30}>
-    <Box>
-      <Sphere args={[50]} />
-    </Box>
-    <Box>
-      <Torus args={[50, 10]} />
-    </Box>
-    <Box>
-      <Icosahedron args={[50]} />
-    </Box>
-  </Flex>
-)
+<Flex flexDirection="row" size={[300, 200, 0]} padding={30} margin={5}>
+  <Box padding={5} margin={5}>
+    <mesh geometry={sphere} />
+  </Box>
+  <Box padding={5} margin={5}>
+    <mesh geometry={torus} />
+  </Box>
+</Flex>
 ```
 
 ![Margin](./docs/margin.png)
@@ -112,40 +92,35 @@ const Layout = () => (
 Since a `<Flex />` component works the same way as a DOM one, you can easily make complex layouts by nesting flex containers.
 
 ```jsx
-import { Flex, Box } from 'react-three-flex'
-import { Sphere, Torus, Icosahedron } from 'drei'
-
-const Layout = () => (
-  <Flex flexDirection="row" flexWrap="wrap" size={[50, 0, 0]}>
-    <Box>
-      <Sphere />
-    </Box>
-    <Box>
-      <Flex flexDirection="column" flexWrap="no-wrap">
-        <Sphere />
-        <Sphere />
-        <Sphere />
-      </Flex>
-    </Box>
-    <Box>
-      <Icosahedron />
-    </Box>
-  </Flex>
-)
+<Flex flexDirection="row" flexWrap="wrap" size={[50, 0, 0]}>
+  <Box>
+    <mesh geometry={sphere} />
+  </Box>
+  <Box>
+    <Flex flexDirection="column" flexWrap="no-wrap">
+      <Box>
+        <mesh geometry={sphere} />
+      </Box>
+      <Box>
+        <mesh geometry={box} />
+      </Box>
+    </Flex>
+  </Box>
+</Flex>
 ```
 
 ## API
 
 ```jsx
 <Flex
-  size={[1, 1, 1]} // Total size of the flex container, see above
-  position={[0, 0, 0]} // Default - position for the flex container in the scene
-  yogaDirection={Yoga.DIRECTION_LTR} // Default - right to left or right to left
-  mainAxis="x" // Default - plane axis, see above
-  crossAxis="y" // Default - plane normal axis, see above
-  {...R3FlexProps}> // Standard Flexbox props, described below
+  size={[1, 1, 1]}                    // Total size of the flex container, see above
+  position={[0, 0, 0]}                // Default - position for the flex container in the scene
+  yogaDirection={Yoga.DIRECTION_LTR}  // Default - right to left or right to left
+  mainAxis="x"                        // Default - plane axis, see above
+  crossAxis="y"                       // Default - plane normal axis, see above
+  {...R3FlexProps}>                   // Standard Flexbox props, described below
   <Box>
-    {/* Your 3D component*/}
+    {/* ... */}
   </Box>
 </Flex>
 ```
