@@ -200,7 +200,8 @@ export function Flex({
 
   // Layout effect because it must compute *before* its children render
   useLayoutEffect(() => {
-    const yogaDirection = direction === 'ltr' ? Yoga.DIRECTION_LTR : direction === 'rtl' ? Yoga.DIRECTION_RTL : direction
+    const yogaDirection =
+      direction === 'ltr' ? Yoga.DIRECTION_LTR : direction === 'rtl' ? Yoga.DIRECTION_RTL : direction
     rootNode.calculateLayout(state.flexWidth, state.flexHeight, yogaDirection)
   }, [rootNode, children, state, direction])
 

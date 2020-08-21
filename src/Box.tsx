@@ -29,6 +29,7 @@ export function Box({
 
   flexBasis,
   flexGrow,
+
   flexShrink,
 
   flexWrap,
