@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/react-spring/react-three-flex.svg?branch=master)](https://travis-ci.org/react-spring/react-three-flex) [![npm version](https://badge.fury.io/js/react-three-flex.svg)](https://badge.fury.io/js/react-three-flex) ![npm](https://img.shields.io/npm/dt/react-three-flex.svg) [![Discord Shield](https://discordapp.com/api/guilds/740090768164651008/widget.png?style=shield)](https://discord.gg/ZZjjNvJ)
+[![Travis CI](https://img.shields.io/travis/react-spring/react-three-flex?style=flat-square)](https://travis-ci.org/react-spring/react-three-flex) [![npm](https://img.shields.io/npm/v/react-three-flex?style=flat-square)](https://www.npmjs.com/package/react-three-flex) ![npm](https://img.shields.io/npm/dt/react-three-flex.svg?style=flat-square) [![Discord Shield](https://discordapp.com/api/guilds/740090768164651008/widget.png?style=shield)](https://discord.gg/ZZjjNvJ)
 
 **`react-three-flex`** brings the web flexbox spec to [react-three-fiber](https://github.com/react-spring/react-three-fiber). 
 It is based on [yoga](https://github.com/facebook/yoga), Facebook's open source layout engine for react-native. 
