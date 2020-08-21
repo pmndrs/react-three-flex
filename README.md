@@ -118,7 +118,8 @@ Since a `<Flex />` component works the same way as a DOM one, you can easily mak
   yogaDirection={Yoga.DIRECTION_LTR}  // Default - right to left or right to left
   mainAxis="x"                        // Default - plane axis, see above
   crossAxis="y"                       // Default - plane normal axis, see above
-  {...R3FlexProps}>                   // Standard Flexbox props, described below
+  {...R3FlexProps}                    // Standard Flexbox props, described below
+>
   <Box>
     {/* ... */}
   </Box>
