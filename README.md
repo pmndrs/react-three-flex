@@ -1,4 +1,4 @@
-![Bundle Size](https://badgen.net/bundlephobia/minzip/react-three-flex) [![Build Status](https://travis-ci.org/react-spring/react-three-flex.svg?branch=master)](https://travis-ci.org/react-spring/react-three-flex) [![npm version](https://badge.fury.io/js/react-three-flex.svg)](https://badge.fury.io/js/react-three-flex) ![npm](https://img.shields.io/npm/dt/react-three-flex.svg)
+[![Build Status](https://travis-ci.org/react-spring/react-three-flex.svg?branch=master)](https://travis-ci.org/react-spring/react-three-flex) [![npm version](https://badge.fury.io/js/react-three-flex.svg)](https://badge.fury.io/js/react-three-flex) ![npm](https://img.shields.io/npm/dt/react-three-flex.svg)
 
 This library brings the webs flexbox spec to the 3D world. It is based on [yoga](https://github.com/facebook/yoga), facebooks open source layout engine for react-native. You might be wondering why. But then again, placing content in threejs is hard. Think of how you would normmaly go about making stuff rensponsive, stick to the sides, wrap around, grids, rows, columns, padding, margin. Especially if you are working on frontend centric projects where the camera is pointing down, forming a 2-dimensional view.
 
@@ -239,7 +239,3 @@ type R3FlexProps = {
   mb: string | number // Shorthand
 }
 ```
-
-## License
-
-[MIT](LICENSE)
