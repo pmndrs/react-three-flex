@@ -1,10 +1,10 @@
 # Explore Examples
 
 ```bash
-git clone https://github.com/react-spring/react-postprocessing
+git clone https://github.com/react-spring/react-three-flex
 
 # install project dependencies & build the library
-cd react-postprocessing && yarn
+cd react-three-flex && yarn
 
 # move to the examples folder & install dependencies 
 cd examples && yarn
