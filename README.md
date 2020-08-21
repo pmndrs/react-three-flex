@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/react-spring/react-three-flex.svg?branch=master)](https://travis-ci.org/react-spring/react-three-flex) [![npm version](https://badge.fury.io/js/react-three-flex.svg)](https://badge.fury.io/js/react-three-flex) ![npm](https://img.shields.io/npm/dt/react-three-flex.svg)
+[![Build Status](https://travis-ci.org/react-spring/react-three-flex.svg?branch=master)](https://travis-ci.org/react-spring/react-three-flex) [![npm version](https://badge.fury.io/js/react-three-flex.svg)](https://badge.fury.io/js/react-three-flex) ![npm](https://img.shields.io/npm/dt/react-three-flex.svg) [![Discord Shield](https://discordapp.com/api/guilds/740090768164651008/widget.png?style=shield)](https://discord.gg/ZZjjNvJ)
 
 **`react-three-flex`** brings the web flexbox spec to [react-three-fiber](https://github.com/react-spring/react-three-fiber). 
 It is based on [yoga](https://github.com/facebook/yoga), Facebook's open source layout engine for react-native. 
@@ -113,12 +113,12 @@ Since a `<Flex />` component works the same way as a DOM one, you can easily mak
 
 ```jsx
 <Flex
-  size={[1, 1, 1]}                    // Total size of the flex container, see above
-  position={[0, 0, 0]}                // Default - position for the flex container in the scene
-  yogaDirection={Yoga.DIRECTION_LTR}  // Default - right to left or right to left
-  mainAxis="x"                        // Default - plane axis, see above
-  crossAxis="y"                       // Default - plane normal axis, see above
-  {...R3FlexProps}                    // Standard Flexbox props, described below
+  size={[1, 1, 1]}        // Total size of the flex container, see above
+  position={[0, 0, 0]}    // Default - position for the flex container in the scene
+  direction="ltr"         // Default - right to left or right to left
+  mainAxis="x"            // Default - plane axis, see above
+  crossAxis="y"           // Default - plane normal axis, see above
+  {...R3FlexProps}        // Standard Flexbox props, described below
 >
   <Box>
     {/* ... */}

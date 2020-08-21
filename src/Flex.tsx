@@ -15,7 +15,7 @@ type FlexProps = Partial<{
   /**
    * Direction - right to left or right to left
    */
-  yogaDirection: Yoga.YogaDirection
+  direction: Yoga.YogaDirection | 'ltr' | 'rtl'
   mainAxis: Axis
   crossAxis: Axis
 }> &
@@ -27,7 +27,7 @@ type FlexProps = Partial<{
 export function Flex({
   // Non flex props
   size = [1, 1, 1],
-  yogaDirection = Yoga.DIRECTION_LTR,
+  direction = "ltr",
   mainAxis = 'x',
   crossAxis = 'y',
   children,
@@ -200,8 +200,10 @@ export function Flex({
 
   // Layout effect because it must compute *before* its children render
   useLayoutEffect(() => {
+    const yogaDirection =
+      direction === 'ltr' ? Yoga.DIRECTION_LTR : direction === 'rtl' ? Yoga.DIRECTION_RTL : direction
     rootNode.calculateLayout(state.flexWidth, state.flexHeight, yogaDirection)
-  }, [rootNode, children, state, yogaDirection])
+  }, [rootNode, children, state, direction])
 
   return (
     <group position={position} {...props}>
