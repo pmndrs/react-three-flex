@@ -115,9 +115,9 @@ export function Box({
   const { rootNode, rootStart, depthAxis, mainAxis, crossAxis, sizeVec3 } = useContext(flexContext)
   const parent = useContext(boxContext) || rootNode
   const group = useRef<THREE.Group>()
-  const [vec] = useState(new THREE.Vector3())
-  const [boundingBox] = useState(new THREE.Box3())
-  const [node] = useState(Yoga.Node.create())
+  const [vec] = useState(() => new THREE.Vector3())
+  const [boundingBox] = useState(() => new THREE.Box3())
+  const [node] = useState(() => Yoga.Node.create())
   const { invalidate } = useThree()
   useLayoutEffect(() => {
     setYogaProperties(node, flexProps)
