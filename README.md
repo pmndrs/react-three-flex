@@ -1,6 +1,8 @@
 [![Build Status](https://travis-ci.org/react-spring/react-three-flex.svg?branch=master)](https://travis-ci.org/react-spring/react-three-flex) [![npm version](https://badge.fury.io/js/react-three-flex.svg)](https://badge.fury.io/js/react-three-flex) ![npm](https://img.shields.io/npm/dt/react-three-flex.svg)
 
-This library brings the webs flexbox spec to [react-three-fiber](https://github.com/react-spring/react-three-fiber). It is based on [yoga](https://github.com/facebook/yoga), facebooks open source layout engine for react-native. You might be wondering why. But then again, placing content in threejs is hard. Think of how you would normmaly go about making stuff rensponsive, stick to the sides, wrap around, grids, rows, columns, padding, margin. Especially if you are working on frontend centric projects where the camera is pointing down, forming a 2-dimensional view.
+**`react-three-flex`** brings the web flexbox spec to [react-three-fiber](https://github.com/react-spring/react-three-fiber). 
+It is based on [yoga](https://github.com/facebook/yoga), Facebook's open source layout engine for react-native. 
+You might be wondering why. But then again, placing content in threejs is hard. Think of how you would normally go about making stuff rensponsive, stick to the sides, wrap around, grids, rows, columns, padding, margin. Especially if you are working on frontend-centric projects where the camera is pointing down, forming a 2-dimensional view.
 
 You can try a live demo here: ...
 
@@ -10,9 +12,7 @@ npm install react-three-flex
 
 ## Usage
 
-The layout works with two components, `<Flex />` as container and `<Box />` as a wrapper for 3D objects.
-
-You simply wrap your 3D objects in different `<Box />` instances inside a flex container. This way they will be automatically placed in the 3D space, just like a DOM Flexbox.
+You simply create layouts by wrapping your 3D objects in different `<Box />` instances inside a `<Flex />` container. This way they will be automatically placed in the 3D space following the flexbox specification, just like in the DOM.
 
 ```jsx
 import { Flex, Box } from 'react-three-flex'
@@ -36,7 +36,7 @@ You can tweak the container and the boxes using standard CSS flex properties, li
 
 ### Sizing
 
-The main difference between a DOM Flexbox and react-three-flex is that you don't have a parent container for the root flex, so you'll need to specify its dimensions using `size` prop, if you want it to be centered and perform grows or wrapping.
+The main difference between a DOM Flexbox and `react-three-flex` is that you don't have a parent container for the root flex, so you'll need to specify its dimensions using `size` prop, if you want it to be centered and perform grows or wrapping.
 
 ```jsx
 <Flex flexDirection="row" flexWrap="wrap" size={[300, 200, 0]}>
@@ -58,9 +58,9 @@ The main difference between a DOM Flexbox and react-three-flex is that you don't
 
 ### Axis Orientation
 
-Another important difference with DOM Flexbox is that you can specify the direction of the container in 3D, using an axis and its normal. The elements will be positioned in the 2D plane given by the axis and normal.
+Another important difference with DOM Flexbox is that you can specify the direction of the container in 3D, using an axis and its normal. The elements will be positioned in the 2D plane given by the two axes.
 
-In fact, the 2D flex container width and height will be calculated looking at the `size` prop with respect of the chosen axes (200 and 100 in this example).
+The 2D flex container width and height will be calculated by looking at the `size` prop with respect of the chosen axes (200 for z and 100 for y in this example).
 
 ```jsx
 <Flex mainAxis="z" crossAxis="y" size={[0, 100, 200]}>
@@ -72,7 +72,7 @@ In fact, the 2D flex container width and height will be calculated looking at th
 
 ### Margin and Padding
 
-For every `<Flex />` and `<Box />` component you can specify the margin and padding like in DOM flexbox.
+For every `<Flex />` and `<Box />` component you can specify the margin and padding like in DOM elements.
 
 ```jsx
 <Flex flexDirection="row" size={[300, 200, 0]} padding={30} margin={5}>
