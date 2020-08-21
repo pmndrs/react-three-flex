@@ -1,11 +1,11 @@
-# react-three-flex 💠
+![Bundle Size](https://badgen.net/bundlephobia/minzip/react-three-flex) [![Build Status](https://travis-ci.org/react-spring/react-three-flex.svg?branch=master)](https://travis-ci.org/react-spring/react-three-flex) [![npm version](https://badge.fury.io/js/react-three-flex.svg)](https://badge.fury.io/js/react-three-flex) ![npm](https://img.shields.io/npm/dt/react-three-flex.svg)
 
-`<Flex />` component for the 3D World. Inspired by the [yoga-r3f demo](https://codesandbox.io/s/yoga-r3f-lgl0j).
+This library brings the webs flexbox spec to the 3D world. It is based on [yoga](https://github.com/facebook/yoga), facebooks open source layout engine for react-native. You might be wondering why. But then again, placing content in threejs is hard. Think of how you would normmaly go about making stuff rensponsive, stick to the sides, wrap around, grids, rows, columns, padding, margin. Especially if you are working on frontend centric projects where the camera is pointing down, forming a 2-dimensional view.
 
-## Installation
+You can try a live demo here: ...
 
-```sh
-npm i react-three-flex
+```bash
+npm install react-three-flex
 ```
 
 ## Example
