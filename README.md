@@ -2,7 +2,7 @@
 
 **`react-three-flex`** brings the web flexbox spec to [react-three-fiber](https://github.com/react-spring/react-three-fiber). 
 It is based on [yoga](https://github.com/facebook/yoga), Facebook's open source layout engine for react-native. 
-You might be wondering why. But then again, placing content in threejs is hard. Think of how you would normally go about making stuff rensponsive, stick to the sides, wrap around, grids, rows, columns, padding, margin. Especially if you are working on frontend-centric projects where the camera is pointing down, forming a 2-dimensional view.
+You might be wondering why. But then again, placing content in threejs is hard. Think of how you would normally go about making stuff responsive, stick to the sides, wrap around, grids, rows, columns, padding, margin. Especially if you are working on frontend-centric projects where the camera is pointing down, forming a 2-dimensional view.
 
 You can try a live demo here: ...
 
