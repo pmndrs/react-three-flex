@@ -113,7 +113,7 @@ export function Box({
     wrap,
   ])
 
-  const { rootNode, rootStart, depthAxis, mainAxis, crossAxis, sizeVec3 } = useContext(flexContext)
+  const { rootNode, rootStart, depthAxis, mainAxis, crossAxis, sizeVec3, updateId } = useContext(flexContext)
   const parent = useContext(boxContext) || rootNode
   const group = useRef<THREE.Group>()
   const [vec] = useState(() => new THREE.Vector3())
@@ -136,7 +136,7 @@ export function Box({
     boundingBox.setFromObject(group.current).getSize(vec)
     node.setWidth(vec[mainAxis])
     node.setHeight(vec[crossAxis])
-  }, [node, mainAxis, crossAxis, boundingBox, vec])
+  }, [node, mainAxis, crossAxis, boundingBox, vec, updateId, children])
 
   // Position view according to yoga *after* the parent has calculated layout
   useEffect(() => {

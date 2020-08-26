@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useMemo, useState } from 'react'
+import React, { useLayoutEffect, useMemo, useState, useCallback, useContext } from 'react'
 import Yoga from 'yoga-layout-prebuilt'
 import { Vector3 } from 'three'
 import { setYogaProperties, rmUndefFromObj } from './util'
@@ -7,6 +7,11 @@ import { boxContext, flexContext } from './context'
 
 import type { Axis } from './util'
 import type { R3FlexProps } from './props'
+
+export function useFlexInvalidate() {
+  const { flexInvalidate } = useContext(flexContext)
+  return flexInvalidate
+}
 
 type FlexYogaDirection = Yoga.YogaDirection | 'ltr' | 'rtl'
 
@@ -192,21 +197,35 @@ export function Flex({
     setYogaProperties(rootNode, flexProps)
   }, [rootNode, flexProps])
 
+  const [updateId, setUpdateId] = useState(0)
+  const flexInvalidate = useCallback(() => setUpdateId((f) => f + 1), [])
+
   const state = useMemo(() => {
     const sizeVec3 = new Vector3(...size)
     const depthAxis = ['x', 'y', 'z'].find((axis) => ![mainAxis, crossAxis].includes(axis as Axis))
     const flexWidth = sizeVec3[mainAxis]
     const flexHeight = sizeVec3[crossAxis]
     const rootStart = new Vector3(...position).addScaledVector(new Vector3(size[0], size[1], size[2]), 0.5)
-    return { rootNode, depthAxis, mainAxis, crossAxis, sizeVec3, flexWidth, flexHeight, rootStart }
-  }, [rootNode, mainAxis, crossAxis, position, size])
+    return {
+      rootNode,
+      depthAxis,
+      mainAxis,
+      crossAxis,
+      sizeVec3,
+      flexWidth,
+      flexHeight,
+      rootStart,
+      updateId,
+      flexInvalidate,
+    }
+  }, [rootNode, mainAxis, crossAxis, position, size, updateId, flexInvalidate])
 
   // Layout effect because it must compute *before* its children render
   useLayoutEffect(() => {
     const yogaDirection_ =
       yogaDirection === 'ltr' ? Yoga.DIRECTION_LTR : yogaDirection === 'rtl' ? Yoga.DIRECTION_RTL : yogaDirection
     rootNode.calculateLayout(state.flexWidth, state.flexHeight, yogaDirection_)
-  }, [rootNode, children, state, yogaDirection])
+  }, [rootNode, children, state, yogaDirection, updateId])
 
   return (
     <group position={position} {...props}>
