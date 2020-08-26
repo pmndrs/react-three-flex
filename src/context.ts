@@ -12,6 +12,8 @@ export const flexContext = createContext<{
   flexWidth: number
   flexHeight: number
   rootStart: Vector3
+  updateId: number
+  flexInvalidate(): void
 }>(null)
 
 export const boxContext = createContext<YogaNode>(null)
