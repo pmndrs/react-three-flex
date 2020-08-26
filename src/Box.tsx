@@ -142,10 +142,10 @@ export function Box({
   useEffect(() => {
     const { left, top, width, height } = node.getComputedLayout()
     const position = vectorFromObject({
-      x: rootStart[mainAxis] - (left + width / 2),
-      y: rootStart[crossAxis] - (+top + height / 2),
-      z: rootStart[depthAxis] - sizeVec3[depthAxis] / 2,
-    })
+      [mainAxis]: -rootStart[mainAxis] + (left + width / 2),
+      [crossAxis]: rootStart[crossAxis] - (+top + height / 2),
+      [depthAxis]: rootStart[depthAxis] - sizeVec3[depthAxis] / 2,
+    } as any)
     group.current.position.copy(position)
     invalidate()
   })
