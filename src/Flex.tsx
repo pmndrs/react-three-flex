@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useMemo, useState, useCallback, useContext } from 'react'
+import React, { useLayoutEffect, useMemo, useState, useCallback, useContext, PropsWithChildren } from 'react'
 import Yoga from 'yoga-layout-prebuilt'
 import { Vector3 } from 'three'
 import { setYogaProperties, rmUndefFromObj } from './util'
@@ -15,18 +15,19 @@ export function useFlexInvalidate() {
 
 type FlexYogaDirection = Yoga.YogaDirection | 'ltr' | 'rtl'
 
-type FlexProps = Partial<{
-  /**
-   * Root container position
-   */
-  position: [number, number, number]
-  children?: JSX.Element
-  size: [number, number, number]
-  yogaDirection: FlexYogaDirection
-  mainAxis: Axis
-  crossAxis: Axis
-}> &
-  R3FlexProps
+type FlexProps = PropsWithChildren<
+  Partial<{
+    /**
+     * Root container position
+     */
+    position: [number, number, number]
+    size: [number, number, number]
+    yogaDirection: FlexYogaDirection
+    mainAxis: Axis
+    crossAxis: Axis
+  }> &
+    R3FlexProps
+>
 
 /**
  * Flex container. Can contain Boxes or other Flexes
