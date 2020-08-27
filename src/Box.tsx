@@ -49,7 +49,7 @@ export function Box({
   // other
   ...props
 }: {
-  children: any
+  children?: JSX.Element
 } & R3FlexProps &
   ReactThreeFiber.Object3DNode<THREE.Group, typeof THREE.Group>) {
   // must memoize or the object literal will cause every dependent of flexProps to rerender everytime
