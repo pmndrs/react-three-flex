@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useContext, useRef, useState, useEffect, useMemo } from 'react'
+import React, { useLayoutEffect, useContext, useRef, useState, useEffect, useMemo, PropsWithChildren } from 'react'
 import * as THREE from 'three'
 import Yoga from 'yoga-layout-prebuilt'
 import { useThree, ReactThreeFiber } from 'react-three-fiber'
@@ -48,10 +48,7 @@ export function Box({
 
   // other
   ...props
-}: {
-  children?: JSX.Element
-} & R3FlexProps &
-  ReactThreeFiber.Object3DNode<THREE.Group, typeof THREE.Group>) {
+}: PropsWithChildren<R3FlexProps & ReactThreeFiber.Object3DNode<THREE.Group, typeof THREE.Group>>) {
   // must memoize or the object literal will cause every dependent of flexProps to rerender everytime
   const flexProps: R3FlexProps = useMemo(() => {
     const _flexProps = {
