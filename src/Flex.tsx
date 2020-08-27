@@ -20,7 +20,7 @@ type FlexProps = Partial<{
    * Root container position
    */
   position: [number, number, number]
-  children: any
+  children?: JSX.Element
   size: [number, number, number]
   yogaDirection: FlexYogaDirection
   mainAxis: Axis
