@@ -1,7 +1,8 @@
 import { createContext } from 'react'
 import { YogaNode } from 'yoga-layout-prebuilt'
 import { Axis } from './util'
-import { Vector3 } from 'three'
+import { Vector3, Group } from 'three'
+import { FlexYogaDirection } from './Flex'
 
 export const flexContext = createContext<{
   rootNode: YogaNode
@@ -12,8 +13,10 @@ export const flexContext = createContext<{
   flexWidth: number
   flexHeight: number
   rootStart: Vector3
-  updateId: number
+  yogaDirection: FlexYogaDirection
   flexInvalidate(): void
+  registerBox(group: Group, node: YogaNode): void
+  unregisterBox(group: Group, node: YogaNode): void
 }>(null)
 
 export const boxContext = createContext<YogaNode>(null)

@@ -1,8 +1,8 @@
-import React, { useLayoutEffect, useContext, useRef, useState, useEffect, useMemo, PropsWithChildren } from 'react'
+import React, { useLayoutEffect, useContext, useRef, useState, useMemo, PropsWithChildren } from 'react'
 import * as THREE from 'three'
 import Yoga from 'yoga-layout-prebuilt'
-import { useThree, ReactThreeFiber } from 'react-three-fiber'
-import { setYogaProperties, vectorFromObject, rmUndefFromObj } from './util'
+import { ReactThreeFiber } from 'react-three-fiber'
+import { setYogaProperties, rmUndefFromObj } from './util'
 import { boxContext, flexContext } from './context'
 import { R3FlexProps } from './props'
 
@@ -110,13 +110,11 @@ export function Box({
     wrap,
   ])
 
-  const { rootNode, rootStart, depthAxis, mainAxis, crossAxis, sizeVec3, updateId } = useContext(flexContext)
+  const { rootNode, registerBox, unregisterBox } = useContext(flexContext)
   const parent = useContext(boxContext) || rootNode
   const group = useRef<THREE.Group>()
-  const [vec] = useState(() => new THREE.Vector3())
-  const [boundingBox] = useState(() => new THREE.Box3())
   const [node] = useState(() => Yoga.Node.create())
-  const { invalidate } = useThree()
+
   useLayoutEffect(() => {
     setYogaProperties(node, flexProps)
   }, [flexProps, node])
@@ -124,28 +122,14 @@ export function Box({
   // Make child known to the parents yoga instance *before* it calculates layout
   useLayoutEffect(() => {
     parent.insertChild(node, parent.getChildCount())
+    registerBox(group.current, node)
+
     // Remove child on unmount
-    return () => parent.removeChild(node)
+    return () => {
+      parent.removeChild(node)
+      unregisterBox(group.current, node)
+    }
   }, [node, parent])
-
-  // Measure view *before* the parent has calculated layout
-  useLayoutEffect(() => {
-    boundingBox.setFromObject(group.current).getSize(vec)
-    node.setWidth(vec[mainAxis])
-    node.setHeight(vec[crossAxis])
-  }, [node, mainAxis, crossAxis, boundingBox, vec, updateId, children])
-
-  // Position view according to yoga *after* the parent has calculated layout
-  useEffect(() => {
-    const { left, top, width, height } = node.getComputedLayout()
-    const position = vectorFromObject({
-      [mainAxis]: -rootStart[mainAxis] + (left + width / 2),
-      [crossAxis]: rootStart[crossAxis] - (+top + height / 2),
-      [depthAxis]: rootStart[depthAxis] - sizeVec3[depthAxis] / 2,
-    } as any)
-    group.current.position.copy(position)
-    invalidate()
-  })
 
   return (
     <group ref={group} {...props}>

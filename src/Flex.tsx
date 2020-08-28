@@ -1,19 +1,20 @@
-import React, { useLayoutEffect, useMemo, useState, useCallback, useContext, PropsWithChildren } from 'react'
-import Yoga from 'yoga-layout-prebuilt'
-import { Vector3 } from 'three'
-import { setYogaProperties, rmUndefFromObj } from './util'
+import React, { useLayoutEffect, useMemo, useState, useCallback, useContext, PropsWithChildren, useRef } from 'react'
+import Yoga, { YogaNode } from 'yoga-layout-prebuilt'
+import { Vector3, Group, Box3 } from 'three'
+import { setYogaProperties, rmUndefFromObj, vectorFromObject } from './util'
 
 import { boxContext, flexContext } from './context'
 
 import type { Axis } from './util'
 import type { R3FlexProps } from './props'
+import { useFrame, useThree } from 'react-three-fiber'
 
 export function useFlexInvalidate() {
   const { flexInvalidate } = useContext(flexContext)
   return flexInvalidate
 }
 
-type FlexYogaDirection = Yoga.YogaDirection | 'ltr' | 'rtl'
+export type FlexYogaDirection = Yoga.YogaDirection | 'ltr' | 'rtl'
 
 type FlexProps = PropsWithChildren<
   Partial<{
@@ -198,8 +199,26 @@ export function Flex({
     setYogaProperties(rootNode, flexProps)
   }, [rootNode, flexProps])
 
-  const [updateId, setUpdateId] = useState(0)
-  const flexInvalidate = useCallback(() => setUpdateId((f) => f + 1), [])
+  const dirtyRef = useRef(false)
+  const flexInvalidate = useCallback(() => {
+    dirtyRef.current = true
+  }, [])
+
+  const boxesRef = useRef<{ group: Group; node: YogaNode }[]>([])
+  const registerBox = useCallback((group: Group, node: YogaNode) => {
+    const i = boxesRef.current.findIndex((b) => b.group === group && b.node === node)
+    if (i !== -1) {
+      boxesRef.current.splice(i, 1)
+    }
+
+    boxesRef.current.push({ group, node })
+  }, [])
+  const unregisterBox = useCallback((group: Group, node: YogaNode) => {
+    const i = boxesRef.current.findIndex((b) => b.group === group && b.node === node)
+    if (i !== -1) {
+      boxesRef.current.splice(i, 1)
+    }
+  }, [])
 
   const state = useMemo(() => {
     const sizeVec3 = new Vector3(...size)
@@ -207,6 +226,8 @@ export function Flex({
     const flexWidth = sizeVec3[mainAxis]
     const flexHeight = sizeVec3[crossAxis]
     const rootStart = new Vector3(...position).addScaledVector(new Vector3(size[0], size[1], size[2]), 0.5)
+    const yogaDirection_ =
+      yogaDirection === 'ltr' ? Yoga.DIRECTION_LTR : yogaDirection === 'rtl' ? Yoga.DIRECTION_RTL : yogaDirection
     return {
       rootNode,
       depthAxis,
@@ -216,17 +237,42 @@ export function Flex({
       flexWidth,
       flexHeight,
       rootStart,
-      updateId,
+      yogaDirection: yogaDirection_,
       flexInvalidate,
+      registerBox,
+      unregisterBox,
     }
-  }, [rootNode, mainAxis, crossAxis, position, size, updateId, flexInvalidate])
+  }, [rootNode, mainAxis, crossAxis, position, size, flexInvalidate, registerBox, unregisterBox])
 
-  // Layout effect because it must compute *before* its children render
-  useLayoutEffect(() => {
-    const yogaDirection_ =
-      yogaDirection === 'ltr' ? Yoga.DIRECTION_LTR : yogaDirection === 'rtl' ? Yoga.DIRECTION_RTL : yogaDirection
-    rootNode.calculateLayout(state.flexWidth, state.flexHeight, yogaDirection_)
-  }, [rootNode, children, state, yogaDirection, updateId])
+  const { invalidate } = useThree()
+  useFrame(() => {
+    if (dirtyRef.current) {
+      const boundingBox = new Box3()
+      const vec = new Vector3()
+
+      // Recalc all the sizes
+      boxesRef.current.forEach(({ group, node }) => {
+        boundingBox.setFromObject(group).getSize(vec)
+        node.setWidth(vec[mainAxis])
+        node.setHeight(vec[crossAxis])
+      })
+
+      // Perform yoga layout calculation
+      rootNode.calculateLayout(state.flexWidth, state.flexHeight, state.yogaDirection)
+
+      // Reposition after recalculation
+      boxesRef.current.forEach(({ group, node }) => {
+        const { left, top, width, height } = node.getComputedLayout()
+        const position = vectorFromObject({
+          [state.mainAxis]: -state.rootStart[state.mainAxis] + (left + width / 2),
+          [state.crossAxis]: state.rootStart[state.crossAxis] - (+top + height / 2),
+          [state.depthAxis]: state.rootStart[state.depthAxis] - state.sizeVec3[state.depthAxis] / 2,
+        } as any)
+        group.position.copy(position)
+        invalidate()
+      })
+    }
+  })
 
   return (
     <group position={position} {...props}>
