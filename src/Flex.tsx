@@ -245,16 +245,14 @@ export function Flex({
     }
   }, [rootNode, plane, position, size, doReflow, registerBox, unregisterBox])
 
-  const { invalidate } = useThree()
-
   // We need to reflow everything if flex props changes
   useLayoutEffect(() => {
     dirtyRef.current = true
-    invalidate()
   }, [state, children, flexProps])
 
   // We check if we have to relayout every frame
   // This way we can batch the relayout if we have multiple reflow requests
+  const { invalidate } = useThree()
   useFrame(() => {
     if (dirtyRef.current) {
       const boundingBox = new Box3()
