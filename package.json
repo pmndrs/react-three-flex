@@ -1,6 +1,6 @@
 {
   "name": "react-three-flex",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "`<Flex />` component for the 3D World.",
   "keywords": [
     "react",
