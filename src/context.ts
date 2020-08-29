@@ -14,7 +14,7 @@ export const flexContext = createContext<{
   flexHeight: number
   rootStart: Vector3
   yogaDirection: FlexYogaDirection
-  flexInvalidate(): void
+  doReflow(): void
   registerBox(group: Group, node: YogaNode): void
   unregisterBox(group: Group, node: YogaNode): void
 }>(null)
