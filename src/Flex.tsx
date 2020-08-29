@@ -201,7 +201,7 @@ export function Flex({
     dirtyRef.current = true
   }, [])
 
-  // Keeps tracks of the yoga nodes of the children and the related wrapper groups
+  // Keeps track of the yoga nodes of the children and the related wrapper groups
   const boxesRef = useRef<{ group: Group; node: YogaNode }[]>([])
   const registerBox = useCallback((group: Group, node: YogaNode) => {
     const i = boxesRef.current.findIndex((b) => b.group === group && b.node === node)
