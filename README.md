@@ -62,6 +62,31 @@ function AnimatedBox() {
 }
 ```
 
+**This will NOT cause a reflow!**
+
+```jsx
+function AnimatedBox() {
+  // ⚠️ Setting state does not rerender <Box/> since it's in the parent
+  // ‼️ No Reflow!!
+  const [state, setState] = useState(true)
+  useInterval(() => setState((s) => !s), 1000)
+  return (
+    <mesh>
+      <boxBufferGeometry attach="geometry" args={[state ? 10 : 30, 10, 10]} />
+    </mesh>
+  )
+}
+function Layout() {
+  return (
+    <Flex>
+      <Box>
+        <AnimatedBox />
+      </Box>
+    </Flex>
+  )
+}
+```
+
 For every other cases (setting size with an `useFrame`, react-spring animations, `<Box/>` not rerendered) you'll need to **manually cause a reflow**, using `useReflow()` hook. Reflows requests are batched every frame, so you can call it from hundreds of components without performance issues.
 
 **Animation with useFrame():**
