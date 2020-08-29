@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { Canvas } from 'react-three-fiber'
 import { OrbitControls, useHelper } from 'drei'
-import { Flex, Box, R3FlexProps, Axis, FlexPlane } from '../../src/index'
+import { Flex, Box, R3FlexProps, FlexPlane } from '../../src/index'
 import { Mesh, BoxHelper, Group } from 'three'
 import { Controls, useControl } from 'react-three-gui'
 
