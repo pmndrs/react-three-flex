@@ -2,8 +2,8 @@
 
 [![Travis CI](https://img.shields.io/travis/react-spring/react-three-flex?style=flat-square)](https://travis-ci.org/react-spring/react-three-flex) [![npm](https://img.shields.io/npm/v/react-three-flex?style=flat-square)](https://www.npmjs.com/package/react-three-flex) ![npm](https://img.shields.io/npm/dt/react-three-flex.svg?style=flat-square) [![Discord Shield](https://discordapp.com/api/guilds/740090768164651008/widget.png?style=shield)](https://discord.gg/ZZjjNvJ)
 
-**`react-three-flex`** brings the web flexbox spec to [react-three-fiber](https://github.com/react-spring/react-three-fiber). 
-It is based on [yoga](https://github.com/facebook/yoga), Facebook's open source layout engine for react-native. 
+**`react-three-flex`** brings the web flexbox spec to [react-three-fiber](https://github.com/react-spring/react-three-fiber).
+It is based on [yoga](https://github.com/facebook/yoga), Facebook's open source layout engine for react-native.
 You might be wondering why. But then again, placing content in threejs is hard. Think of how you would normally go about making stuff responsive, stick to the sides, wrap around, grids, rows, columns, padding, margin. Especially if you are working on frontend-centric projects where the camera is pointing down, forming a 2-dimensional view.
 
 You can try a live demo here: ...
@@ -35,6 +35,70 @@ const Layout = () => (
 ```
 
 You can tweak the container and the boxes using standard CSS flex properties, like `flexDirection` or `justifyContent` for the container and `flexGrow` for the boxes. There are also _shorthands_, like `align` and `justify`. See props docs below for more info.
+
+### Invalidation and Reflow
+
+While DOM's Flexbox has full control over all the changes of the tree, `react-three-flex` runs on React, hence it has no way to know if a children size or shape has changed. For performance reasons Flex layout calculation _does not run every frame_, and it has to be triggered manually in some cases.
+
+**What will trigger a reflow:**
+
+- `<Flexbox/>` props changes (alignItems, size, ...)
+- `<Box/>` props changes (flexGrow, margin, ...)
+- `<Flexbox/>` and `<Box/>` rerenders with children differences
+
+```jsx
+function AnimatedBox() {
+  // Since <Box/> is inside the component, setting the state will rerender it, thus causing a reflow.
+  // ⚠️ If <Box/> were outside this component, this would NOT cause a reflow!
+  const [state, setState] = useState(true)
+  useInterval(() => setState((s) => !s), 1000)
+  return (
+    <Box>
+      <mesh>
+        <boxBufferGeometry attach="geometry" args={[state ? 10 : 30, 10, 10]} />
+      </mesh>
+    </Box>
+  )
+}
+```
+
+For every other cases (setting size with an `useFrame`, react-spring animations, `<Box/>` not rerendered) you'll need to **manually cause a reflow**, using `useReflow()` hook. Reflows requests are batched every frame, so you can call it from hundreds of components without performance issues.
+
+**Animation with useFrame():**
+
+```jsx
+function AnimatedBox() {
+  const ref = useRef()
+  const reflow = useReflow()
+  useFrame(({ clock }) => {
+    ref.current.scale.x = 1 + Math.sin(clock.getElapsed())
+    reflow()
+  })
+  return (
+    <Box>
+      <mesh ref={ref}>
+        <boxBufferGeometry attach="geometry" args={[10, 10, 10]} />
+      </mesh>
+    </Box>
+  )
+}
+```
+
+**`<Box/>` outside of component:**
+
+```jsx
+function AnimatedBox() {
+  const [state, setState] = useState(true)
+  useInterval(() => setState((s) => !s), 1000)
+  const reflow = useReflow()
+  useEffect(reflow, [state])
+  return (
+    <mesh ref={ref}>
+      <boxBufferGeometry attach="geometry" args={[state ? 10 : 30, 10, 10]} />
+    </mesh>
+  )
+}
+```
 
 ### Sizing
 
@@ -117,15 +181,13 @@ Since a `<Flex />` component works the same way as a DOM one, you can easily mak
 
 ```jsx
 <Flex
-  size={[1, 1, 1]}        // Total size of the flex container, see above
-  position={[0, 0, 0]}    // Default - position for the flex container in the scene
-  direction="ltr"         // Default - right to left or right to left
-  plane="xy"              // Default - plane axes, see above
-  {...R3FlexProps}        // Standard Flexbox props, described below
+  size={[1, 1, 1]} // Total size of the flex container, see above
+  position={[0, 0, 0]} // Default - position for the flex container in the scene
+  direction="ltr" // Default - right to left or right to left
+  plane="xy" // Default - plane axes, see above
+  {...R3FlexProps} // Standard Flexbox props, described below
 >
-  <Box>
-    {/* ... */}
-  </Box>
+  <Box>{/* ... */}</Box>
 </Flex>
 ```
 
