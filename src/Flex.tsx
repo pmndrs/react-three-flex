@@ -9,9 +9,9 @@ import type { Axis } from './util'
 import type { R3FlexProps } from './props'
 import { useFrame, useThree } from 'react-three-fiber'
 
-export function useFlexInvalidate() {
-  const { flexInvalidate } = useContext(flexContext)
-  return flexInvalidate
+export function useReflow() {
+  const { doReflow } = useContext(flexContext)
+  return doReflow
 }
 
 export type FlexYogaDirection = Yoga.YogaDirection | 'ltr' | 'rtl'
@@ -200,7 +200,7 @@ export function Flex({
   }, [rootNode, flexProps])
 
   const dirtyRef = useRef(false)
-  const flexInvalidate = useCallback(() => {
+  const doReflow = useCallback(() => {
     dirtyRef.current = true
   }, [])
 
@@ -238,11 +238,11 @@ export function Flex({
       flexHeight,
       rootStart,
       yogaDirection: yogaDirection_,
-      flexInvalidate,
+      doReflow,
       registerBox,
       unregisterBox,
     }
-  }, [rootNode, mainAxis, crossAxis, position, size, flexInvalidate, registerBox, unregisterBox])
+  }, [rootNode, mainAxis, crossAxis, position, size, doReflow, registerBox, unregisterBox])
 
   const { invalidate } = useThree()
   useFrame(() => {
