@@ -16,6 +16,8 @@ jobs:
         with:
           node-version: 12
           registry-url: https://registry.npmjs.org/
+      - name: Install deps and build
+        run: yarn
       - name: Publish to NPM
         run: npm publish
         env:
