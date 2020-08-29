@@ -8,8 +8,8 @@ import { boxContext, flexContext } from './context'
 import type { R3FlexProps } from './props'
 
 export function useReflow() {
-  const { doReflow } = useContext(flexContext)
-  return doReflow
+  const { requestReflow } = useContext(flexContext)
+  return requestReflow
 }
 
 export type FlexYogaDirection = Yoga.YogaDirection | 'ltr' | 'rtl'
@@ -196,10 +196,13 @@ export function Flex({
     setYogaProperties(rootNode, flexProps)
   }, [rootNode, flexProps])
 
+  const { invalidate } = useThree()
+
   const dirtyRef = useRef(true)
-  const doReflow = useCallback(() => {
+  const requestReflow = useCallback(() => {
     dirtyRef.current = true
-  }, [])
+    invalidate()
+  }, [invalidate])
 
   // Keeps track of the yoga nodes of the children and the related wrapper groups
   const boxesRef = useRef<{ group: Group; node: YogaNode }[]>([])
@@ -238,50 +241,52 @@ export function Flex({
       flexHeight,
       rootStart,
       yogaDirection: yogaDirection_,
-      doReflow,
+      requestReflow,
       registerBox,
       unregisterBox,
     }
-  }, [rootNode, plane, position, size, doReflow, registerBox, unregisterBox])
-
-  const { invalidate } = useThree()
+  }, [rootNode, plane, position, size, requestReflow, registerBox, unregisterBox])
 
   // We need to reflow everything if flex props changes
   useLayoutEffect(() => {
-    dirtyRef.current = true
-    invalidate()
-  }, [state, children, flexProps])
+    requestReflow()
+  }, [state, children, flexProps, requestReflow])
 
-  // We check if we have to relayout every frame
-  // This way we can batch the relayout if we have multiple reflow requests
+  // Handles the reflow procedure
+  const boundingBox = useMemo(() => new Box3(), [])
+  const vec = useMemo(() => new Vector3(), [])
+  const reflow = useCallback(() => {
+    // Recalc all the sizes
+    boxesRef.current.forEach(({ group, node }) => {
+      boundingBox.setFromObject(group).getSize(vec)
+      node.setWidth(vec[state.mainAxis])
+      node.setHeight(vec[state.crossAxis])
+    })
+
+    // Perform yoga layout calculation
+    rootNode.calculateLayout(state.flexWidth, state.flexHeight, state.yogaDirection)
+
+    // Reposition after recalculation
+    boxesRef.current.forEach(({ group, node }) => {
+      const { left, top, width, height } = node.getComputedLayout()
+      const position = vectorFromObject({
+        [state.mainAxis]: -state.rootStart[state.mainAxis] + (left + width / 2),
+        [state.crossAxis]: state.rootStart[state.crossAxis] - (+top + height / 2),
+        [state.depthAxis]: state.rootStart[state.depthAxis] - state.sizeVec3[state.depthAxis] / 2,
+      } as any)
+      group.position.copy(position)
+    })
+
+    // Ask react-three-fiber to perform a render (invalidateFrameLoop)
+    invalidate()
+  }, [boundingBox, vec, state, invalidate])
+
+  // We check if we have to reflow every frame
+  // This way we can batch the reflow if we have multiple reflow requests
   useFrame(() => {
     if (dirtyRef.current) {
-      const boundingBox = new Box3()
-      const vec = new Vector3()
-
-      // Recalc all the sizes
-      boxesRef.current.forEach(({ group, node }) => {
-        boundingBox.setFromObject(group).getSize(vec)
-        node.setWidth(vec[state.mainAxis])
-        node.setHeight(vec[state.crossAxis])
-      })
-
-      // Perform yoga layout calculation
-      rootNode.calculateLayout(state.flexWidth, state.flexHeight, state.yogaDirection)
-
-      // Reposition after recalculation
-      boxesRef.current.forEach(({ group, node }) => {
-        const { left, top, width, height } = node.getComputedLayout()
-        const position = vectorFromObject({
-          [state.mainAxis]: -state.rootStart[state.mainAxis] + (left + width / 2),
-          [state.crossAxis]: state.rootStart[state.crossAxis] - (+top + height / 2),
-          [state.depthAxis]: state.rootStart[state.depthAxis] - state.sizeVec3[state.depthAxis] / 2,
-        } as any)
-        group.position.copy(position)
-        invalidate()
-      })
-
       dirtyRef.current = false
+      reflow()
     }
   })
 
