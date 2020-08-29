@@ -1,7 +1,7 @@
 import { createContext } from 'react'
 import { YogaNode } from 'yoga-layout-prebuilt'
-import { Axis } from './util'
 import { Vector3, Group } from 'three'
+import { Axis } from './util'
 import { FlexYogaDirection } from './Flex'
 
 export const flexContext = createContext<{
