@@ -60,12 +60,14 @@ You can tweak the container and the boxes using standard CSS flex properties, li
 
 ### Axis Orientation
 
-Another important difference with DOM Flexbox is that you can specify the direction of the container in 3D, using an axis and its normal. The elements will be positioned in the 2D plane given by the two axes.
+Another important difference with DOM Flexbox is that you have to specify the plane of the container in 3D. The elements will be positioned in the 2D plane given by the two axes, using width and height calculated along the two axes.
 
-The 2D flex container width and height will be calculated by looking at the `size` prop with respect of the chosen axes (200 for z and 100 for y in this example).
+The 2D flex container width and height will be calculated by looking at the `size` prop with respect of the chosen axes (100 for xy and 200 for y in this example).
+
+The default plane is `xy`, the other possibilites are `yz` and `xz`.
 
 ```jsx
-<Flex mainAxis="z" crossAxis="y" size={[0, 100, 200]}>
+<Flex plane="xy" size={[100, 200, 0]}>
   {/* ... */}
 </Flex>
 ```
@@ -118,8 +120,7 @@ Since a `<Flex />` component works the same way as a DOM one, you can easily mak
   size={[1, 1, 1]}        // Total size of the flex container, see above
   position={[0, 0, 0]}    // Default - position for the flex container in the scene
   direction="ltr"         // Default - right to left or right to left
-  mainAxis="x"            // Default - plane axis, see above
-  crossAxis="y"           // Default - plane normal axis, see above
+  plane="xy"              // Default - plane axes, see above
   {...R3FlexProps}        // Standard Flexbox props, described below
 >
   <Box>
