@@ -1,26 +1,60 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { Canvas } from 'react-three-fiber'
 import { OrbitControls, useHelper } from 'drei'
 import { Flex, Box, R3FlexProps, Axis } from '../../src/index'
 import { Mesh, BoxHelper, Group } from 'three'
 import { Controls, useControl } from 'react-three-gui'
 
+function useInterval(callback: any, delay: number) {
+  const savedCallback = useRef<any>()
+  useEffect(() => {
+    savedCallback.current = callback
+  }, [callback])
+  useEffect(() => {
+    const tick = () => savedCallback.current()
+    if (delay !== null) {
+      let id = setInterval(tick, delay)
+      return () => clearInterval(id)
+    }
+  }, [delay])
+}
+
 function Sphere({
   sphereWidth = 50,
   color = 'white',
-  children,
   ...props
 }: {
   sphereWidth?: number
   color?: string
-  children?: any
 } & R3FlexProps) {
   const mesh = useRef<Mesh>()
   useHelper(mesh, BoxHelper, 'red')
   return (
     <Box {...props}>
       <mesh ref={mesh}>
-        <sphereBufferGeometry attach="geometry" args={[(sphereWidth as number) / 2, 64, 64]} />
+        <sphereBufferGeometry attach="geometry" args={[sphereWidth / 2, 64, 64]} />
+        <meshLambertMaterial attach="material" color={color} />
+      </mesh>
+    </Box>
+  )
+}
+
+function AnimatedBox({
+  size = 50,
+  color = 'white',
+  ...props
+}: {
+  size?: number
+  color?: string
+} & R3FlexProps) {
+  const mesh = useRef<Mesh>()
+  useHelper(mesh, BoxHelper, 'red')
+  const [state, setState] = useState(true)
+  useInterval(() => setState((s) => !s), 1000)
+  return (
+    <Box {...props}>
+      <mesh ref={mesh}>
+        <boxBufferGeometry attach="geometry" args={[size * (state ? 2.5 : 1), size, size]} />
         <meshLambertMaterial attach="material" color={color} />
       </mesh>
     </Box>
@@ -33,6 +67,7 @@ function Scene({ grow, shrink }: { grow: number; shrink: number }) {
 
   return (
     <group ref={group}>
+      <AnimatedBox />
       <Sphere flexGrow={grow} />
       <Sphere flexShrink={shrink} />
       <Sphere sphereWidth={100} />
