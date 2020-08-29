@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { Canvas } from 'react-three-fiber'
 import { OrbitControls, useHelper } from 'drei'
-import { Flex, Box, R3FlexProps, Axis } from '../../src/index'
+import { Flex, Box, R3FlexProps, Axis, FlexPlane } from '../../src/index'
 import { Mesh, BoxHelper, Group } from 'three'
 import { Controls, useControl } from 'react-three-gui'
 
@@ -88,7 +88,7 @@ function Scene({ grow, shrink }: { grow: number; shrink: number }) {
 
 const FlexDemo = () => {
   const containerWidth = useControl('containerWidth', { type: 'number', min: 50, max: 500, value: 200 })
-  const plane: Axis = useControl('plane', { type: 'select', items: ['xy', 'yz', 'xz'], value: 'xy' })
+  const plane: FlexPlane = useControl('plane', { type: 'select', items: ['xy', 'yz', 'xz'], value: 'xy' })
 
   const flexDirection = useControl('flexDirection', {
     type: 'select',

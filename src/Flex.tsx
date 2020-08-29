@@ -14,7 +14,7 @@ export function useReflow() {
 }
 
 export type FlexYogaDirection = Yoga.YogaDirection | 'ltr' | 'rtl'
-export type FlexYogaPlane = 'xy' | 'yz' | 'xz'
+export type FlexPlane = 'xy' | 'yz' | 'xz'
 
 type FlexProps = PropsWithChildren<
   Partial<{
@@ -24,7 +24,7 @@ type FlexProps = PropsWithChildren<
     position: [number, number, number]
     size: [number, number, number]
     yogaDirection: FlexYogaDirection
-    plane: FlexYogaPlane
+    plane: FlexPlane
   }> &
     R3FlexProps
 >
