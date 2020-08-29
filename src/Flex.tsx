@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useMemo, useState, useCallback, useContext, PropsWithChildren, useRef } from 'react'
 import Yoga, { YogaNode } from 'yoga-layout-prebuilt'
 import { Vector3, Group, Box3 } from 'three'
-import { setYogaProperties, rmUndefFromObj, vectorFromObject } from './util'
+import { setYogaProperties, rmUndefFromObj, vectorFromObject, Axis } from './util'
 
 import { boxContext, flexContext } from './context'
 
@@ -221,9 +221,9 @@ export function Flex({
 
   const state = useMemo(() => {
     const sizeVec3 = new Vector3(...size)
-    const mainAxis = plane[0]
-    const crossAxis = plane[1]
-    const depthAxis = ['x', 'y', 'z'].find((axis) => ![mainAxis, crossAxis].includes(axis))
+    const mainAxis = plane[0] as Axis
+    const crossAxis = plane[1] as Axis
+    const depthAxis = ['x', 'y', 'z'].find((axis: Axis) => ![mainAxis, crossAxis].includes(axis))
     const flexWidth = sizeVec3[mainAxis]
     const flexHeight = sizeVec3[crossAxis]
     const rootStart = new Vector3(...position).addScaledVector(new Vector3(size[0], size[1], size[2]), 0.5)
