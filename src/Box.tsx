@@ -5,6 +5,7 @@ import { ReactThreeFiber } from 'react-three-fiber'
 import { setYogaProperties, rmUndefFromObj } from './util'
 import { boxContext, flexContext } from './context'
 import { R3FlexProps } from './props'
+import { useReflow } from './Flex'
 
 /**
  * Box container for 3D Objects.
@@ -114,6 +115,7 @@ export function Box({
   const parent = useContext(boxContext) || rootNode
   const group = useRef<THREE.Group>()
   const [node] = useState(() => Yoga.Node.create())
+  const reflow = useReflow()
 
   useLayoutEffect(() => {
     setYogaProperties(node, flexProps)
@@ -130,6 +132,11 @@ export function Box({
       unregisterBox(group.current, node)
     }
   }, [node, parent])
+
+  // We need to reflow if props changes
+  useLayoutEffect(() => {
+    reflow()
+  }, [children, flexProps])
 
   return (
     <group ref={group} {...props}>
