@@ -134,7 +134,7 @@ export function Box({
     }
   }, [node, parent])
 
-  // We need to reflow if props changes
+  // We need to reflow if props change
   useLayoutEffect(() => {
     reflow()
   }, [children, flexProps])
