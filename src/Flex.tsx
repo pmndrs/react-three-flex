@@ -5,7 +5,6 @@ import { setYogaProperties, rmUndefFromObj, vectorFromObject } from './util'
 
 import { boxContext, flexContext } from './context'
 
-import type { Axis } from './util'
 import type { R3FlexProps } from './props'
 import { useFrame, useThree } from 'react-three-fiber'
 
@@ -15,6 +14,7 @@ export function useReflow() {
 }
 
 export type FlexYogaDirection = Yoga.YogaDirection | 'ltr' | 'rtl'
+export type FlexYogaPlane = 'xy' | 'yz' | 'xz'
 
 type FlexProps = PropsWithChildren<
   Partial<{
@@ -24,8 +24,7 @@ type FlexProps = PropsWithChildren<
     position: [number, number, number]
     size: [number, number, number]
     yogaDirection: FlexYogaDirection
-    mainAxis: Axis
-    crossAxis: Axis
+    plane: FlexYogaPlane
   }> &
     R3FlexProps
 >
@@ -37,8 +36,7 @@ export function Flex({
   // Non flex props
   size = [1, 1, 1],
   yogaDirection = 'ltr',
-  mainAxis = 'x',
-  crossAxis = 'y',
+  plane = 'xy',
   children,
   position = [0, 0, 0],
 
@@ -199,11 +197,12 @@ export function Flex({
     setYogaProperties(rootNode, flexProps)
   }, [rootNode, flexProps])
 
-  const dirtyRef = useRef(false)
+  const dirtyRef = useRef(true)
   const doReflow = useCallback(() => {
     dirtyRef.current = true
   }, [])
 
+  // Keeps tracks of the yoga nodes of the children and the related wrapper groups
   const boxesRef = useRef<{ group: Group; node: YogaNode }[]>([])
   const registerBox = useCallback((group: Group, node: YogaNode) => {
     const i = boxesRef.current.findIndex((b) => b.group === group && b.node === node)
@@ -222,7 +221,9 @@ export function Flex({
 
   const state = useMemo(() => {
     const sizeVec3 = new Vector3(...size)
-    const depthAxis = ['x', 'y', 'z'].find((axis) => ![mainAxis, crossAxis].includes(axis as Axis))
+    const mainAxis = plane[0]
+    const crossAxis = plane[1]
+    const depthAxis = ['x', 'y', 'z'].find((axis) => ![mainAxis, crossAxis].includes(axis))
     const flexWidth = sizeVec3[mainAxis]
     const flexHeight = sizeVec3[crossAxis]
     const rootStart = new Vector3(...position).addScaledVector(new Vector3(size[0], size[1], size[2]), 0.5)
@@ -242,9 +243,18 @@ export function Flex({
       registerBox,
       unregisterBox,
     }
-  }, [rootNode, mainAxis, crossAxis, position, size, doReflow, registerBox, unregisterBox])
+  }, [rootNode, plane, position, size, doReflow, registerBox, unregisterBox])
 
   const { invalidate } = useThree()
+
+  // We need to reflow everything if flex props changes
+  useLayoutEffect(() => {
+    dirtyRef.current = true
+    invalidate()
+  }, [state, children, flexProps])
+
+  // We check if we have to relayout every frame
+  // This way we can batch the relayout if we have multiple reflow requests
   useFrame(() => {
     if (dirtyRef.current) {
       const boundingBox = new Box3()
@@ -253,8 +263,8 @@ export function Flex({
       // Recalc all the sizes
       boxesRef.current.forEach(({ group, node }) => {
         boundingBox.setFromObject(group).getSize(vec)
-        node.setWidth(vec[mainAxis])
-        node.setHeight(vec[crossAxis])
+        node.setWidth(vec[state.mainAxis])
+        node.setHeight(vec[state.crossAxis])
       })
 
       // Perform yoga layout calculation
@@ -271,6 +281,8 @@ export function Flex({
         group.position.copy(position)
         invalidate()
       })
+
+      dirtyRef.current = false
     }
   })
 

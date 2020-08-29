@@ -53,8 +53,7 @@ function Scene({ grow, shrink }: { grow: number; shrink: number }) {
 
 const FlexDemo = () => {
   const containerWidth = useControl('containerWidth', { type: 'number', min: 50, max: 500, value: 200 })
-  const mainAxis: Axis = useControl('mainAxis', { type: 'select', items: ['x', 'y', 'z'], value: 'x' })
-  const crossAxis: Axis = useControl('crossAxis', { type: 'select', items: ['x', 'y', 'z'], value: 'y' })
+  const plane: Axis = useControl('plane', { type: 'select', items: ['xy', 'yz', 'xz'], value: 'xy' })
 
   const flexDirection = useControl('flexDirection', {
     type: 'select',
@@ -84,13 +83,10 @@ const FlexDemo = () => {
   const padding = useControl('Padding', { type: 'number', min: 0, value: 0, max: 300 })
 
   const size = [200, 200, 200] as [number, number, number]
-  size[{ x: 0, y: 1, z: 2 }[mainAxis]] = containerWidth
+  size[{ x: 0, y: 1, z: 2 }[plane[0]]] = containerWidth
 
   return (
-    <Flex
-      size={size}
-      {...{ flexWrap, alignItems, justifyContent, mainAxis, crossAxis, flexDirection, margin, padding }}
-    >
+    <Flex size={size} {...{ flexWrap, alignItems, justifyContent, plane, flexDirection, margin, padding }}>
       <Scene grow={grow} shrink={shrink} />
     </Flex>
   )
