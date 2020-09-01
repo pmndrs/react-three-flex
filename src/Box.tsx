@@ -140,7 +140,7 @@ export function Box({
   }, [children, flexProps])
 
   return (
-    <group ref={group} {...props}>
+    <group ref={group} name="r3flex-box" {...props}>
       <boxContext.Provider value={node}>{children}</boxContext.Provider>
     </group>
   )

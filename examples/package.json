@@ -10,16 +10,18 @@
     "serve": "serve -s ./build"
   },
   "dependencies": {
-    "drei": "^1.2.0",
+    "drei": "^1.4.0-alpha.0",
     "postprocessing": "^6.17.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router": "5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
+    "react-spring": "^8.0.27",
     "react-three-fiber": "5.0.0-beta.11",
     "react-three-gui": "^0.2.0",
-    "three": "^0.119.1"
+    "three": "^0.119.1",
+    "troika-three-text": "https://github.com/jmatsushita/troika-three-text"
   },
   "devDependencies": {
     "customize-cra": "^1.0.0",

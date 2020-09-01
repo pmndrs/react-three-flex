@@ -275,6 +275,10 @@ export function Flex({
         [state.depthAxis]: state.rootStart[state.depthAxis] - state.sizeVec3[state.depthAxis] / 2,
       } as any)
       group.position.copy(position)
+
+      if (group.parent.name === 'r3flex-box') {
+        group.position.sub(group.parent.position)
+      }
     })
 
     // Ask react-three-fiber to perform a render (invalidateFrameLoop)
