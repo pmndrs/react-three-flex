@@ -2,6 +2,8 @@ import React, { useLayoutEffect, useContext, useRef, useState, useMemo, PropsWit
 import * as THREE from 'three'
 import Yoga from 'yoga-layout-prebuilt'
 import { ReactThreeFiber } from 'react-three-fiber'
+import { useHelper } from 'drei'
+import { BoxHelper } from 'three'
 
 import { setYogaProperties, rmUndefFromObj } from './util'
 import { boxContext, flexContext } from './context'
@@ -38,7 +40,26 @@ export function Box({
   wrap,
 
   margin,
+  m,
+  marginBottom,
+  marginLeft,
+  marginRight,
+  marginTop,
+  mb,
+  ml,
+  mr,
+  mt,
+
   padding,
+  p,
+  paddingBottom,
+  paddingLeft,
+  paddingRight,
+  paddingTop,
+  pb,
+  pl,
+  pr,
+  pt,
 
   height,
   width,
@@ -74,7 +95,26 @@ export function Box({
       wrap,
 
       margin,
+      m,
+      marginBottom,
+      marginLeft,
+      marginRight,
+      marginTop,
+      mb,
+      ml,
+      mr,
+      mt,
+
       padding,
+      p,
+      paddingBottom,
+      paddingLeft,
+      paddingRight,
+      paddingTop,
+      pb,
+      pl,
+      pr,
+      pt,
 
       height,
       width,
@@ -102,30 +142,48 @@ export function Box({
     height,
     justify,
     justifyContent,
-    margin,
     maxHeight,
     maxWidth,
     minHeight,
     minWidth,
+    margin,
+    m,
+    marginBottom,
+    marginLeft,
+    marginRight,
+    marginTop,
+    mb,
+    ml,
+    mr,
+    mt,
     padding,
+    p,
+    paddingBottom,
+    paddingLeft,
+    paddingRight,
+    paddingTop,
+    pb,
+    pl,
+    pr,
+    pt,
     width,
     wrap,
   ])
 
-  const { rootNode, registerBox, unregisterBox } = useContext(flexContext)
-  const parent = useContext(boxContext) || rootNode
+  const { rootNode, registerBox, unregisterBox, scaleFactor } = useContext(flexContext)
+  const parent = useContext(boxContext)
   const group = useRef<THREE.Group>()
   const [node] = useState(() => Yoga.Node.create())
   const reflow = useReflow()
 
   useLayoutEffect(() => {
-    setYogaProperties(node, flexProps)
+    setYogaProperties(node, flexProps, scaleFactor)
   }, [flexProps, node])
 
   // Make child known to the parents yoga instance *before* it calculates layout
   useLayoutEffect(() => {
     parent.insertChild(node, parent.getChildCount())
-    registerBox(group.current, node)
+    registerBox(group.current, node, flexProps)
 
     // Remove child on unmount
     return () => {
@@ -138,6 +196,8 @@ export function Box({
   useLayoutEffect(() => {
     reflow()
   }, [children, flexProps])
+
+  // useHelper(group, BoxHelper, 'red')
 
   return (
     <group ref={group} name="r3flex-box" {...props}>

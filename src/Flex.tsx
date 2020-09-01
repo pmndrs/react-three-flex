@@ -24,6 +24,7 @@ type FlexProps = PropsWithChildren<
     size: [number, number, number]
     yogaDirection: FlexYogaDirection
     plane: FlexPlane
+    scaleFactor?: number
   }> &
     R3FlexProps
 >
@@ -38,6 +39,7 @@ export function Flex({
   plane = 'xy',
   children,
   position = [0, 0, 0],
+  scaleFactor = 100,
 
   // flex props
 
@@ -193,7 +195,7 @@ export function Flex({
 
   const [rootNode] = useState(() => Yoga.Node.create())
   useLayoutEffect(() => {
-    setYogaProperties(rootNode, flexProps)
+    setYogaProperties(rootNode, flexProps, scaleFactor)
   }, [rootNode, flexProps])
 
   const { invalidate } = useThree()
@@ -205,14 +207,14 @@ export function Flex({
   }, [invalidate])
 
   // Keeps track of the yoga nodes of the children and the related wrapper groups
-  const boxesRef = useRef<{ group: Group; node: YogaNode }[]>([])
-  const registerBox = useCallback((group: Group, node: YogaNode) => {
+  const boxesRef = useRef<{ group: Group; node: YogaNode; flexProps: R3FlexProps }[]>([])
+  const registerBox = useCallback((group: Group, node: YogaNode, flexProps: R3FlexProps) => {
     const i = boxesRef.current.findIndex((b) => b.group === group && b.node === node)
     if (i !== -1) {
       boxesRef.current.splice(i, 1)
     }
 
-    boxesRef.current.push({ group, node })
+    boxesRef.current.push({ group, node, flexProps })
   }, [])
   const unregisterBox = useCallback((group: Group, node: YogaNode) => {
     const i = boxesRef.current.findIndex((b) => b.group === group && b.node === node)
@@ -244,8 +246,9 @@ export function Flex({
       requestReflow,
       registerBox,
       unregisterBox,
+      scaleFactor,
     }
-  }, [rootNode, plane, position, size, requestReflow, registerBox, unregisterBox])
+  }, [rootNode, plane, position, size, requestReflow, registerBox, unregisterBox, scaleFactor])
 
   // We need to reflow everything if flex props changes
   useLayoutEffect(() => {
@@ -257,28 +260,24 @@ export function Flex({
   const vec = useMemo(() => new Vector3(), [])
   const reflow = useCallback(() => {
     // Recalc all the sizes
-    boxesRef.current.forEach(({ group, node }) => {
+    boxesRef.current.forEach(({ group, node, flexProps }) => {
       boundingBox.setFromObject(group).getSize(vec)
-      node.setWidth(vec[state.mainAxis])
-      node.setHeight(vec[state.crossAxis])
+      node.setWidth(flexProps.width || vec[state.mainAxis] * scaleFactor)
+      node.setHeight(flexProps.height || vec[state.crossAxis] * scaleFactor)
     })
 
     // Perform yoga layout calculation
-    rootNode.calculateLayout(state.flexWidth, state.flexHeight, state.yogaDirection)
+    rootNode.calculateLayout(state.flexWidth * scaleFactor, state.flexHeight * scaleFactor, state.yogaDirection)
 
     // Reposition after recalculation
     boxesRef.current.forEach(({ group, node }) => {
       const { left, top, width, height } = node.getComputedLayout()
       const position = vectorFromObject({
-        [state.mainAxis]: -state.rootStart[state.mainAxis] + (left + width / 2),
-        [state.crossAxis]: state.rootStart[state.crossAxis] - (+top + height / 2),
-        [state.depthAxis]: state.rootStart[state.depthAxis] - state.sizeVec3[state.depthAxis] / 2,
+        [state.mainAxis]: left / scaleFactor,
+        [state.crossAxis]: -top / scaleFactor,
+        [state.depthAxis]: 0,
       } as any)
       group.position.copy(position)
-
-      if (group.parent.name === 'r3flex-box') {
-        group.position.sub(group.parent.position)
-      }
     })
 
     // Ask react-three-fiber to perform a render (invalidateFrameLoop)
@@ -294,9 +293,21 @@ export function Flex({
     }
   })
 
+  const positionOffset = useMemo(
+    () => ({
+      [state.mainAxis]: -state.rootStart[state.mainAxis],
+      [state.crossAxis]: state.rootStart[state.crossAxis],
+      [state.depthAxis]: -state.rootStart[state.depthAxis] + state.sizeVec3[state.depthAxis] / 2,
+    }),
+    [state]
+  )
+
   return (
-    <group position={position} {...props}>
-      <boxContext.Provider value={null}>
+    <group
+      position={[position[0] + positionOffset.x, position[1] + positionOffset.y, position[2] + positionOffset.z]}
+      {...props}
+    >
+      <boxContext.Provider value={rootNode}>
         <flexContext.Provider value={state}>{children}</flexContext.Provider>
       </boxContext.Provider>
     </group>

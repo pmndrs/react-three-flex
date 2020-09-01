@@ -38,7 +38,7 @@ type Props = JSX.IntrinsicElements['mesh'] & {
 const defaultFont = `https://fonts.gstatic.com/s/raleway/v17/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVvao7CIPrcVIT9d0c8.woff`
 
 export const Text = forwardRef(
-  ({ anchorX = 'center', anchorY = 'middle', children, maxWidth, ...props }: Props, ref) => {
+  ({ anchorX = 'left', anchorY = 'top', textAlign = 'left', children, maxWidth, ...props }: Props, ref) => {
     const { invalidate } = useThree()
     const reflow = useReflow()
     const textRef = useRef<TextMeshImpl>()
@@ -85,6 +85,7 @@ export const Text = forwardRef(
         text={text}
         anchorX={anchorX}
         anchorY={anchorY}
+        textAlign={textAlign}
         maxWidth={maxWidth}
         font={defaultFont}
         {...props}
