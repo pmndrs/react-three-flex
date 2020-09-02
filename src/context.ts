@@ -12,6 +12,7 @@ export const flexContext = createContext<{
   sizeVec3: Vector3
   flexWidth: number
   flexHeight: number
+  scaleFactor: number
   rootStart: Vector3
   yogaDirection: FlexYogaDirection
   requestReflow(): void

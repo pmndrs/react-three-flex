@@ -6,7 +6,7 @@ export const capitalize = (s: string) => s[0].toUpperCase() + s.slice(1)
 
 export const jsxPropToYogaProp = (s: string) => s.toUpperCase().replace('-', '_')
 
-export const setYogaProperties = (node: YogaNode, props: R3FlexProps) => {
+export const setYogaProperties = (node: YogaNode, props: R3FlexProps, scaleFactor: number) => {
   return Object.keys(props).forEach((name) => {
     const value = props[name]
 
@@ -25,6 +25,9 @@ export const setYogaProperties = (node: YogaNode, props: R3FlexProps) => {
         case 'wrap':
         case 'flexWrap':
           return node.setFlexWrap(Yoga[`WRAP_${jsxPropToYogaProp(value)}`])
+
+        default:
+          return node[`set${capitalize(name)}`](value)
       }
     } else {
       switch (name) {
@@ -39,38 +42,42 @@ export const setYogaProperties = (node: YogaNode, props: R3FlexProps) => {
           return node.setFlexWrap(value)
         case 'padding':
         case 'p':
-          return node.setPadding(Yoga.EDGE_ALL, value)
+          return node.setPadding(Yoga.EDGE_ALL, value * scaleFactor)
         case 'paddingLeft':
         case 'pl':
-          return node.setPadding(Yoga.EDGE_LEFT, value)
+          return node.setPadding(Yoga.EDGE_LEFT, value * scaleFactor)
         case 'paddingRight':
         case 'pr':
-          return node.setPadding(Yoga.EDGE_RIGHT, value)
+          return node.setPadding(Yoga.EDGE_RIGHT, value * scaleFactor)
         case 'paddingTop':
         case 'pt':
-          return node.setPadding(Yoga.EDGE_TOP, value)
+          return node.setPadding(Yoga.EDGE_TOP, value * scaleFactor)
         case 'paddingBottom':
         case 'pb':
-          return node.setPadding(Yoga.EDGE_BOTTOM, value)
+          return node.setPadding(Yoga.EDGE_BOTTOM, value * scaleFactor)
 
         case 'margin':
         case 'm':
-          return node.setMargin(Yoga.EDGE_ALL, value)
+          return node.setMargin(Yoga.EDGE_ALL, value * scaleFactor)
         case 'marginLeft':
         case 'ml':
-          return node.setMargin(Yoga.EDGE_LEFT, value)
+          return node.setMargin(Yoga.EDGE_LEFT, value * scaleFactor)
         case 'marginRight':
         case 'mr':
-          return node.setMargin(Yoga.EDGE_RIGHT, value)
+          return node.setMargin(Yoga.EDGE_RIGHT, value * scaleFactor)
         case 'marginTop':
         case 'mt':
-          return node.setMargin(Yoga.EDGE_TOP, value)
+          return node.setMargin(Yoga.EDGE_TOP, value * scaleFactor)
         case 'marginBottom':
         case 'mb':
-          return node.setMargin(Yoga.EDGE_BOTTOM, value)
+          return node.setMargin(Yoga.EDGE_BOTTOM, value * scaleFactor)
 
         default:
-          return node[`set${capitalize(name)}`](value)
+          if (typeof value === 'number') {
+            return node[`set${capitalize(name)}`](value * scaleFactor)
+          } else {
+            return node[`set${capitalize(name)}`](value)
+          }
       }
     }
   })
