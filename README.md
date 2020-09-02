@@ -218,6 +218,15 @@ Since a `<Flex />` component works the same way as a DOM one, you can easily mak
 </Flex>
 ```
 
+```jsx
+<Box
+  centerAnchor // Set if the box inside content position is centered
+  {...R3FlexProps} // Standard Flexbox props, described below
+>
+  <mesh geometry={box} />
+</Box>
+```
+
 ### Flexbox props
 
 Both `<Flex/>` and `<Box />` components shares the same Flexbox props API from Yoga. The library also provides string and number inputs for convenience and shorthands.
