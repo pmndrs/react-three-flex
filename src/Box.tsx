@@ -15,6 +15,7 @@ import { useReflow } from './Flex'
 export function Box({
   // Non-flex props
   children,
+  centerAnchor,
 
   // flex props
   flexDirection,
@@ -183,14 +184,14 @@ export function Box({
   // Make child known to the parents yoga instance *before* it calculates layout
   useLayoutEffect(() => {
     parent.insertChild(node, parent.getChildCount())
-    registerBox(group.current, node, flexProps)
+    registerBox(group.current, node, flexProps, centerAnchor)
 
     // Remove child on unmount
     return () => {
       parent.removeChild(node)
       unregisterBox(group.current, node)
     }
-  }, [node, parent, flexProps])
+  }, [node, parent, flexProps, centerAnchor])
 
   // We need to reflow if props change
   useLayoutEffect(() => {
