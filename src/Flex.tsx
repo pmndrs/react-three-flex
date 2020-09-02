@@ -207,14 +207,14 @@ export function Flex({
   }, [invalidate])
 
   // Keeps track of the yoga nodes of the children and the related wrapper groups
-  const boxesRef = useRef<{ group: Group; node: YogaNode }[]>([])
+  const boxesRef = useRef<{ group: Group; node: YogaNode; flexProps: R3FlexProps }[]>([])
   const registerBox = useCallback((group: Group, node: YogaNode) => {
     const i = boxesRef.current.findIndex((b) => b.group === group && b.node === node)
     if (i !== -1) {
       boxesRef.current.splice(i, 1)
     }
 
-    boxesRef.current.push({ group, node })
+    boxesRef.current.push({ group, node, flexProps })
   }, [])
   const unregisterBox = useCallback((group: Group, node: YogaNode) => {
     const i = boxesRef.current.findIndex((b) => b.group === group && b.node === node)
@@ -260,10 +260,10 @@ export function Flex({
   const vec = useMemo(() => new Vector3(), [])
   const reflow = useCallback(() => {
     // Recalc all the sizes
-    boxesRef.current.forEach(({ group, node }) => {
+    boxesRef.current.forEach(({ group, node, flexProps }) => {
       boundingBox.setFromObject(group).getSize(vec)
-      node.setWidth(vec[state.mainAxis] * scaleFactor)
-      node.setHeight(vec[state.crossAxis] * scaleFactor)
+      node.setWidth(flexProps.width || vec[state.mainAxis] * scaleFactor)
+      node.setHeight(flexProps.height || vec[state.crossAxis] * scaleFactor)
     })
 
     // Perform yoga layout calculation

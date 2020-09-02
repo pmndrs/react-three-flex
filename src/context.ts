@@ -3,6 +3,7 @@ import { YogaNode } from 'yoga-layout-prebuilt'
 import { Vector3, Group } from 'three'
 import { Axis } from './util'
 import { FlexYogaDirection } from './Flex'
+import { R3FlexProps } from './props'
 
 export const flexContext = createContext<{
   rootNode: YogaNode
@@ -16,7 +17,7 @@ export const flexContext = createContext<{
   rootStart: Vector3
   yogaDirection: FlexYogaDirection
   requestReflow(): void
-  registerBox(group: Group, node: YogaNode): void
+  registerBox(group: Group, node: YogaNode, flexProps: R3FlexProps): void
   unregisterBox(group: Group, node: YogaNode): void
 }>(null)
 
