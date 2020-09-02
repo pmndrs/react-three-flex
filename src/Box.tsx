@@ -38,7 +38,26 @@ export function Box({
   wrap,
 
   margin,
+  m,
+  marginBottom,
+  marginLeft,
+  marginRight,
+  marginTop,
+  mb,
+  ml,
+  mr,
+  mt,
+
   padding,
+  p,
+  paddingBottom,
+  paddingLeft,
+  paddingRight,
+  paddingTop,
+  pb,
+  pl,
+  pr,
+  pt,
 
   height,
   width,
@@ -50,7 +69,9 @@ export function Box({
 
   // other
   ...props
-}: PropsWithChildren<R3FlexProps & ReactThreeFiber.Object3DNode<THREE.Group, typeof THREE.Group>>) {
+}: PropsWithChildren<
+  { centerAnchor?: boolean } & R3FlexProps & ReactThreeFiber.Object3DNode<THREE.Group, typeof THREE.Group>
+>) {
   // must memoize or the object literal will cause every dependent of flexProps to rerender everytime
   const flexProps: R3FlexProps = useMemo(() => {
     const _flexProps = {
@@ -74,7 +95,26 @@ export function Box({
       wrap,
 
       margin,
+      m,
+      marginBottom,
+      marginLeft,
+      marginRight,
+      marginTop,
+      mb,
+      ml,
+      mr,
+      mt,
+
       padding,
+      p,
+      paddingBottom,
+      paddingLeft,
+      paddingRight,
+      paddingTop,
+      pb,
+      pl,
+      pr,
+      pt,
 
       height,
       width,
@@ -102,12 +142,30 @@ export function Box({
     height,
     justify,
     justifyContent,
+    m,
     margin,
+    marginBottom,
+    marginLeft,
+    marginRight,
+    marginTop,
     maxHeight,
     maxWidth,
+    mb,
     minHeight,
     minWidth,
+    ml,
+    mr,
+    mt,
+    p,
     padding,
+    paddingBottom,
+    paddingLeft,
+    paddingRight,
+    paddingTop,
+    pb,
+    pl,
+    pr,
+    pt,
     width,
     wrap,
   ])
