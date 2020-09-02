@@ -183,14 +183,14 @@ export function Box({
   // Make child known to the parents yoga instance *before* it calculates layout
   useLayoutEffect(() => {
     parent.insertChild(node, parent.getChildCount())
-    registerBox(group.current, node)
+    registerBox(group.current, node, flexProps)
 
     // Remove child on unmount
     return () => {
       parent.removeChild(node)
       unregisterBox(group.current, node)
     }
-  }, [node, parent])
+  }, [node, parent, flexProps])
 
   // We need to reflow if props change
   useLayoutEffect(() => {
