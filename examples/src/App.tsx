@@ -74,20 +74,19 @@ function Scene({ grow, shrink }: { grow: number; shrink: number }) {
       <Sphere sphereWidth={75} color="darkred" />
       <Sphere color="darkgreen" />
       <Sphere />
-      <Box>
-        {/* nested flex container */}
-        <Flex flexDirection="column" flexWrap="no-wrap" size={[20, 20, 20]}>
-          <Sphere sphereWidth={20} color="gold" />
-          <Sphere sphereWidth={20} color="tomato" />
-          <Sphere sphereWidth={20} color="#474750" />
-        </Flex>
+
+      {/* nested flex container */}
+      <Box flexDirection="column" flexWrap="no-wrap" alignItems="flex-start" justifyContent="flex-start">
+        <Sphere sphereWidth={20} color="gold" />
+        <Sphere sphereWidth={20} color="tomato" />
+        <Sphere sphereWidth={50} color="#474750" />
       </Box>
     </group>
   )
 }
 
 const FlexDemo = () => {
-  const containerWidth = useControl('containerWidth', { type: 'number', min: 50, max: 500, value: 200 })
+  const containerWidth = useControl('containerWidth', { type: 'number', min: 50, max: 800, value: 200 })
   const plane: FlexPlane = useControl('plane', { type: 'select', items: ['xy', 'yz', 'xz'], value: 'xy' })
 
   const flexDirection = useControl('flexDirection', {
