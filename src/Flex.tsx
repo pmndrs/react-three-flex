@@ -273,9 +273,9 @@ export function Flex({
     boxesRef.current.forEach(({ group, node, centerAnchor }) => {
       const { left, top, width, height } = node.getComputedLayout()
       const position = vectorFromObject({
-        [state.mainAxis]: -state.rootStart[state.mainAxis] + (left + (centerAnchor ? width / 2 : 0)) / scaleFactor,
-        [state.crossAxis]: state.rootStart[state.crossAxis] - (top + (centerAnchor ? height / 2 : 0)) / scaleFactor,
-        [state.depthAxis]: state.rootStart[state.depthAxis] - state.sizeVec3[state.depthAxis] / 2,
+        [state.mainAxis]: (left + (centerAnchor ? width / 2 : 0)) / scaleFactor,
+        [state.crossAxis]: -(top + (centerAnchor ? height / 2 : 0)) / scaleFactor,
+        [state.depthAxis]: 0,
       } as any)
       group.position.copy(position)
     })
@@ -293,8 +293,20 @@ export function Flex({
     }
   })
 
+  const positionOffset = useMemo(
+    () => ({
+      [state.mainAxis]: -state.rootStart[state.mainAxis],
+      [state.crossAxis]: state.rootStart[state.crossAxis],
+      [state.depthAxis]: -state.rootStart[state.depthAxis] + state.sizeVec3[state.depthAxis] / 2,
+    }),
+    [state]
+  )
+
   return (
-    <group position={position} {...props}>
+    <group
+      position={[position[0] + positionOffset.x, position[1] + positionOffset.y, position[2] + positionOffset.z]}
+      {...props}
+    >
       <boxContext.Provider value={null}>
         <flexContext.Provider value={state}>{children}</flexContext.Provider>
       </boxContext.Provider>
