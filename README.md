@@ -143,7 +143,7 @@ function AnimatedBox() {
 </Flex>
 ```
 
-**⚠️ WATCH OUT!** Yoga flexbox engine uses integer numbers to perform layout calculation, so to preserve precision make sure you choose big enough numbers for sizes.
+**⚠️ WATCH OUT!** Yoga flexbox engine uses integer numbers to perform layout calculation, so to preserve precision `react-three-flex` multiplies every element size and flex prop by the `scaleFactor` of the root flex container. By default it's `100`, and works well for small scenes. If you use a different scene scale, make sure to tweak it accordingly.
 
 ![Bounds](./docs/bounds.png)
 
@@ -210,6 +210,7 @@ Since a `<Flex />` component works the same way as a DOM one, you can easily mak
   position={[0, 0, 0]} // Default - position for the flex container in the scene
   direction="ltr" // Default - right to left or right to left
   plane="xy" // Default - plane axes, see above
+  scaleFactor={100} // Default - integer scale factor, see above (Sizing)
   {...R3FlexProps} // Standard Flexbox props, described below
 >
   <Box>{/* ... */}</Box>
