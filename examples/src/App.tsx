@@ -30,7 +30,7 @@ function Sphere({
   const mesh = useRef<Mesh>()
   useHelper(mesh, BoxHelper, 'red')
   return (
-    <Box {...props}>
+    <Box centerAnchor {...props}>
       <mesh ref={mesh}>
         <sphereBufferGeometry attach="geometry" args={[sphereWidth / 2, 64, 64]} />
         <meshLambertMaterial attach="material" color={color} />
@@ -52,7 +52,7 @@ function AnimatedBox({
   const [state, setState] = useState(true)
   useInterval(() => setState((s) => !s), 1000)
   return (
-    <Box {...props}>
+    <Box centerAnchor {...props}>
       <mesh ref={mesh}>
         <boxBufferGeometry attach="geometry" args={[size * (state ? 2.5 : 1), size, size]} />
         <meshLambertMaterial attach="material" color={color} />

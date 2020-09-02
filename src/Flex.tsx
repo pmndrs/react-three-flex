@@ -207,14 +207,14 @@ export function Flex({
   }, [invalidate])
 
   // Keeps track of the yoga nodes of the children and the related wrapper groups
-  const boxesRef = useRef<{ group: Group; node: YogaNode; flexProps: R3FlexProps }[]>([])
-  const registerBox = useCallback((group: Group, node: YogaNode) => {
+  const boxesRef = useRef<{ group: Group; node: YogaNode; flexProps: R3FlexProps; centerAnchor: boolean }[]>([])
+  const registerBox = useCallback((group: Group, node: YogaNode, flexProps: R3FlexProps, centerAnchor?: boolean) => {
     const i = boxesRef.current.findIndex((b) => b.group === group && b.node === node)
     if (i !== -1) {
       boxesRef.current.splice(i, 1)
     }
 
-    boxesRef.current.push({ group, node, flexProps })
+    boxesRef.current.push({ group, node, flexProps, centerAnchor })
   }, [])
   const unregisterBox = useCallback((group: Group, node: YogaNode) => {
     const i = boxesRef.current.findIndex((b) => b.group === group && b.node === node)
@@ -270,11 +270,11 @@ export function Flex({
     rootNode.calculateLayout(state.flexWidth * scaleFactor, state.flexHeight * scaleFactor, state.yogaDirection)
 
     // Reposition after recalculation
-    boxesRef.current.forEach(({ group, node }) => {
+    boxesRef.current.forEach(({ group, node, centerAnchor }) => {
       const { left, top, width, height } = node.getComputedLayout()
       const position = vectorFromObject({
-        [state.mainAxis]: -state.rootStart[state.mainAxis] + (left + width / 2) / scaleFactor,
-        [state.crossAxis]: state.rootStart[state.crossAxis] - (+top + height / 2) / scaleFactor,
+        [state.mainAxis]: -state.rootStart[state.mainAxis] + (left + (centerAnchor ? width / 2 : 0)) / scaleFactor,
+        [state.crossAxis]: state.rootStart[state.crossAxis] - (top + (centerAnchor ? height / 2 : 0)) / scaleFactor,
         [state.depthAxis]: state.rootStart[state.depthAxis] - state.sizeVec3[state.depthAxis] / 2,
       } as any)
       group.position.copy(position)

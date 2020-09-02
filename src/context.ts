@@ -17,7 +17,7 @@ export const flexContext = createContext<{
   rootStart: Vector3
   yogaDirection: FlexYogaDirection
   requestReflow(): void
-  registerBox(group: Group, node: YogaNode, flexProps: R3FlexProps): void
+  registerBox(group: Group, node: YogaNode, flexProps: R3FlexProps, centerAnchor?: boolean): void
   unregisterBox(group: Group, node: YogaNode): void
 }>(null)
 
