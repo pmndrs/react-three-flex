@@ -112,14 +112,14 @@ export function Box({
     wrap,
   ])
 
-  const { rootNode, registerBox, unregisterBox } = useContext(flexContext)
+  const { rootNode, registerBox, unregisterBox, scaleFactor } = useContext(flexContext)
   const parent = useContext(boxContext) || rootNode
   const group = useRef<THREE.Group>()
   const [node] = useState(() => Yoga.Node.create())
   const reflow = useReflow()
 
   useLayoutEffect(() => {
-    setYogaProperties(node, flexProps)
+    setYogaProperties(node, flexProps, scaleFactor)
   }, [flexProps, node])
 
   // Make child known to the parents yoga instance *before* it calculates layout

@@ -24,6 +24,7 @@ type FlexProps = PropsWithChildren<
     size: [number, number, number]
     yogaDirection: FlexYogaDirection
     plane: FlexPlane
+    scaleFactor?: number
   }> &
     R3FlexProps
 >
@@ -38,6 +39,7 @@ export function Flex({
   plane = 'xy',
   children,
   position = [0, 0, 0],
+  scaleFactor = 100,
 
   // flex props
 
@@ -193,7 +195,7 @@ export function Flex({
 
   const [rootNode] = useState(() => Yoga.Node.create())
   useLayoutEffect(() => {
-    setYogaProperties(rootNode, flexProps)
+    setYogaProperties(rootNode, flexProps, scaleFactor)
   }, [rootNode, flexProps])
 
   const { invalidate } = useThree()
@@ -244,8 +246,9 @@ export function Flex({
       requestReflow,
       registerBox,
       unregisterBox,
+      scaleFactor,
     }
-  }, [rootNode, plane, position, size, requestReflow, registerBox, unregisterBox])
+  }, [rootNode, plane, position, size, requestReflow, registerBox, unregisterBox, scaleFactor])
 
   // We need to reflow everything if flex props changes
   useLayoutEffect(() => {
@@ -259,19 +262,19 @@ export function Flex({
     // Recalc all the sizes
     boxesRef.current.forEach(({ group, node }) => {
       boundingBox.setFromObject(group).getSize(vec)
-      node.setWidth(vec[state.mainAxis])
-      node.setHeight(vec[state.crossAxis])
+      node.setWidth(vec[state.mainAxis] * scaleFactor)
+      node.setHeight(vec[state.crossAxis] * scaleFactor)
     })
 
     // Perform yoga layout calculation
-    rootNode.calculateLayout(state.flexWidth, state.flexHeight, state.yogaDirection)
+    rootNode.calculateLayout(state.flexWidth * scaleFactor, state.flexHeight * scaleFactor, state.yogaDirection)
 
     // Reposition after recalculation
     boxesRef.current.forEach(({ group, node }) => {
       const { left, top, width, height } = node.getComputedLayout()
       const position = vectorFromObject({
-        [state.mainAxis]: -state.rootStart[state.mainAxis] + (left + width / 2),
-        [state.crossAxis]: state.rootStart[state.crossAxis] - (+top + height / 2),
+        [state.mainAxis]: -state.rootStart[state.mainAxis] + (left + width / 2) / scaleFactor,
+        [state.crossAxis]: state.rootStart[state.crossAxis] - (+top + height / 2) / scaleFactor,
         [state.depthAxis]: state.rootStart[state.depthAxis] - state.sizeVec3[state.depthAxis] / 2,
       } as any)
       group.position.copy(position)
