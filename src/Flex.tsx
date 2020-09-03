@@ -25,7 +25,7 @@ type FlexProps = PropsWithChildren<
 >
 
 /**
- * Flex container. Can contain Boxes or other Flexes
+ * Flex container. Can contain Boxes
  */
 export function Flex({
   // Non flex props
