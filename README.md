@@ -13,6 +13,18 @@ You can try a live demo here: ...
 npm install react-three-flex
 ```
 
+## Table of contents
+
+  * [Usage](#usage)
+    + [Anchors](#anchors)
+    + [Invalidation and Reflow](#invalidation-and-reflow)
+    + [Sizing](#sizing)
+    + [Axis Orientation](#axis-orientation)
+    + [Margin and Padding](#margin-and-padding)
+    + [Nesting](#nesting)
+  * [API](#api)
+    + [Flexbox props](#flexbox-props)
+
 ## Usage
 
 You simply create layouts by wrapping your 3D objects in different `<Box />` instances inside a `<Flex />` container. This way they will be automatically placed in the 3D space following the flexbox specification, just like in the DOM.
