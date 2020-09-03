@@ -120,7 +120,11 @@ const FlexDemo = () => {
   size[{ x: 0, y: 1, z: 2 }[plane[0]]] = containerWidth
 
   return (
-    <Flex size={size} {...{ flexWrap, alignItems, justifyContent, plane, flexDirection, margin, padding }}>
+    <Flex
+      onReflow={console.log}
+      size={size}
+      {...{ flexWrap, alignItems, justifyContent, plane, flexDirection, margin, padding }}
+    >
       <Scene grow={grow} shrink={shrink} />
     </Flex>
   )
