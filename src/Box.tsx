@@ -6,7 +6,7 @@ import { ReactThreeFiber } from 'react-three-fiber'
 import { setYogaProperties, rmUndefFromObj } from './util'
 import { boxContext, flexContext } from './context'
 import { R3FlexProps } from './props'
-import { useReflow } from './Flex'
+import { useReflow } from './hooks'
 
 /**
  * Box container for 3D Objects.
