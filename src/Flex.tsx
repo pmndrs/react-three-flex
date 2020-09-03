@@ -17,6 +17,7 @@ type FlexProps = PropsWithChildren<
     yogaDirection: FlexYogaDirection
     plane: FlexPlane
     scaleFactor?: number
+    onReflow?: (totalWidth: number, totalHeight: number) => void
   }> &
     R3FlexProps
 >
@@ -32,6 +33,7 @@ export function Flex({
   children,
   position = [0, 0, 0],
   scaleFactor = 100,
+  onReflow,
 
   // flex props
 
@@ -271,9 +273,14 @@ export function Flex({
     // Perform yoga layout calculation
     rootNode.calculateLayout(state.flexWidth * scaleFactor, state.flexHeight * scaleFactor, state.yogaDirection)
 
+    let totalWidth = 0
+    let totalHeight = 0
+
     // Reposition after recalculation
     boxesRef.current.forEach(({ group, node, centerAnchor }) => {
       const { left, top, width, height } = node.getComputedLayout()
+      totalWidth += width / scaleFactor
+      totalHeight += height / scaleFactor
       const position = vectorFromObject({
         [state.mainAxis]: (left + (centerAnchor ? width / 2 : 0)) / scaleFactor,
         [state.crossAxis]: -(top + (centerAnchor ? height / 2 : 0)) / scaleFactor,
@@ -281,6 +288,8 @@ export function Flex({
       } as any)
       group.position.copy(position)
     })
+
+    onReflow && onReflow(totalWidth, totalHeight)
 
     // Ask react-three-fiber to perform a render (invalidateFrameLoop)
     invalidate()
