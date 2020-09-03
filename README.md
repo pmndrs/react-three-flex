@@ -251,6 +251,7 @@ To make it easier, you can use the `onReflow` callback on the root `<Flex>` comp
   direction="ltr" // Default - right to left or right to left
   plane="xy" // Default - plane axes, see above
   scaleFactor={100} // Default - integer scale factor, see above (Sizing)
+  onReflow={fn} // Called everytime the layout is recalculated
   {...R3FlexProps} // Standard Flexbox props, described below
 >
   <Box>{/* ... */}</Box>
