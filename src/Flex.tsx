@@ -5,10 +5,7 @@ import { useFrame, useThree } from 'react-three-fiber'
 
 import { setYogaProperties, rmUndefFromObj, vectorFromObject, Axis } from './util'
 import { boxContext, flexContext } from './context'
-import type { R3FlexProps } from './props'
-
-export type FlexYogaDirection = Yoga.YogaDirection | 'ltr' | 'rtl'
-export type FlexPlane = 'xy' | 'yz' | 'xz'
+import type { R3FlexProps, FlexYogaDirection, FlexPlane } from './props'
 
 type FlexProps = PropsWithChildren<
   Partial<{
