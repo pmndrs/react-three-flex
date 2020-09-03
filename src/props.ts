@@ -1,4 +1,7 @@
-import { YogaFlexDirection, YogaAlign, YogaJustifyContent, YogaFlexWrap } from 'yoga-layout-prebuilt'
+import { YogaFlexDirection, YogaAlign, YogaJustifyContent, YogaFlexWrap, YogaDirection } from 'yoga-layout-prebuilt'
+
+export type FlexYogaDirection = YogaDirection | 'ltr' | 'rtl'
+export type FlexPlane = 'xy' | 'yz' | 'xz'
 
 export type Value = string | number
 
