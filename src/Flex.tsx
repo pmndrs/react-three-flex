@@ -261,9 +261,19 @@ export function Flex({
   const reflow = useCallback(() => {
     // Recalc all the sizes
     boxesRef.current.forEach(({ group, node, flexProps }) => {
-      boundingBox.setFromObject(group).getSize(vec)
-      node.setWidth(flexProps.width || vec[state.mainAxis] * scaleFactor)
-      node.setHeight(flexProps.height || vec[state.crossAxis] * scaleFactor)
+      const scaledWidth = typeof flexProps.width === 'number' ? flexProps.width * scaleFactor : flexProps.width
+      const scaledHeight = typeof flexProps.height === 'number' ? flexProps.height * scaleFactor : flexProps.height
+
+      if (flexProps.width !== undefined && flexProps.height !== undefined) {
+        // Forced size, no need to calculate bounding box
+        node.setWidth(scaledWidth)
+        node.setHeight(scaledHeight)
+      } else {
+        // No size specified, calculate bounding box
+        boundingBox.setFromObject(group).getSize(vec)
+        node.setWidth(scaledWidth || vec[state.mainAxis] * scaleFactor)
+        node.setHeight(scaledHeight || vec[state.crossAxis] * scaleFactor)
+      }
     })
 
     // Perform yoga layout calculation
