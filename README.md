@@ -22,13 +22,13 @@ import { Flex, Box } from 'react-three-flex'
 
 const Layout = () => (
   <Flex justifyContent="center" alignItems="center">
-    <Box>
+    <Box centerAnchor>
       <mesh geometry={box} />
     </Box>
-    <Box flexGrow={1}>
+    <Box centerAnchor flexGrow={1}>
       <mesh geometry={torus} />
     </Box>
-    <Box>
+    <Box centerAnchor>
       <mesh geometry={sphere} />
     </Box>
   </Flex>
@@ -36,6 +36,23 @@ const Layout = () => (
 ```
 
 You can tweak the container and the boxes using standard CSS flex properties, like `flexDirection` or `justifyContent` for the container and `flexGrow` for the boxes. There are also _shorthands_, like `align` and `justify`. See props docs below for more info.
+
+### Anchors
+
+When positioning items, `react-three-flex` needs to know where the object anchor is: Yoga Layout expects the object position to be relative to the upper left corner, same as the DOM.
+
+Most THREE.js geometries, though, are positioned relative to the object center. To tell `react-three-flex` that your `<Box />` positioning is relative to the center you need to set the `centerAnchor` prop to true.
+
+```jsx
+<Box centerAnchor>
+  <mesh geometry={sphere} />
+</Box>
+```
+
+If you nest `<Box />` elements, though, you need to set it to false. See [Nesting](#nesting).
+
+
+![Anchors](./docs/anchors.png)
 
 ### Invalidation and Reflow
 
@@ -54,7 +71,7 @@ function AnimatedBox() {
   const [state, setState] = useState(true)
   useInterval(() => setState((s) => !s), 1000)
   return (
-    <Box>
+    <Box centerAnchor>
       <mesh>
         <boxBufferGeometry attach="geometry" args={[state ? 10 : 30, 10, 10]} />
       </mesh>
@@ -80,7 +97,7 @@ function AnimatedBox() {
 function Layout() {
   return (
     <Flex>
-      <Box>
+      <Box centerAnchor>
         <AnimatedBox />
       </Box>
     </Flex>
@@ -101,7 +118,7 @@ function AnimatedBox() {
     reflow()
   })
   return (
-    <Box>
+    <Box centerAnchor>
       <mesh ref={ref}>
         <boxBufferGeometry attach="geometry" args={[10, 10, 10]} />
       </mesh>
@@ -132,13 +149,13 @@ function AnimatedBox() {
 
 ```jsx
 <Flex flexDirection="row" flexWrap="wrap" size={[300, 200, 0]}>
-  <Box>
+  <Box centerAnchor>
     <mesh geometry={sphere} />
   </Box>
-  <Box>
+  <Box centerAnchor>
     <mesh geometry={torus} />
   </Box>
-  <Box>
+  <Box centerAnchor>
     <mesh geometry={icosahedron} />
   </Box>
 </Flex>
@@ -170,10 +187,10 @@ For every `<Flex />` and `<Box />` component you can specify the margin and padd
 
 ```jsx
 <Flex flexDirection="row" size={[300, 200, 0]} padding={30} margin={5}>
-  <Box padding={5} margin={5}>
+  <Box padding={5} marginTop={5} centerAnchor>
     <mesh geometry={sphere} />
   </Box>
-  <Box padding={5} margin={5}>
+  <Box paddingLeft={5} margin={5} centerAnchor>
     <mesh geometry={torus} />
   </Box>
 </Flex>
@@ -187,18 +204,16 @@ Since a `<Flex />` component works the same way as a DOM one, you can easily mak
 
 ```jsx
 <Flex flexDirection="row" flexWrap="wrap" size={[50, 0, 0]}>
-  <Box>
+  <Box centerAnchor>
     <mesh geometry={sphere} />
   </Box>
-  <Box>
-    <Flex flexDirection="column" flexWrap="no-wrap">
-      <Box>
-        <mesh geometry={sphere} />
-      </Box>
-      <Box>
-        <mesh geometry={box} />
-      </Box>
-    </Flex>
+  <Box flexDirection="column" flexWrap="no-wrap">
+    <Box centerAnchor>
+      <mesh geometry={sphere} />
+    </Box>
+    <Box centerAnchor>
+      <mesh geometry={box} />
+    </Box>
   </Box>
 </Flex>
 ```
@@ -220,7 +235,7 @@ Since a `<Flex />` component works the same way as a DOM one, you can easily mak
 
 ```jsx
 <Box
-  centerAnchor // Set if the box inside content position is centered
+  centerAnchor // If the inner content position is relative to its center, see above (Anchors)
   {...R3FlexProps} // Standard Flexbox props, described below
 >
   <mesh geometry={box} />
