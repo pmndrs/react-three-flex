@@ -233,7 +233,8 @@ Since a `<Flex />` component works the same way as a DOM one, you can easily mak
 
 ### Measuring the container
 
-When building responsive layouts, you might need to syncronize the size of the 3D Flex container with the DOM. To make it easier, you can use the `onReflow` callback on the root `<Flex>` component, that will be called every time the flex layout is recalculated - e.g. when any content changes.
+When building responsive layouts, you might need to syncronize the size of the 3D Flex container with the DOM, for example, to syncronize scroll position or the height of a scroll container. 
+To make it easier, you can use the `onReflow` callback on the root `<Flex>` component, that will be called every time the flex layout is recalculated - e.g. when any content changes.
 
 ```jsx
 <Flex onReflow={(totalWidth, totalHeight) => ...}>
