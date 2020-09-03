@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useMemo, useState, useCallback, useContext, PropsWithChildren, useRef } from 'react'
+import React, { useLayoutEffect, useMemo, useState, useCallback, PropsWithChildren, useRef } from 'react'
 import Yoga, { YogaNode } from 'yoga-layout-prebuilt'
 import { Vector3, Group, Box3 } from 'three'
 import { useFrame, useThree } from 'react-three-fiber'
@@ -6,11 +6,6 @@ import { useFrame, useThree } from 'react-three-fiber'
 import { setYogaProperties, rmUndefFromObj, vectorFromObject, Axis } from './util'
 import { boxContext, flexContext } from './context'
 import type { R3FlexProps } from './props'
-
-export function useReflow() {
-  const { requestReflow } = useContext(flexContext)
-  return requestReflow
-}
 
 export type FlexYogaDirection = Yoga.YogaDirection | 'ltr' | 'rtl'
 export type FlexPlane = 'xy' | 'yz' | 'xz'
