@@ -273,23 +273,27 @@ export function Flex({
     // Perform yoga layout calculation
     rootNode.calculateLayout(state.flexWidth * scaleFactor, state.flexHeight * scaleFactor, state.yogaDirection)
 
-    let totalWidth = 0
-    let totalHeight = 0
+    let minX = 0
+    let maxX = 0
+    let minY = 0
+    let maxY = 0
 
     // Reposition after recalculation
     boxesRef.current.forEach(({ group, node, centerAnchor }) => {
       const { left, top, width, height } = node.getComputedLayout()
-      totalWidth += width / scaleFactor
-      totalHeight += height / scaleFactor
       const position = vectorFromObject({
         [state.mainAxis]: (left + (centerAnchor ? width / 2 : 0)) / scaleFactor,
-        [state.crossAxis]: -(top + (centerAnchor ? height / 2 : 0)) / scaleFactor,
+        [state.crossAxis]: (-top + (centerAnchor ? height / 2 : 0)) / scaleFactor,
         [state.depthAxis]: 0,
       } as any)
+      minX = Math.min(minX, left)
+      minY = Math.min(minY, top)
+      maxX = Math.max(maxX, left + width)
+      maxY = Math.max(maxY, top + height)
       group.position.copy(position)
     })
 
-    onReflow && onReflow(totalWidth, totalHeight)
+    onReflow && onReflow((maxX - minX) / scaleFactor, (maxY - minY) / scaleFactor)
 
     // Ask react-three-fiber to perform a render (invalidateFrameLoop)
     invalidate()
