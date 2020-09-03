@@ -22,6 +22,7 @@ npm install react-three-flex
     + [Axis Orientation](#axis-orientation)
     + [Margin and Padding](#margin-and-padding)
     + [Nesting](#nesting)
+    + [Measuring the Container](#measuring-the-container)
   * [API](#api)
     + [Flexbox props](#flexbox-props)
 
@@ -227,6 +228,16 @@ Since a `<Flex />` component works the same way as a DOM one, you can easily mak
       <mesh geometry={box} />
     </Box>
   </Box>
+</Flex>
+```
+
+### Measuring the container
+
+When building responsive layouts, you might need to syncronize the size of the 3D Flex container with the DOM. To make it easier, you can use the `onReflow` callback on the root `<Flex>` component, that will be called every time the flex layout is recalculated - e.g. when any content changes.
+
+```jsx
+<Flex onReflow={(totalWidth, totalHeight) => ...}>
+ ...
 </Flex>
 ```
 
