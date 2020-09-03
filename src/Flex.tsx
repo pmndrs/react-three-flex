@@ -283,7 +283,7 @@ export function Flex({
       const { left, top, width, height } = node.getComputedLayout()
       const position = vectorFromObject({
         [state.mainAxis]: (left + (centerAnchor ? width / 2 : 0)) / scaleFactor,
-        [state.crossAxis]: (-top + (centerAnchor ? height / 2 : 0)) / scaleFactor,
+        [state.crossAxis]: -(top + (centerAnchor ? height / 2 : 0)) / scaleFactor,
         [state.depthAxis]: 0,
       } as any)
       minX = Math.min(minX, left)
