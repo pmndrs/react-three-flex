@@ -4,7 +4,7 @@ import Yoga from 'yoga-layout-prebuilt'
 import { ReactThreeFiber } from 'react-three-fiber'
 
 import { setYogaProperties, rmUndefFromObj } from './util'
-import { boxContext, flexContext } from './context'
+import { boxContext, flexContext, useContextSafe } from './context'
 import { R3FlexProps } from './props'
 import { useReflow } from './hooks'
 
@@ -171,7 +171,7 @@ export function Box({
     wrap,
   ])
 
-  const { rootNode, registerBox, unregisterBox, scaleFactor } = useContext(flexContext)
+  const { rootNode, registerBox, unregisterBox, scaleFactor } = useContextSafe(flexContext)
   const parent = useContext(boxContext) || rootNode
   const group = useRef<THREE.Group>()
   const [node] = useState(() => Yoga.Node.create())
@@ -183,13 +183,17 @@ export function Box({
 
   // Make child known to the parents yoga instance *before* it calculates layout
   useLayoutEffect(() => {
+    if (!group.current) return () => {}
+
     parent.insertChild(node, parent.getChildCount())
     registerBox(group.current, node, flexProps, centerAnchor)
 
     // Remove child on unmount
     return () => {
       parent.removeChild(node)
-      unregisterBox(group.current, node)
+      if (group.current) {
+        unregisterBox(group.current, node)
+      }
     }
   }, [node, parent, flexProps, centerAnchor])
 

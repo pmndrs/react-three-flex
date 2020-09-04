@@ -1,7 +1,6 @@
-import { useContext } from 'react'
-import { flexContext } from './context'
+import { flexContext, useContextSafe } from './context'
 
 export function useReflow() {
-  const { requestReflow } = useContext(flexContext)
+  const { requestReflow } = useContextSafe(flexContext)
   return requestReflow
 }
