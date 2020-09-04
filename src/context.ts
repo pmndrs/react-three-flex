@@ -1,4 +1,4 @@
-import { createContext, Context, useContext } from 'react'
+import { createContext } from 'react'
 import { YogaNode } from 'yoga-layout-prebuilt'
 import { Vector3, Group } from 'three'
 import { Axis } from './util'
@@ -20,4 +20,4 @@ export const flexContext = createContext<{
   unregisterBox(group: Group, node: YogaNode): void
 }>({} as any)
 
-export const boxContext = createContext<YogaNode>({} as any)
+export const boxContext = createContext<YogaNode | null>(null)

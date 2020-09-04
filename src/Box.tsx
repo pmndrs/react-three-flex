@@ -1,4 +1,11 @@
-import React, { useLayoutEffect, useRef, useState, useMemo, PropsWithChildren } from 'react'
+import React, {
+  useLayoutEffect,
+  useRef,
+  useState,
+  useMemo,
+  useContext as useContextUnsafe,
+  PropsWithChildren,
+} from 'react'
 import * as THREE from 'three'
 import Yoga from 'yoga-layout-prebuilt'
 import { ReactThreeFiber } from 'react-three-fiber'
@@ -172,7 +179,7 @@ export function Box({
   ])
 
   const { rootNode, registerBox, unregisterBox, scaleFactor } = useContext(flexContext)
-  const parent = useContext(boxContext) || rootNode
+  const parent = useContextUnsafe(boxContext) || rootNode
   const group = useRef<THREE.Group>()
   const [node] = useState(() => Yoga.Node.create())
   const reflow = useReflow()
