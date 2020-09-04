@@ -3,7 +3,7 @@ import Yoga, { YogaNode } from 'yoga-layout-prebuilt'
 import { Vector3, Group, Box3 } from 'three'
 import { useFrame, useThree } from 'react-three-fiber'
 
-import { setYogaProperties, rmUndefFromObj, vectorFromObject, Axis } from './util'
+import { setYogaProperties, rmUndefFromObj, vectorFromObject, Axis, axes } from './util'
 import { boxContext, flexContext } from './context'
 import type { R3FlexProps, FlexYogaDirection, FlexPlane } from './props'
 
@@ -202,14 +202,17 @@ export function Flex({
 
   // Keeps track of the yoga nodes of the children and the related wrapper groups
   const boxesRef = useRef<{ group: Group; node: YogaNode; flexProps: R3FlexProps; centerAnchor: boolean }[]>([])
-  const registerBox = useCallback((group: Group, node: YogaNode, flexProps: R3FlexProps, centerAnchor?: boolean) => {
-    const i = boxesRef.current.findIndex((b) => b.group === group && b.node === node)
-    if (i !== -1) {
-      boxesRef.current.splice(i, 1)
-    }
+  const registerBox = useCallback(
+    (group: Group, node: YogaNode, flexProps: R3FlexProps, centerAnchor: boolean = false) => {
+      const i = boxesRef.current.findIndex((b) => b.group === group && b.node === node)
+      if (i !== -1) {
+        boxesRef.current.splice(i, 1)
+      }
 
-    boxesRef.current.push({ group, node, flexProps, centerAnchor })
-  }, [])
+      boxesRef.current.push({ group, node, flexProps, centerAnchor })
+    },
+    []
+  )
   const unregisterBox = useCallback((group: Group, node: YogaNode) => {
     const i = boxesRef.current.findIndex((b) => b.group === group && b.node === node)
     if (i !== -1) {
@@ -221,7 +224,7 @@ export function Flex({
     const sizeVec3 = new Vector3(...size)
     const mainAxis = plane[0] as Axis
     const crossAxis = plane[1] as Axis
-    const depthAxis = ['x', 'y', 'z'].find((axis: Axis) => ![mainAxis, crossAxis].includes(axis))
+    const depthAxis = axes.find((axis) => ![mainAxis, crossAxis].includes(axis)) || 'z'
     const flexWidth = sizeVec3[mainAxis]
     const flexHeight = sizeVec3[crossAxis]
     const rootStart = new Vector3(...position).addScaledVector(new Vector3(size[0], size[1], size[2]), 0.5)
@@ -258,7 +261,7 @@ export function Flex({
       const scaledWidth = typeof flexProps.width === 'number' ? flexProps.width * scaleFactor : flexProps.width
       const scaledHeight = typeof flexProps.height === 'number' ? flexProps.height * scaleFactor : flexProps.height
 
-      if (flexProps.width !== undefined && flexProps.height !== undefined) {
+      if (scaledWidth !== undefined && scaledHeight !== undefined) {
         // Forced size, no need to calculate bounding box
         node.setWidth(scaledWidth)
         node.setHeight(scaledHeight)
