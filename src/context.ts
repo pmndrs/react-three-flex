@@ -4,7 +4,7 @@ import { Vector3, Group } from 'three'
 import { Axis } from './util'
 import { FlexYogaDirection, R3FlexProps } from './props'
 
-export const flexContext = createContext<{
+export interface SharedFlexContext {
   rootNode: YogaNode
   mainAxis: Axis
   crossAxis: Axis
@@ -18,6 +18,30 @@ export const flexContext = createContext<{
   requestReflow(): void
   registerBox(group: Group, node: YogaNode, flexProps: R3FlexProps, centerAnchor?: boolean): void
   unregisterBox(group: Group, node: YogaNode): void
-}>({} as any)
+}
+
+const initialSharedFlexContext: SharedFlexContext = {
+  rootNode: null as any,
+  mainAxis: 'x',
+  crossAxis: 'y',
+  depthAxis: 'z',
+  sizeVec3: new Vector3(0, 0, 0),
+  flexWidth: 0,
+  flexHeight: 0,
+  scaleFactor: 100,
+  rootStart: new Vector3(0, 0, 0),
+  yogaDirection: 'ltr',
+  requestReflow() {
+    console.warn('Flex not initialized! Please report')
+  },
+  registerBox(group: Group, node: YogaNode, flexProps: R3FlexProps, centerAnchor?: boolean) {
+    console.warn('Flex not initialized! Please report')
+  },
+  unregisterBox(group: Group, node: YogaNode) {
+    console.warn('Flex not initialized! Please report')
+  },
+}
+
+export const flexContext = createContext<SharedFlexContext>(initialSharedFlexContext)
 
 export const boxContext = createContext<YogaNode | null>(null)
