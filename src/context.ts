@@ -18,14 +18,6 @@ export const flexContext = createContext<{
   requestReflow(): void
   registerBox(group: Group, node: YogaNode, flexProps: R3FlexProps, centerAnchor?: boolean): void
   unregisterBox(group: Group, node: YogaNode): void
-} | null>(null)
+}>({} as any)
 
-export const boxContext = createContext<YogaNode | null>(null)
-
-export function useContextSafe<T>(context: Context<Exclude<T, null> | null>) {
-  const value = useContext(context)
-  if (!value) {
-    throw new Error('You must place this hook/component under a <Flex/> component!')
-  }
-  return value
-}
+export const boxContext = createContext<YogaNode>({} as any)
