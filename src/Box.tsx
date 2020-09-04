@@ -1,12 +1,12 @@
-import React, { useLayoutEffect, useContext, useRef, useState, useMemo, PropsWithChildren } from 'react'
+import React, { useLayoutEffect, useRef, useState, useMemo, PropsWithChildren } from 'react'
 import * as THREE from 'three'
 import Yoga from 'yoga-layout-prebuilt'
 import { ReactThreeFiber } from 'react-three-fiber'
 
 import { setYogaProperties, rmUndefFromObj } from './util'
-import { boxContext, flexContext, useContextSafe } from './context'
+import { boxContext, flexContext } from './context'
 import { R3FlexProps } from './props'
-import { useReflow } from './hooks'
+import { useReflow, useContext } from './hooks'
 
 /**
  * Box container for 3D Objects.
@@ -171,7 +171,7 @@ export function Box({
     wrap,
   ])
 
-  const { rootNode, registerBox, unregisterBox, scaleFactor } = useContextSafe(flexContext)
+  const { rootNode, registerBox, unregisterBox, scaleFactor } = useContext(flexContext)
   const parent = useContext(boxContext) || rootNode
   const group = useRef<THREE.Group>()
   const [node] = useState(() => Yoga.Node.create())
