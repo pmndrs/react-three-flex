@@ -6,9 +6,13 @@ const state = {
   pages: 0,
   threshold: 4,
   content: [
-    { tag: '00', text: `The Bacchic\nand Dionysiac\nRites`, image1: "/images/1.jpg", image2: "/images/2.jpg" },
-    { tag: '01', text: `The Elysian\nMysteries`, image1: "/images/4.jpg", image2: "/images/5.jpg" },
-    { tag: '02', text: `The Hiramic\nLegend`, image1: "/images/6.jpg", image2: "/images/9.jpg" },
+    {
+      tag: '00',
+      text: `The Bacchic\nand Dionysiac\nRites`,
+      images: ['/images/1.jpg', '/images/2.jpg', '/images/3.jpg'],
+    },
+    { tag: '01', text: `The Elysian\nMysteries`, images: ['/images/4.jpg', '/images/5.jpg', '/images/6.jpg'] },
+    { tag: '02', text: `The Hiramic\nLegend`, images: ['/images/7.jpg', '/images/8.jpg', '/images/9.jpg'] },
   ],
   depthimg:
     'https://images.unsplash.com/photo-1500412830877-c77d92c33203?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&dl=gian-d-YE6iUShVcps-unsplash.jpg&w=1920',

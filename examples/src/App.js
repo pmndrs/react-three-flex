@@ -9,8 +9,8 @@ import Loader from './components/Loader'
 import Geo from './components/Geo'
 import state from './state'
 
-function Title({ text, tag, image1, image2, left = false }) {
-  const [img1, img2] = useLoader(THREE.TextureLoader, [image1, image2])
+function Title({ text, tag, images, left = false }) {
+  const textures = useLoader(THREE.TextureLoader, images)
   return (
     <Box
       flexDirection="column"
@@ -20,18 +20,14 @@ function Title({ text, tag, image1, image2, left = false }) {
       height="100%"
     >
       <Box flexDirection="row" width="100%" justifyContent={left ? 'flex-end' : 'flex-start'} margin={0}>
-        <Box centerAnchor margin={1} marginLeft={left ? 1 : 0} marginRight={left ? 1 : 0}>
-          <mesh position={[-0.5, left ? -1.4 : 0, left ? 2 : 0.25]}>
-            <planeBufferGeometry args={left ? [6, 6, 32, 32] : [8, 8, 32, 32]} />
-            <meshBasicMaterial map={img1} toneMapped={false} />
-          </mesh>
-        </Box>
-        <Box centerAnchor margin={1} marginLeft={left ? 0 : 1} marginRight={left ? 0 : 1}>
-          <mesh position={[0.0, left ? 0 : -1.4, left ? 0.25 : 2]}>
-            <planeBufferGeometry args={left ? [8, 8, 32, 32] : [6, 6, 32, 32]} />
-            <meshBasicMaterial map={img2} toneMapped={false} />
-          </mesh>
-        </Box>
+        {textures.map((texture, index) => (
+          <Box key={index} centerAnchor margin={1} marginLeft={left * 1} marginRight={!left * 1}>
+            <mesh>
+              <planeBufferGeometry args={[6, 6]} />
+              <meshBasicMaterial map={texture} toneMapped={false} />
+            </mesh>
+          </Box>
+        ))}
       </Box>
       <Box marginLeft={1} marginRight={1} marginTop={2}>
         <Text
