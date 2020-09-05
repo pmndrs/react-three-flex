@@ -91,7 +91,7 @@ function DepthLayerCard({ depth, boxWidth, boxHeight, text, textColor, color, ma
 function Content({ onReflow }) {
   const group = useRef()
   const { viewport, size, gl } = useThree()
-  const [boxWidth, boxHeight] = useAspect('cover', 1920, 1280, 0.5)
+  const [boxWidth, boxHeight] = useAspect('cover', 1920, 1920, 0.5)
   const textures = useLoader(
     THREE.TextureLoader,
     state.depthbox.map((props) => props.image)
