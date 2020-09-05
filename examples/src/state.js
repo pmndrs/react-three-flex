@@ -11,8 +11,8 @@ const state = {
       text: `The Bacchic\nand Dionysiac\nRites`,
       images: [imgur('BH41NVu'), imgur('fBoIJLX'), imgur('04zTfWB')],
     },
-    { tag: '01', text: `The Elysian\nMysteries`, images: [imgur('BH41NVu'), imgur('fBoIJLX'), imgur('04zTfWB')] },
-    { tag: '02', text: `The Hiramic\nLegend`, images: [imgur('BH41NVu'), imgur('fBoIJLX'), imgur('04zTfWB')] },
+    { tag: '01', text: `The Elysian\nMysteries`, images: [imgur('c4cA8UN'), imgur('ajQ73ol'), imgur('gZOmLNU')] },
+    { tag: '02', text: `The Hiramic\nLegend`, images: [imgur('mbFIW1b'), imgur('mlDUVig'), imgur('gwuZrgo')] },
   ],
   depthbox: [
     {
