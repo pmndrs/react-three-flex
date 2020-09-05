@@ -1,7 +1,7 @@
 import * as THREE from 'three'
-import React, { Suspense, useEffect, useRef, useState, useCallback } from 'react'
+import React, { Suspense, useEffect, useRef, useState, useCallback, useLayoutEffect } from 'react'
 import { Canvas, useThree, useFrame, useLoader } from 'react-three-fiber'
-import { Flex, Box } from 'react-three-flex'
+import { Flex, Box, useFlexSize } from 'react-three-flex'
 import { useAspect, Line } from 'drei'
 import Effects from './components/Effects'
 import Text from './components/Text'
@@ -9,7 +9,13 @@ import Loader from './components/Loader'
 import Geo from './components/Geo'
 import state from './state'
 
-function Title({ text, tag, images, textScaleFactor, left = false }) {
+function HeightReporter({ onReflow }) {
+  const size = useFlexSize()
+  useLayoutEffect(() => onReflow && onReflow(...size), [onReflow, size])
+  return null
+}
+
+function Title({ text, tag, images, textScaleFactor, onReflow, left = false }) {
   const textures = useLoader(THREE.TextureLoader, images)
   const { viewport } = useThree()
   return (
@@ -21,6 +27,7 @@ function Title({ text, tag, images, textScaleFactor, left = false }) {
       height="auto"
       minHeight="100%"
     >
+      <HeightReporter onReflow={onReflow} />
       <Box
         flexDirection="row"
         width="100%"
@@ -86,7 +93,7 @@ function Title({ text, tag, images, textScaleFactor, left = false }) {
 
 function DepthLayerCard({ depth, boxWidth, boxHeight, text, textColor, color, map, textScaleFactor }) {
   const ref = useRef()
-  const { size } = useThree()
+  const { viewport, size } = useThree()
   const pageLerp = useRef(state.top / size.height)
   useFrame(() => {
     const page = (pageLerp.current = THREE.MathUtils.lerp(pageLerp.current, state.top / size.height, 0.2))
@@ -100,7 +107,8 @@ function DepthLayerCard({ depth, boxWidth, boxHeight, text, textColor, color, ma
       </mesh>
       <Text
         position={[0.09 + boxWidth / 2, 0.0565 + -boxHeight / 2, depth + 1.5]}
-        maxWidth={boxWidth}
+        // maxWidth={boxWidth}
+        maxWidth={(viewport.width / 4) * 1}
         anchorX="center"
         anchorY="middle"
         textAlign="left"
@@ -138,6 +146,7 @@ function Content({ onReflow }) {
     onReflow,
     viewport.height,
   ])
+  const sizesRef = useRef([])
   const textScaleFactor = Math.min(1, viewport.width / 16)
   return (
     <group ref={group}>
@@ -148,7 +157,16 @@ function Content({ onReflow }) {
         onReflow={handleReflow}
       >
         {state.content.map((props, index) => (
-          <Title key={index} left={!(index % 2)} textScaleFactor={textScaleFactor} {...props} />
+          <Title
+            key={index}
+            left={!(index % 2)}
+            textScaleFactor={textScaleFactor}
+            onReflow={(w, h) => {
+              sizesRef.current[index] = h
+              state.threshold = Math.max(4, (4 / (15.8 * 3)) * sizesRef.current.reduce((acc, e) => acc + e, 0))
+            }}
+            {...props}
+          />
         ))}
         <Box flexDirection="row" width="100%" height="100%" alignItems="center" justifyContent="center">
           <Box centerAnchor>
