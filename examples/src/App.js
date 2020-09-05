@@ -56,9 +56,9 @@ function Title({ text, tag, images, textScaleFactor, left = false }) {
         ))}
         {!left && <Box width="20%" height="auto" />}
       </Box>
-      <Box marginLeft={1} marginRight={1} marginTop={2}>
+      <Box marginLeft={1.5} marginRight={1.5} marginTop={2}>
         <Text
-          position={[left ? 1.2 : -1.2, 0.4, 1]}
+          position={[left ? 1 : -1, 0.5, 1]}
           fontSize={1 * textScaleFactor}
           lineHeight={1}
           letterSpacing={-0.05}
@@ -69,11 +69,11 @@ function Title({ text, tag, images, textScaleFactor, left = false }) {
           <meshBasicMaterial color="#cccccc" toneMapped={false} />
         </Text>
       </Box>
-      <Box marginLeft={left ? 1.6 : 1} marginRight={left ? 1 : 1.6} marginBottom={1}>
+      <Box marginLeft={left ? 1.5 : 1} marginRight={left ? 1 : 1.5} marginBottom={1}>
         <Text
           position-z={0.5}
           textAlign={left ? 'left' : 'right'}
-          fontSize={1.6 * textScaleFactor}
+          fontSize={1.5 * textScaleFactor}
           lineHeight={1}
           letterSpacing={-0.05}
           color="black"
@@ -176,7 +176,7 @@ function Content({ onReflow }) {
               anchorX="center"
               anchorY="middle"
               textAlign="left"
-              fontSize={1.6 * textScaleFactor}
+              fontSize={1.5 * textScaleFactor}
               lineHeight={1}
               letterSpacing={-0.05}
               color="black"
