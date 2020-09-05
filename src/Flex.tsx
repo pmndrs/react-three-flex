@@ -224,6 +224,16 @@ export function Flex({
     requestReflow()
   }, [children, flexProps, requestReflow])
 
+  // Common variables for reflow
+  const boundingBox = useMemo(() => new Box3(), [])
+  const vec = useMemo(() => new Vector3(), [])
+  const mainAxis = plane[0] as Axis
+  const crossAxis = plane[1] as Axis
+  const depthAxis = getDepthAxis(plane)
+  const [flexWidth, flexHeight] = getFlex2DSize(size, plane)
+  const yogaDirection_ =
+    yogaDirection === 'ltr' ? Yoga.DIRECTION_LTR : yogaDirection === 'rtl' ? Yoga.DIRECTION_RTL : yogaDirection
+
   // Shared context for flex and box
   const sharedFlexContext = useMemo<SharedFlexContext>(
     () => ({
@@ -234,17 +244,11 @@ export function Flex({
     }),
     [requestReflow, registerBox, unregisterBox, scaleFactor]
   )
-  const sharedBoxContext = useMemo<SharedBoxContext>(() => ({ node }), [node])
-
-  // Common variables for reflow
-  const boundingBox = useMemo(() => new Box3(), [])
-  const vec = useMemo(() => new Vector3(), [])
-  const mainAxis = plane[0] as Axis
-  const crossAxis = plane[1] as Axis
-  const depthAxis = getDepthAxis(plane)
-  const [flexWidth, flexHeight] = getFlex2DSize(size, plane)
-  const yogaDirection_ =
-    yogaDirection === 'ltr' ? Yoga.DIRECTION_LTR : yogaDirection === 'rtl' ? Yoga.DIRECTION_RTL : yogaDirection
+  const sharedBoxContext = useMemo<SharedBoxContext>(() => ({ node, size: [flexWidth, flexHeight] }), [
+    node,
+    flexWidth,
+    flexHeight,
+  ])
 
   // Handles the reflow procedure
   function reflow() {
