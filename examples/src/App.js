@@ -2,40 +2,68 @@ import * as THREE from 'three'
 import React, { Suspense, useEffect, useRef, useState, useCallback } from 'react'
 import { Canvas, useThree, useFrame, useLoader } from 'react-three-fiber'
 import { Flex, Box } from 'react-three-flex'
-import { useAspect } from 'drei'
+import { useAspect, Line } from 'drei'
 import Effects from './components/Effects'
 import Text from './components/Text'
 import Loader from './components/Loader'
 import Geo from './components/Geo'
 import state from './state'
 
-function Title({ text, tag, images, left = false }) {
+function Title({ text, tag, images, textScaleFactor, left = false }) {
   const textures = useLoader(THREE.TextureLoader, images)
+  const { viewport } = useThree()
   return (
     <Box
       flexDirection="column"
       alignItems={left ? 'flex-start' : 'flex-end'}
       justifyContent="flex-start"
       width="100%"
-      height="100%"
+      height="auto"
+      minHeight="100%"
     >
-      <Box flexDirection="row" width="100%" justifyContent={left ? 'flex-end' : 'flex-start'} margin={0}>
+      <Box
+        flexDirection="row"
+        width="100%"
+        height="auto"
+        justifyContent={left ? 'flex-end' : 'flex-start'}
+        margin={0}
+        flexGrow={1}
+        flexWrap="wrap"
+      >
+        {left && <Box width="20%" height="auto" />}
         {textures.map((texture, index) => (
-          <Box key={index} centerAnchor margin={1} marginLeft={left * 1} marginRight={!left * 1}>
-            <mesh>
-              <planeBufferGeometry args={[5, 5]} />
-              <meshBasicMaterial map={texture} toneMapped={false} />
-            </mesh>
+          <Box
+            key={index}
+            centerAnchor
+            flexGrow={1}
+            marginTop={1}
+            marginLeft={left * 1}
+            marginRight={!left * 1}
+            width="auto"
+            height="auto"
+            minWidth={3}
+            minHeight={3}
+            maxWidth={6}
+            maxHeight={6}
+          >
+            {(width, height) => (
+              <mesh>
+                <planeBufferGeometry args={[width, height]} />
+                <meshBasicMaterial map={texture} toneMapped={false} />
+              </mesh>
+            )}
           </Box>
         ))}
+        {!left && <Box width="20%" height="auto" />}
       </Box>
       <Box marginLeft={1.5} marginRight={1.5} marginTop={2}>
         <Text
           position={[left ? 1 : -1, 0.5, 1]}
-          fontSize={0.75}
+          fontSize={1 * textScaleFactor}
           lineHeight={1}
           letterSpacing={-0.05}
           font="https://cdn.jsdelivr.net/npm/inter-ui/Inter%20(web)/Inter-Regular.woff"
+          maxWidth={(viewport.width / 4) * 3}
         >
           {tag}
           <meshBasicMaterial color="#cccccc" toneMapped={false} />
@@ -45,10 +73,11 @@ function Title({ text, tag, images, left = false }) {
         <Text
           position-z={0.5}
           textAlign={left ? 'left' : 'right'}
-          fontSize={1.5}
+          fontSize={1.5 * textScaleFactor}
           lineHeight={1}
           letterSpacing={-0.05}
           color="black"
+          maxWidth={(viewport.width / 4) * 3}
         >
           {text}
         </Text>
@@ -57,7 +86,7 @@ function Title({ text, tag, images, left = false }) {
   )
 }
 
-function DepthLayerCard({ depth, boxWidth, boxHeight, text, textColor, color, map }) {
+function DepthLayerCard({ depth, boxWidth, boxHeight, text, textColor, color, map, textScaleFactor }) {
   const ref = useRef()
   const { size } = useThree()
   const pageLerp = useRef(state.top / size.height)
@@ -77,7 +106,7 @@ function DepthLayerCard({ depth, boxWidth, boxHeight, text, textColor, color, ma
         anchorX="center"
         anchorY="middle"
         textAlign="left"
-        fontSize={0.6}
+        fontSize={0.6 * textScaleFactor}
         lineHeight={1}
         letterSpacing={-0.05}
         color={textColor}
@@ -90,7 +119,7 @@ function DepthLayerCard({ depth, boxWidth, boxHeight, text, textColor, color, ma
 
 function Content({ onReflow }) {
   const group = useRef()
-  const { viewport, size, gl } = useThree()
+  const { viewport, size } = useThree()
   const [boxWidth, boxHeight] = useAspect('cover', 1920, 1920, 0.5)
   const textures = useLoader(
     THREE.TextureLoader,
@@ -111,6 +140,7 @@ function Content({ onReflow }) {
     onReflow,
     viewport.height,
   ])
+  const textScaleFactor = Math.min(1, viewport.width / 16)
   return (
     <group ref={group}>
       <Flex
@@ -120,20 +150,29 @@ function Content({ onReflow }) {
         onReflow={handleReflow}
       >
         {state.content.map((props, index) => (
-          <Title key={index} left={!(index % 2)} {...props} />
+          <Title key={index} left={!(index % 2)} textScaleFactor={textScaleFactor} {...props} />
         ))}
         <Box flexDirection="row" width="100%" height="100%" alignItems="center" justifyContent="center">
           <Box centerAnchor>
+            <Line
+              points={[
+                [-9, -4, 0],
+                [-9, 4, 0],
+              ]}
+              color="black"
+              lineWidth={0.5}
+            />
             <Text
               position-z={0.5}
               maxWidth={viewport.width}
               anchorX="center"
               anchorY="middle"
               textAlign="left"
-              fontSize={1.6}
+              fontSize={1.6 * textScaleFactor}
               lineHeight={1}
               letterSpacing={-0.05}
               color="black"
+              maxWidth={(viewport.width / 4) * 3}
             >
               {state.depthbox[0].text}
             </Text>
@@ -147,6 +186,7 @@ function Content({ onReflow }) {
               boxWidth={boxWidth}
               boxHeight={boxHeight}
               map={textures[0]}
+              textScaleFactor={textScaleFactor}
             />
             <Geo position={[boxWidth / 2, -boxHeight / 2, state.depthbox[1].depth]} />
           </Box>
