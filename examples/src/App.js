@@ -168,7 +168,7 @@ function Content({ onReflow }) {
               anchorX="center"
               anchorY="middle"
               textAlign="left"
-              fontSize={1.6 * textScaleFactor}
+              fontSize={1.5 * textScaleFactor}
               lineHeight={1}
               letterSpacing={-0.05}
               color="black"
