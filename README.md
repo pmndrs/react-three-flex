@@ -193,7 +193,7 @@ function AnimatedBox() {
 
 ### Sizing
 
-`react-three-flex` differs from DOM Flexbox in that it rely on a parent container for the root flex. It is required to specify its dimensions using `size` prop for centering, wrapping, and to be responsive.
+`react-three-flex` differs from DOM Flexbox in that it rely on a parent container for the root flex. It is required to specify its dimensions using `size` prop for wrapping and to be responsive.
 
 ```jsx
 <Flex flexDirection="row" flexWrap="wrap" size={[300, 200, 0]}>
