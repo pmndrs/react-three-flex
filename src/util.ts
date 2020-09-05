@@ -1,6 +1,6 @@
 import { Vector3 } from 'three'
 import Yoga, { YogaNode } from 'yoga-layout-prebuilt'
-import { R3FlexProps } from './props'
+import { R3FlexProps, FlexPlane } from './props'
 
 export const capitalize = (s: string) => s[0].toUpperCase() + s.slice(1)
 
@@ -84,6 +84,28 @@ export const vectorFromObject = ({ x, y, z }: { x: number; y: number; z: number 
 
 export type Axis = 'x' | 'y' | 'z'
 export const axes: Axis[] = ['x', 'y', 'z']
+
+export function getDepthAxis(plane: FlexPlane) {
+  switch (plane) {
+    case 'xy':
+      return 'z'
+    case 'yz':
+      return 'x'
+    case 'xz':
+      return 'y'
+  }
+}
+
+export function getFlex2DSize(sizes: [number, number, number], plane: FlexPlane) {
+  switch (plane) {
+    case 'xy':
+      return [sizes[0], sizes[1]]
+    case 'yz':
+      return [sizes[1], sizes[2]]
+    case 'xz':
+      return [sizes[0], sizes[2]]
+  }
+}
 
 export const rmUndefFromObj = (obj: Record<string, any>) =>
   Object.keys(obj).forEach((key) => (obj[key] === undefined ? delete obj[key] : {}))
