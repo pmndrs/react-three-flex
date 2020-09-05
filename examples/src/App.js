@@ -126,7 +126,12 @@ function Content({ onReflow }) {
   ])
   return (
     <group ref={group}>
-      <Flex flexDirection="column" size={[viewport.width, viewport.height, 0]} onReflow={handleReflow}>
+      <Flex
+        flexDirection="column"
+        position={[-viewport.width / 2, viewport.height / 2, 0]}
+        size={[viewport.width, viewport.height, 0]}
+        onReflow={handleReflow}
+      >
         {state.content.map((props, index) => (
           <Title key={index} left={!(index % 2)} {...props} />
         ))}
