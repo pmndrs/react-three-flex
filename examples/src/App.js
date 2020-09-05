@@ -88,26 +88,14 @@ function DepthLayerCard({ depth, boxWidth, boxHeight, text, textColor, color, ma
   )
 }
 
-function DepthBox() {
+function Content({ onReflow }) {
+  const group = useRef()
+  const { viewport, size, gl } = useThree()
   const [boxWidth, boxHeight] = useAspect('cover', 1920, 1280, 0.5)
   const textures = useLoader(
     THREE.TextureLoader,
     state.depthbox.map((props) => props.image)
   )
-  return (
-    <Box flexDirection="row" width="100%" height="100%" alignItems="center" justifyContent="center">
-      <Box>
-        {state.depthbox.map((props, index) => (
-          <DepthLayerCard key={index} {...props} boxWidth={boxWidth} boxHeight={boxHeight} map={textures[index]} />
-        ))}
-      </Box>
-    </Box>
-  )
-}
-
-function Content({ onReflow }) {
-  const group = useRef()
-  const { viewport, size, gl } = useThree()
   const vec = new THREE.Vector3()
   const pageLerp = useRef(state.top / size.height)
   useFrame(() => {
@@ -130,17 +118,33 @@ function Content({ onReflow }) {
         {state.content.map((props, index) => (
           <Title key={index} left={!(index % 2)} {...props} />
         ))}
-        <Box flexDirection="column" alignItems={'center'} justifyContent="center" width="100%" height="100%">
+        <Box flexDirection="row" width="100%" height="100%" alignItems="center" justifyContent="center">
           <Box centerAnchor>
-            <Geo scale={[4, 4, 4]} position={[0, 2, 0]} />
+            <Text
+              position-z={0.5}
+              maxWidth={viewport.width}
+              anchorX="center"
+              anchorY="middle"
+              textAlign="left"
+              fontSize={1.6}
+              lineHeight={1}
+              letterSpacing={-0.05}
+              color="black"
+            >
+              {state.depthbox[0].text}
+            </Text>
           </Box>
         </Box>
-        <DepthBox />
+        <Box flexDirection="row" width="100%" height="100%" alignItems="center" justifyContent="center">
+          <Box>
+            <DepthLayerCard {...state.depthbox[0]} text={state.depthbox[1].text} boxWidth={boxWidth} boxHeight={boxHeight} map={textures[0]} />
+            <Geo position={[boxWidth / 2, -boxHeight / 2, state.depthbox[1].depth]} />
+          </Box>
+        </Box>
       </Flex>
     </group>
   )
 }
-
 
 export default function App() {
   const scrollArea = useRef()
@@ -149,10 +153,10 @@ export default function App() {
   const [pages, setPages] = useState(0)
 
   const onMouseMove = useCallback((e) => {
-    state.mouse = [(e.clientX/window.innerWidth) * 2 - 1, (e.clientY/window.innerHeight) * 2 - 1]
+    state.mouse = [(e.clientX / window.innerWidth) * 2 - 1, (e.clientY / window.innerHeight) * 2 - 1]
     console.log(state.mouse)
   }, [])
-  
+
   return (
     <>
       <Canvas
@@ -160,7 +164,7 @@ export default function App() {
         colorManagement
         shadowMap
         noEvents
-        pixelRatio={1}
+        pixelRatio={2}
         camera={{ position: [0, 0, 10], far: 1000 }}
         gl={{ powerPreference: 'high-performance', alpha: false, antialias: false, stencil: false, depth: false }}
       >
@@ -174,7 +178,7 @@ export default function App() {
           shadow-mapSize-height={1024}
         />
         <pointLight position={[-10, -10, -10]} color="white" intensity={1} />
-        <ambientLight intensity={0.6} />
+        <ambientLight intensity={0.5} />
         <Suspense fallback={null}>
           <Content onReflow={setPages} />
         </Suspense>
