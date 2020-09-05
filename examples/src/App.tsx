@@ -61,13 +61,36 @@ function AnimatedBox({
   )
 }
 
+function StretchBox({
+  size = 50,
+  color = 'white',
+  ...props
+}: {
+  size?: number
+  color?: string
+} & R3FlexProps) {
+  const mesh = useRef<Mesh>()
+  useHelper(mesh, BoxHelper, 'red')
+  return (
+    <Box centerAnchor width="auto" height="auto" {...props}>
+      {(width, height) => (
+        <mesh ref={mesh}>
+          <boxBufferGeometry attach="geometry" args={[width, height, size]} />
+          <meshLambertMaterial attach="material" color={color} />
+        </mesh>
+      )}
+    </Box>
+  )
+}
+
 function Scene({ grow, shrink }: { grow: number; shrink: number }) {
   const group = useRef<Group>()
   useHelper(group, BoxHelper, '#272730')
 
   return (
     <group ref={group}>
-      <AnimatedBox />
+      <StretchBox color="red" flexGrow={1} minWidth={10} />
+      <AnimatedBox color="blue" />
       <Sphere flexGrow={grow} />
       <Sphere flexShrink={shrink} />
       <Sphere sphereWidth={100} />
@@ -107,7 +130,7 @@ const FlexDemo = () => {
   const alignItems = useControl('alignItems', {
     type: 'select',
     items: ['flex-start', 'flex-end', 'auto', 'baseline', 'center', 'space-around', 'space-between', 'stretch'],
-    value: 'center',
+    value: 'stretch',
   })
   const grow = useControl('First item grow', { type: 'number', min: 0, max: 2, value: 0 })
   const shrink = useControl('Second item shrink', { type: 'number', min: 0, max: 10, value: 1 })
