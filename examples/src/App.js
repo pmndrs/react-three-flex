@@ -72,7 +72,7 @@ function DepthLayerCard({ depth, boxWidth, boxHeight, text, textColor, color, ma
         <meshBasicMaterial color={color} map={map} toneMapped={false} transparent opacity={1} />
       </mesh>
       <Text
-        position={[0.09 + boxWidth / 2, 0.0565 + -boxHeight / 2, depth + 0.8]}
+        position={[0.09 + boxWidth / 2, 0.0565 + -boxHeight / 2, depth + 1.5]}
         maxWidth={boxWidth}
         anchorX="center"
         anchorY="middle"
