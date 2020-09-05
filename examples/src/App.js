@@ -69,7 +69,7 @@ function DepthLayerCard({ depth, boxWidth, boxHeight, text, textColor, color, ma
     <>
       <mesh ref={ref} position={[boxWidth / 2, -boxHeight / 2, depth]}>
         <planeBufferGeometry args={[boxWidth, boxHeight]} />
-        <meshBasicMaterial color={color} map={map} transparent opacity={1} />
+        <meshBasicMaterial color={color} map={map} toneMapped={false} transparent opacity={1} />
       </mesh>
       <Text
         position={[0.09 + boxWidth / 2, 0.0565 + -boxHeight / 2, depth + 0.8]}
@@ -90,18 +90,15 @@ function DepthLayerCard({ depth, boxWidth, boxHeight, text, textColor, color, ma
 
 function DepthBox() {
   const [boxWidth, boxHeight] = useAspect('cover', 1920, 1280, 0.5)
-  const img = useLoader(THREE.TextureLoader, state.depthimg)
+  const textures = useLoader(
+    THREE.TextureLoader,
+    state.depthbox.map((props) => props.image)
+  )
   return (
     <Box flexDirection="row" width="100%" height="100%" alignItems="center" justifyContent="center">
       <Box>
         {state.depthbox.map((props, index) => (
-          <DepthLayerCard
-            key={index}
-            {...props}
-            boxWidth={boxWidth}
-            boxHeight={boxHeight}
-            map={props.depth < 0 ? img : null}
-          />
+          <DepthLayerCard key={index} {...props} boxWidth={boxWidth} boxHeight={boxHeight} map={textures[index]} />
         ))}
       </Box>
     </Box>
@@ -117,13 +114,13 @@ function Content({ onReflow }) {
     const page = (pageLerp.current = THREE.MathUtils.lerp(pageLerp.current, state.top / size.height, 0.2))
     const y = page * viewport.height
     const sticky = state.threshold * viewport.height
-    gl.setClearColor(page > state.threshold * 1.4 ? 'black' : '#f5f5f5')
+    gl.setClearColor('#f5f5f5')
     group.current.position.lerp(
       vec.set(0, page < state.threshold ? y : sticky, page < state.threshold ? 0 : page * 1.2),
       0.1
     )
   })
-  const handleReflow = useCallback((w, h) => onReflow((state.pages = h / viewport.height + 5)), [
+  const handleReflow = useCallback((w, h) => onReflow((state.pages = h / viewport.height + 5.5)), [
     onReflow,
     viewport.height,
   ])
@@ -135,7 +132,7 @@ function Content({ onReflow }) {
         ))}
         <Box flexDirection="column" alignItems={'center'} justifyContent="center" width="100%" height="100%">
           <Box centerAnchor>
-            <Geo scale={[4, 4, 4]} />
+            <Geo scale={[4, 4, 4]} position={[0, 5, 0]} />
           </Box>
         </Box>
         <DepthBox />
@@ -157,14 +154,14 @@ export default function App() {
         shadowMap
         noEvents
         pixelRatio={1}
-        camera={{ position: [0, 0, 10] }}
+        camera={{ position: [0, 0, 10], far: 1000 }}
         gl={{ powerPreference: 'high-performance', alpha: false, antialias: false, stencil: false, depth: false }}
       >
         <spotLight
           castShadow
           angle={0.3}
           penumbra={1}
-          position={[10, 10, 20]}
+          position={[0, 10, 20]}
           intensity={5}
           shadow-mapSize-width={1024}
           shadow-mapSize-height={1024}
