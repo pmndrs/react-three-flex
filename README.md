@@ -15,16 +15,17 @@ npm install react-three-flex
 
 ## Table of contents
 
-  * [Usage](#usage)
-    + [Anchors](#anchors)
-    + [Invalidation and Reflow](#invalidation-and-reflow)
-    + [Sizing](#sizing)
-    + [Axis Orientation](#axis-orientation)
-    + [Margin and Padding](#margin-and-padding)
-    + [Nesting](#nesting)
-    + [Measuring the Container](#measuring-the-container)
-  * [API](#api)
-    + [Flexbox props](#flexbox-props)
+- [Usage](#usage)
+  - [Anchors](#anchors)
+  - [Stretching](#stretching)
+  - [Invalidation and Reflow](#invalidation-and-reflow)
+  - [Sizing](#sizing)
+  - [Axis Orientation](#axis-orientation)
+  - [Margin and Padding](#margin-and-padding)
+  - [Nesting](#nesting)
+  - [Measuring the Container](#measuring-the-container)
+- [API](#api)
+  - [Flexbox props](#flexbox-props)
 
 ## Usage
 
@@ -64,8 +65,42 @@ Most THREE.js geometries, though, are positioned relative to the object center. 
 
 If you nest `<Box />` elements, though, you need to set it to false. See [Nesting](#nesting).
 
-
 ![Anchors](./docs/anchors.png)
+
+### Stretching
+
+By default `react-three-flex` controls elements position only. In some cases you may want to control element sizing too. Since `react-three-flex` has no information about how the inner content size works, you need to set your content size manually. To do so `react-three-flex` provides you the container size in two ways:
+
+- By using a **children render function**:
+
+```jsx
+<Flex>
+  <Box width="auto" height="auto" flexGrow={1} centerAnchor>
+    {(width, height) => <Plane args={[width, height]} />}
+  </Box>
+</Flex>
+```
+
+- By using an **hook**:
+
+```jsx
+function Inner() {
+  const [width, height] = useFlexSize()
+  return <Plane args={[width, height]} />
+}
+
+function Outer() {
+  return (
+    <Flex>
+      <Box width="auto" height="auto" flexGrow={1} centerAnchor>
+        <Inner />
+      </Box>
+    </Flex>
+  )
+}
+```
+
+Remember that the `useFlexSize` hook works **ONLY** if your `<Box/>` is outside the component.
 
 ### Invalidation and Reflow
 
@@ -233,7 +268,7 @@ Since a `<Flex />` component works the same way as a DOM one, you can easily mak
 
 ### Measuring the container
 
-When building responsive layouts, you might need to syncronize the size of the 3D Flex container with the DOM, for example, to syncronize scroll position or the height of a scroll container. 
+When building responsive layouts, you might need to syncronize the size of the 3D Flex container with the DOM, for example, to syncronize scroll position or the height of a scroll container.
 To make it easier, you can use the `onReflow` callback on the root `<Flex>` component, that will be called every time the flex layout is recalculated - e.g. when any content changes.
 
 ```jsx
@@ -265,6 +300,12 @@ To make it easier, you can use the `onReflow` callback on the root `<Flex>` comp
 >
   <mesh geometry={box} />
 </Box>
+```
+
+Or you can pass a function as children:
+
+```jsx
+<Box>{(width, height) => <Model width={width} height={height} />}</Box>
 ```
 
 ### Flexbox props
