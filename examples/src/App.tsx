@@ -123,6 +123,7 @@ const FlexDemo = () => {
     <Flex
       onReflow={console.log}
       size={size}
+      position={[-size[0] / 2, size[1] / 2, 0]}
       {...{ flexWrap, alignItems, justifyContent, plane, flexDirection, margin, padding }}
     >
       <Scene grow={grow} shrink={shrink} />
