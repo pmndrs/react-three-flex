@@ -9,7 +9,7 @@ extend({ TextMeshImpl })
 const Text = forwardRef(
   (
     {
-      font = `/AirbnbCerealBold.woff`,
+      font = `https://cdn.jsdelivr.net/npm/inter-ui/Inter%20(web)/Inter-Bold.woff`,
       anchorX = "left",
       anchorY = "top",
       textAlign = "left",
