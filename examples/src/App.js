@@ -132,7 +132,7 @@ function Content({ onReflow }) {
         ))}
         <Box flexDirection="column" alignItems={'center'} justifyContent="center" width="100%" height="100%">
           <Box centerAnchor>
-            <Geo scale={[4, 4, 4]} />
+            <Geo scale={[4, 4, 4]} position={[0, 2, 0]} />
           </Box>
         </Box>
         <DepthBox />
