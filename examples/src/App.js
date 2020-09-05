@@ -23,16 +23,16 @@ function Title({ text, tag, images, left = false }) {
         {textures.map((texture, index) => (
           <Box key={index} centerAnchor margin={1} marginLeft={left * 1} marginRight={!left * 1}>
             <mesh>
-              <planeBufferGeometry args={[6, 6]} />
+              <planeBufferGeometry args={[5, 5]} />
               <meshBasicMaterial map={texture} toneMapped={false} />
             </mesh>
           </Box>
         ))}
       </Box>
-      <Box marginLeft={1} marginRight={1} marginTop={2}>
+      <Box marginLeft={1.5} marginRight={1.5} marginTop={2}>
         <Text
-          position={[left ? 1.2 : -1.2, 0.4, 1]}
-          fontSize={1}
+          position={[left ? 1 : -1, 0.5, 1]}
+          fontSize={0.75}
           lineHeight={1}
           letterSpacing={-0.05}
           font="https://cdn.jsdelivr.net/npm/inter-ui/Inter%20(web)/Inter-Regular.woff"
@@ -41,11 +41,11 @@ function Title({ text, tag, images, left = false }) {
           <meshBasicMaterial color="#cccccc" toneMapped={false} />
         </Text>
       </Box>
-      <Box marginLeft={left ? 1.6 : 1} marginRight={left ? 1 : 1.6} marginBottom={1}>
+      <Box marginLeft={left ? 1.5 : 1} marginRight={left ? 1 : 1.5} marginBottom={1}>
         <Text
           position-z={0.5}
           textAlign={left ? 'left' : 'right'}
-          fontSize={1.6}
+          fontSize={1.5}
           lineHeight={1}
           letterSpacing={-0.05}
           color="black"
