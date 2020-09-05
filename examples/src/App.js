@@ -146,7 +146,6 @@ function Content({ onReflow }) {
   )
 }
 
-
 export default function App() {
   const scrollArea = useRef()
   const onScroll = (e) => (state.top = e.target.scrollTop)
@@ -154,10 +153,9 @@ export default function App() {
   const [pages, setPages] = useState(0)
 
   const onMouseMove = useCallback((e) => {
-    state.mouse = [(e.clientX/window.innerWidth) * 2 - 1, (e.clientY/window.innerHeight) * 2 - 1]
-    console.log(state.mouse)
+    state.mouse = [(e.clientX / window.innerWidth) * 2 - 1, (e.clientY / window.innerHeight) * 2 - 1]
   }, [])
-  
+
   return (
     <>
       <Canvas
