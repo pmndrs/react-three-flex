@@ -8884,10 +8884,10 @@ react-three-fiber@5.0.0-alpha.1:
     tiny-emitter "^2.1.0"
     utility-types "^3.10.0"
 
-react-three-flex@0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/react-three-flex/-/react-three-flex-0.4.0.tgz#1207dc79f3c292f45b2ba41a4485af60585e1eb7"
-  integrity sha512-kidMpaEguTnoHq0TBOAjbHbIRfy1hwfjA0TCHCmEswqIo/pIGwtnFIwYKMBPMTfq6VO7QiIGoOk1Y9WX6Mxelw==
+react-three-flex@0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/react-three-flex/-/react-three-flex-0.5.0.tgz#55494a2361fe9785f7fc7d4a5d591bc5e6962d9a"
+  integrity sha512-auJ5ys9GICLdw1dK/zXNXrxeYfE67cjrv19a76t4JLNNsy4uoaJHzmOvfAjLtnOpuQ5SQHyM8DWA1bV3N2Padw==
   dependencies:
     yoga-layout-prebuilt "^1.9.6"
 

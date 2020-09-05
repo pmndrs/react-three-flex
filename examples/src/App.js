@@ -102,7 +102,6 @@ function Content({ onReflow }) {
     const page = (pageLerp.current = THREE.MathUtils.lerp(pageLerp.current, state.top / size.height, 0.2))
     const y = page * viewport.height
     const sticky = state.threshold * viewport.height
-    gl.setClearColor('#f5f5f5')
     group.current.position.lerp(
       vec.set(0, page < state.threshold ? y : sticky, page < state.threshold ? 0 : page * 1.2),
       0.1
@@ -114,7 +113,12 @@ function Content({ onReflow }) {
   ])
   return (
     <group ref={group}>
-      <Flex flexDirection="column" size={[viewport.width, viewport.height, 0]} onReflow={handleReflow}>
+      <Flex
+        flexDirection="column"
+        position={[-viewport.width / 2, viewport.height / 2, 0]}
+        size={[viewport.width, viewport.height, 0]}
+        onReflow={handleReflow}
+      >
         {state.content.map((props, index) => (
           <Title key={index} left={!(index % 2)} {...props} />
         ))}
@@ -154,7 +158,6 @@ export default function App() {
 
   const onMouseMove = useCallback((e) => {
     state.mouse = [(e.clientX / window.innerWidth) * 2 - 1, (e.clientY / window.innerHeight) * 2 - 1]
-    console.log(state.mouse)
   }, [])
 
   return (
@@ -167,6 +170,9 @@ export default function App() {
         pixelRatio={2}
         camera={{ position: [0, 0, 10], far: 1000 }}
         gl={{ powerPreference: 'high-performance', alpha: false, antialias: false, stencil: false, depth: false }}
+        onCreated={({ gl }) => {
+          gl.setClearColor('#f5f5f5')
+        }}
       >
         <spotLight
           castShadow
