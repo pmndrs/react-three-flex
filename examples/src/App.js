@@ -30,7 +30,6 @@ function Title({ text, tag, images, textScaleFactor, left = false }) {
         flexGrow={1}
         flexWrap="wrap"
       >
-        {left && <Box width="20%" height="auto" />}
         {textures.map((texture, index) => (
           <Box
             key={index}
@@ -54,7 +53,6 @@ function Title({ text, tag, images, textScaleFactor, left = false }) {
             )}
           </Box>
         ))}
-        {!left && <Box width="20%" height="auto" />}
       </Box>
       <Box marginLeft={1.5} marginRight={1.5} marginTop={2}>
         <Text
@@ -172,7 +170,6 @@ function Content({ onReflow }) {
             />
             <Text
               position-z={0.5}
-              maxWidth={viewport.width}
               anchorX="center"
               anchorY="middle"
               textAlign="left"
