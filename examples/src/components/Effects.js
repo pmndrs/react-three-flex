@@ -15,7 +15,6 @@ export default function Effects() {
   const water = useRef()
   const { gl, size, camera, scene } = useThree()
   useEffect(() => void composer.current.setSize(size.width, size.height), [size])
-  useEffect(() => void console.log(composer), [])
   let last = state.top
   let index = 0
   let values = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]

@@ -16,7 +16,7 @@ const Text = forwardRef(
       children,
       maxWidth,
       ...props
-    }: Props,
+    },
     ref
   ) => {
     const { invalidate } = useThree()
