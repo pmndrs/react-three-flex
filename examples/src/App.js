@@ -107,14 +107,13 @@ function DepthBox() {
 
 function Content({ onReflow }) {
   const group = useRef()
-  const { viewport, size, gl } = useThree()
+  const { viewport, size } = useThree()
   const vec = new THREE.Vector3()
   const pageLerp = useRef(state.top / size.height)
   useFrame(() => {
     const page = (pageLerp.current = THREE.MathUtils.lerp(pageLerp.current, state.top / size.height, 0.2))
     const y = page * viewport.height
     const sticky = state.threshold * viewport.height
-    gl.setClearColor('#f5f5f5')
     group.current.position.lerp(
       vec.set(0, page < state.threshold ? y : sticky, page < state.threshold ? 0 : page * 1.2),
       0.1
@@ -141,7 +140,6 @@ function Content({ onReflow }) {
   )
 }
 
-
 export default function App() {
   const scrollArea = useRef()
   const onScroll = (e) => (state.top = e.target.scrollTop)
@@ -149,10 +147,9 @@ export default function App() {
   const [pages, setPages] = useState(0)
 
   const onMouseMove = useCallback((e) => {
-    state.mouse = [(e.clientX/window.innerWidth) * 2 - 1, (e.clientY/window.innerHeight) * 2 - 1]
-    console.log(state.mouse)
+    state.mouse = [(e.clientX / window.innerWidth) * 2 - 1, (e.clientY / window.innerHeight) * 2 - 1]
   }, [])
-  
+
   return (
     <>
       <Canvas
@@ -163,6 +160,9 @@ export default function App() {
         pixelRatio={1}
         camera={{ position: [0, 0, 10], far: 1000 }}
         gl={{ powerPreference: 'high-performance', alpha: false, antialias: false, stencil: false, depth: false }}
+        onCreated={({ gl }) => {
+          gl.setClearColor('#f5f5f5')
+        }}
       >
         <spotLight
           castShadow
