@@ -1,8 +1,8 @@
-import React, { Children, createElement, forwardRef, useMemo, useRef, useLayoutEffect, useState } from "react"
-import { Text as TextMeshImpl } from "troika-three-text"
-import { extend, useThree } from "react-three-fiber"
-import mergeRefs from "react-merge-refs"
-import { useReflow } from "react-three-flex"
+import React, { Children, createElement, forwardRef, useMemo, useRef, useLayoutEffect, useState } from 'react'
+import { Text as TextMeshImpl } from 'troika-three-text'
+import { extend, useThree } from 'react-three-fiber'
+import mergeRefs from 'react-merge-refs'
+import { useReflow } from 'react-three-flex'
 
 extend({ TextMeshImpl })
 
@@ -10,14 +10,14 @@ const Text = forwardRef(
   (
     {
       font = `https://cdn.jsdelivr.net/npm/inter-ui/Inter%20(web)/Inter-Bold.woff`,
-      anchorX = "left",
-      anchorY = "top",
-      textAlign = "left",
+      anchorX = 'left',
+      anchorY = 'top',
+      textAlign = 'left',
       children,
       maxWidth,
       ...props
     }: Props,
-    ref,
+    ref
   ) => {
     const { invalidate } = useThree()
     const reflow = useReflow()
@@ -25,18 +25,18 @@ const Text = forwardRef(
     const [baseMtl, setBaseMtl] = useState()
     const [nodes, text] = useMemo(() => {
       let n = []
-      let t = ""
+      let t = ''
       Children.forEach(children, (child) => {
-        if (typeof child === "string") {
+        if (typeof child === 'string') {
           t += child
-        } else if (child && typeof child === "object" && child.props.attach === "material") {
+        } else if (child && typeof child === 'object' && child.props.attach === 'material') {
           // Instantiate the base material and grab a reference to it, but don't assign any
           // props, and assign it as the `material`, which Troika will replace behind the scenes.
           n.push(
             createElement(child.type, {
               ref: setBaseMtl,
-              attach: "material",
-            }),
+              attach: 'material',
+            })
           )
           // Once the base material has been assigned, grab the resulting upgraded material,
           // and apply the original material props to that.
@@ -66,11 +66,12 @@ const Text = forwardRef(
         textAlign={textAlign}
         maxWidth={maxWidth}
         font={font}
-        {...props}>
+        {...props}
+      >
         {nodes}
       </textMeshImpl>
     )
-  },
+  }
 )
 
 export default Text
