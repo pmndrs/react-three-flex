@@ -32,10 +32,10 @@ function Title({ text, tag, images, left = false }) {
       <Box marginLeft={1} marginRight={1} marginTop={2}>
         <Text
           position={[left ? 1.2 : -1.2, 0.4, 1]}
-          fontSize={2}
-          lineHeight={0.8}
-          letterSpacing={-0.06}
-          font="/AirbnbCerealLight.woff"
+          fontSize={1}
+          lineHeight={1}
+          letterSpacing={-0.05}
+          font="https://cdn.jsdelivr.net/npm/inter-ui/Inter%20(web)/Inter-Regular.woff"
         >
           {tag}
           <meshBasicMaterial color="#cccccc" toneMapped={false} />
@@ -46,8 +46,8 @@ function Title({ text, tag, images, left = false }) {
           position-z={0.5}
           textAlign={left ? 'left' : 'right'}
           fontSize={2}
-          lineHeight={0.8}
-          letterSpacing={-0.06}
+          lineHeight={1}
+          letterSpacing={-0.05}
           color="black"
         >
           {text}
