@@ -146,11 +146,18 @@ function Content({ onReflow }) {
   )
 }
 
+
 export default function App() {
   const scrollArea = useRef()
   const onScroll = (e) => (state.top = e.target.scrollTop)
   useEffect(() => void onScroll({ target: scrollArea.current }), [])
   const [pages, setPages] = useState(0)
+
+  const onMouseMove = useCallback((e) => {
+    state.mouse = [(e.clientX/window.innerWidth) * 2 - 1, (e.clientY/window.innerHeight) * 2 - 1]
+    console.log(state.mouse)
+  }, [])
+  
   return (
     <>
       <Canvas
@@ -178,7 +185,7 @@ export default function App() {
         </Suspense>
         <Effects />
       </Canvas>
-      <div className="scrollArea" ref={scrollArea} onScroll={onScroll}>
+      <div className="scrollArea" ref={scrollArea} onScroll={onScroll} onMouseMove={onMouseMove}>
         <div style={{ height: `${pages * 100}vh` }} />
       </div>
       <Loader />

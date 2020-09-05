@@ -4,6 +4,7 @@ const state = {
   top: 0,
   pages: 0,
   threshold: 4,
+  mouse: [0, 0],
   content: [
     {
       tag: '00',
