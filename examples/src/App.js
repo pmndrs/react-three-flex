@@ -141,7 +141,13 @@ function Content({ onReflow }) {
         </Box>
         <Box flexDirection="row" width="100%" height="100%" alignItems="center" justifyContent="center">
           <Box>
-            <DepthLayerCard {...state.depthbox[0]} text={state.depthbox[1].text} boxWidth={boxWidth} boxHeight={boxHeight} map={textures[0]} />
+            <DepthLayerCard
+              {...state.depthbox[0]}
+              text={state.depthbox[1].text}
+              boxWidth={boxWidth}
+              boxHeight={boxHeight}
+              map={textures[0]}
+            />
             <Geo position={[boxWidth / 2, -boxHeight / 2, state.depthbox[1].depth]} />
           </Box>
         </Box>
