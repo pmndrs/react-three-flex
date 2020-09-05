@@ -77,8 +77,8 @@ function DepthLayerCard({ depth, boxWidth, boxHeight, text, textColor, color, ma
         anchorX="center"
         anchorY="middle"
         textAlign="left"
-        fontSize={0.7}
-        lineHeight={0.8}
+        fontSize={0.6}
+        lineHeight={1}
         letterSpacing={-0.05}
         color={textColor}
       >
