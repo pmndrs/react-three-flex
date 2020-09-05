@@ -20,7 +20,7 @@ const state = {
       color: '#cccccc',
       textColor: '#ffffff',
       text: 'In a void,\nno one could say\nwhy a thing\nonce set in motion\nshould stop anywhere',
-      image: imgur('BH41NVu')
+      image: "/images/8.jpg"
     },
     {
       depth: -4.5,
