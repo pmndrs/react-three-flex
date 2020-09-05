@@ -172,11 +172,6 @@ export default function App() {
           intensity={4}
           shadow-mapSize-width={1024}
           shadow-mapSize-height={1024}
-          shadow-camera-far={50}
-          shadow-camera-left={-10}
-          shadow-camera-right={10}
-          shadow-camera-top={10}
-          shadow-camera-bottom={-10}
         />
         <pointLight position={[-10, -10, -10]} color="white" />
         <ambientLight intensity={0.4} />
