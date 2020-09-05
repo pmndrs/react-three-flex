@@ -7,11 +7,12 @@ import React, { useRef } from 'react'
 import { useLoader, useFrame } from 'react-three-fiber'
 import { draco, Shadow, MeshDistortMaterial } from 'drei'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
+import Text from './Text'
 
 export default function Model(props) {
   const group = useRef()
   const shadow = useRef()
-  const { nodes, materials } = useLoader(GLTFLoader, '/geo-d.glb', draco())
+  const { nodes } = useLoader(GLTFLoader, '/geo-d.glb', draco())
   useFrame((state) => {
     const t = (1 + Math.sin(state.clock.getElapsedTime() * 1.5)) / 2
     group.current.position.y = t / 3
@@ -25,6 +26,21 @@ export default function Model(props) {
         <mesh geometry={nodes.geo.geometry} castShadow receiveShadow>
           <MeshDistortMaterial color="white" roughness={1} metalness={0.5} factor={15} speed={5} />
         </mesh>
+      </group>
+      <group position={[1.25, -0.5, 0]}>
+        <Text
+          position={[0, 0, 0]}
+          fontSize={0.05}
+          lineHeight={1}
+          letterSpacing={-0.05}
+          font="https://cdn.jsdelivr.net/npm/inter-ui/Inter%20(web)/Inter-Regular.woff"
+        >
+          03
+          <meshBasicMaterial color="#cccccc" toneMapped={false} />
+        </Text>
+        <Text position-y={-0.07} fontSize={0.1} lineHeight={1} letterSpacing={-0.05} color="black">
+          {`Poimandres,\nThe vision of Hermes`}
+        </Text>
       </group>
       <Shadow ref={shadow} opacity={0.3} rotation-x={-Math.PI / 2} position={[0, -1.51, 0]} />
     </group>
