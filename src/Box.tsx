@@ -193,16 +193,14 @@ export function Box({
     // Remove child on unmount
     return () => {
       parent.removeChild(node)
-      if (group.current) {
-        unregisterBox(node)
-      }
+      unregisterBox(node)
     }
-  }, [node, parent, flexProps, centerAnchor])
+  }, [node, parent, flexProps, centerAnchor, registerBox, unregisterBox])
 
   // We need to reflow if props change
   useLayoutEffect(() => {
     reflow()
-  }, [children, flexProps])
+  }, [children, flexProps, reflow])
 
   const [size, setSize] = useState<[number, number]>([0, 0])
   useFrame(() => {
