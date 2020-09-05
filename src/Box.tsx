@@ -203,6 +203,7 @@ export function Box({
   }, [children, flexProps, reflow])
 
   const [size, setSize] = useState<[number, number]>([0, 0])
+  const epsilon = 1 / scaleFactor
   useFrame(() => {
     const width =
       (typeof flexProps.width === 'number' ? flexProps.width : null) || node.getComputedWidth().valueOf() / scaleFactor
@@ -210,10 +211,12 @@ export function Box({
       (typeof flexProps.height === 'number' ? flexProps.height : null) ||
       node.getComputedHeight().valueOf() / scaleFactor
 
-    setSize([width, height])
+    if (Math.abs(width - size[0]) > epsilon || Math.abs(height - size[1]) > epsilon) {
+      setSize([width, height])
+    }
   })
 
-  const sharedBoxContext = useMemo(() => ({ node, size }), [size, node])
+  const sharedBoxContext = useMemo(() => ({ node, size }), [node, size])
 
   return (
     <group ref={group} {...props}>
