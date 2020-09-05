@@ -5,9 +5,13 @@ const state = {
   pages: 0,
   threshold: 4,
   content: [
-    { tag: '00', text: `The Bacchic\nand Dionysiac\nRites`, image1: imgur('20xjASS'), image2: imgur('M2mxjL5') },
-    { tag: '01', text: `The Elysian\nMysteries`, image1: imgur('GfFfjb6'), image2: imgur('RzKRbxn') },
-    { tag: '02', text: `The Hiramic\nLegend`, image1: imgur('YWrVODD'), image2: imgur('DPDfTB9') },
+    {
+      tag: '00',
+      text: `The Bacchic\nand Dionysiac\nRites`,
+      images: [imgur('HIiaPb7'), imgur('gveH9pv'), imgur('WqAf9Xb')],
+    },
+    { tag: '01', text: `The Elysian\nMysteries`, images: [imgur('UR0c6pR'), imgur('Orggg3a'), imgur('cAKwexj')] },
+    { tag: '02', text: `The Hiramic\nLegend`, images: [imgur('BH41NVu'), imgur('fBoIJLX'), imgur('04zTfWB')] },
   ],
   depthimg: imgur('jBx6WrQ'),
   depthbox: [
