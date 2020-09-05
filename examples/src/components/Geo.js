@@ -15,8 +15,8 @@ export default function Model(props) {
   return (
     <group {...props} dispose={null}>
       <group ref={group}>
-        <mesh geometry={nodes.geo.geometry} castShadow receiveShadow>
-          <meshPhysicalMaterial color="white" roughness={1} metalness={0.5} />
+      <mesh geometry={nodes.geo.geometry} castShadow receiveShadow>
+          <meshPhysicalMaterial color="white" roughness={1} metalness={0.5}/>
         </mesh>
       </group>
       <Shadow opacity={0.6} rotation-x={-Math.PI / 2} position={[0, -1.51, -1]} scale={[2, 2, 2]} />

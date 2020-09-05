@@ -165,12 +165,12 @@ export default function App() {
           angle={0.3}
           penumbra={1}
           position={[10, 10, 20]}
-          intensity={4}
+          intensity={5}
           shadow-mapSize-width={1024}
           shadow-mapSize-height={1024}
         />
-        <pointLight position={[-10, -10, -10]} color="white" />
-        <ambientLight intensity={0.4} />
+        <pointLight position={[-10, -10, -10]} color="white" intensity={1} />
+        <ambientLight intensity={0.6} />
         <Suspense fallback={null}>
           <Content onReflow={setPages} />
         </Suspense>
