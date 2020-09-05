@@ -74,13 +74,11 @@ By default `react-three-flex` controls elements position only. In some cases you
 - By using a **children render function**:
 
 ```jsx
-return (
-  <Flex>
-    <Box width="auto" height="auto" flexGrow={1} centerAnchor>
-      {(width, height) => <Plane args={[width, height]} />}
-    </Box>
-  </Flex>
-)
+<Flex>
+  <Box width="auto" height="auto" flexGrow={1} centerAnchor>
+    {(width, height) => <Plane args={[width, height]} />}
+  </Box>
+</Flex>
 ```
 
 - By using an **hook**:
