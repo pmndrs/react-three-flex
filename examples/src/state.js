@@ -8,10 +8,10 @@ const state = {
     {
       tag: '00',
       text: `The Bacchic\nand Dionysiac\nRites`,
-      images: [imgur('20xjASS'), imgur('M2mxjL5'), imgur('M2mxjL5')],
+      images: [imgur('HIiaPb7'), imgur('gveH9pv'), imgur('WqAf9Xb')],
     },
-    { tag: '01', text: `The Elysian\nMysteries`, images: [imgur('GfFfjb6'), imgur('RzKRbxn'), imgur('RzKRbxn')] },
-    { tag: '02', text: `The Hiramic\nLegend`, images: [imgur('YWrVODD'), imgur('DPDfTB9'), imgur('DPDfTB9')] },
+    { tag: '01', text: `The Elysian\nMysteries`, images: [imgur('UR0c6pR'), imgur('Orggg3a'), imgur('cAKwexj')] },
+    { tag: '02', text: `The Hiramic\nLegend`, images: [imgur('BH41NVu'), imgur('fBoIJLX'), imgur('04zTfWB')] },
   ],
   depthimg: imgur('jBx6WrQ'),
   depthbox: [
