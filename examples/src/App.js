@@ -45,7 +45,7 @@ function Title({ text, tag, images, left = false }) {
         <Text
           position-z={0.5}
           textAlign={left ? 'left' : 'right'}
-          fontSize={2}
+          fontSize={1.6}
           lineHeight={1}
           letterSpacing={-0.05}
           color="black"
