@@ -223,6 +223,14 @@ export default function App() {
   const onScroll = (e) => (state.top = e.target.scrollTop)
   useEffect(() => void onScroll({ target: scrollArea.current }), [])
   const [pages, setPages] = useState(0)
+
+  
+  useEffect(() => {
+    const setMouse = e => state.mouse= [(e.clientX/window.innerWidth) * 2 - 1, (e.clientY/window.innerHeight) * 2 - 1]
+    window.addEventListener('mousemove', setMouse)
+    return () => window.removeEventListener('mousemove', setMouse)
+  }, [])
+  
   return (
     <>
       <Canvas
