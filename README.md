@@ -10,11 +10,17 @@ Placing content in threejs is hard.
 It is based on [yoga](https://github.com/facebook/yoga), Facebook's open source layout engine for react-native.
 Think of how you would normally go about making content responsive, stick to the sides, wrap around, grids, rows, columns, padding, margin. Especially if you are working on frontend-centric projects where the camera is pointing down, forming a 2-dimensional view.
 
-You can try a live demo here: ...
-
 ```bash
 npm install react-three-flex
 ```
+
+<p align="center">
+  <a href="https://codesandbox.io/embed/gallant-elbakyan-lvwmj"><img width="274" src="https://i.imgur.com/Gbck2Cl.gif" /></a>
+  <a href="https://codesandbox.io/embed/r3flex-jbgrq"><img width="274" src="https://i.imgur.com/hM1b92k.gif" /></a>
+</p>
+<p align="middle">
+  <i>These demos are real, you can click them! They contain the full code, too.</i>
+</p>
 
 ## Table of contents
 
