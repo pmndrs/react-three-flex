@@ -28,7 +28,7 @@ export default function Model(props) {
           <meshPhysicalMaterial color="#ffffff" roughness={1} metalness={0.5} />
         </mesh>
         <mesh geometry={nodes.geo.geometry}>
-          <meshPhysicalMaterial wireframe color="#cccccc" roughness={1} metalness={0} />
+          <meshBasicMaterial wireframe color="#cccccc" roughness={1} metalness={0} />
         </mesh>
       </group>
       <group position={[1.25, -0.5, 0]}>
