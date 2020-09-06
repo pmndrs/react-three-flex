@@ -2,10 +2,9 @@ import * as THREE from 'three'
 import React, { Suspense, useEffect, useRef, useState, useCallback, useLayoutEffect } from 'react'
 import { Canvas, useThree, useFrame, useLoader } from 'react-three-fiber'
 import { Flex, Box, useFlexSize } from 'react-three-flex'
-import { useAspect, Line } from 'drei'
+import { useAspect, Line, Loader } from 'drei'
 import Effects from './components/Effects'
 import Text from './components/Text'
-import Loader from './components/Loader'
 import Geo from './components/Geo'
 import state from './state'
 
@@ -106,7 +105,7 @@ function DepthLayerCard({ depth, boxWidth, boxHeight, text, textColor, color, ma
         <meshBasicMaterial color={color} map={map} toneMapped={false} transparent opacity={1} />
       </mesh>
       <Text
-        position={[0.09 + boxWidth / 2, 0.0565 + -boxHeight / 2, depth + 1.5]}
+        position={[boxWidth / 2, -boxHeight / 2, depth + 1.5]}
         // maxWidth={boxWidth}
         maxWidth={(viewport.width / 4) * 1}
         anchorX="center"
@@ -138,7 +137,7 @@ function Content({ onReflow }) {
     const y = page * viewport.height
     const sticky = state.threshold * viewport.height
     group.current.position.lerp(
-      vec.set(0, page < state.threshold ? y : sticky, page < state.threshold ? 0 : page * 1.2),
+      vec.set(0, page < state.threshold ? y : sticky, page < state.threshold ? 0 : page * 1.25),
       0.1
     )
   })
@@ -224,11 +223,6 @@ export default function App() {
   const onScroll = (e) => (state.top = e.target.scrollTop)
   useEffect(() => void onScroll({ target: scrollArea.current }), [])
   const [pages, setPages] = useState(0)
-
-  const onMouseMove = useCallback((e) => {
-    state.mouse = [(e.clientX / window.innerWidth) * 2 - 1, (e.clientY / window.innerHeight) * 2 - 1]
-  }, [])
-
   return (
     <>
       <Canvas
@@ -239,9 +233,7 @@ export default function App() {
         pixelRatio={2}
         camera={{ position: [0, 0, 10], far: 1000 }}
         gl={{ powerPreference: 'high-performance', alpha: false, antialias: false, stencil: false, depth: false }}
-        onCreated={({ gl }) => {
-          gl.setClearColor('#f5f5f5')
-        }}
+        onCreated={({ gl }) => gl.setClearColor('#f5f5f5')}
       >
         <spotLight
           castShadow
@@ -253,13 +245,13 @@ export default function App() {
           shadow-mapSize-height={1024}
         />
         <pointLight position={[-10, -10, -10]} color="white" intensity={1} />
-        <ambientLight intensity={0.5} />
+        <ambientLight intensity={0.4} />
         <Suspense fallback={null}>
           <Content onReflow={setPages} />
         </Suspense>
         <Effects />
       </Canvas>
-      <div className="scrollArea" ref={scrollArea} onScroll={onScroll} onMouseMove={onMouseMove}>
+      <div className="scrollArea" ref={scrollArea} onScroll={onScroll}>
         <div style={{ height: `${pages * 100}vh` }} />
       </div>
       <Loader />

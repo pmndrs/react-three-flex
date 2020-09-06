@@ -23,7 +23,7 @@ const state = {
       image: imgur('cAKwexj'),
     },
     {
-      depth: -4.5,
+      depth: -5,
       textColor: '#272727',
       text:
         'For why should it stop\nhere rather than here?\nSo that a thing\nwill either be at rest\nor must be moved\nad infinitum.',
