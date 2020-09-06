@@ -1,6 +1,9 @@
 # react-three-flex
 
-[![Travis CI](https://img.shields.io/travis/react-spring/react-three-flex?style=flat-square)](https://travis-ci.org/react-spring/react-three-flex) [![npm](https://img.shields.io/npm/v/react-three-flex?style=flat-square)](https://www.npmjs.com/package/react-three-flex) ![npm](https://img.shields.io/npm/dt/react-three-flex.svg?style=flat-square) [![Discord Shield](https://discordapp.com/api/guilds/740090768164651008/widget.png?style=shield)](https://discord.gg/ZZjjNvJ)
+[![Build Status](https://img.shields.io/travis/react-spring/react-three-flex/master?style=flat&colorA=000000&colorB=000000)](https://travis-ci.org/react-spring/react-three-flex)
+[![Version](https://img.shields.io/npm/v/react-three-flex?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/react-three-flex)
+[![Downloads](https://img.shields.io/npm/dt/react-three-flex.svg?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/react-three-flex)
+[![Discord Shield](https://discordapp.com/api/guilds/740090768164651008/widget.png?style=shield)](https://discord.gg/ZZjjNvJ)
 
 Placing content in threejs is hard.
 **`react-three-flex`** brings the web flexbox spec to [react-three-fiber](https://github.com/react-spring/react-three-fiber).
