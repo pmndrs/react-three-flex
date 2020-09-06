@@ -2350,10 +2350,10 @@ es-to-primitive@^1.2.1:
     is-date-object "^1.0.1"
     is-symbol "^1.0.2"
 
-esbuild@^0.6.26:
-  version "0.6.30"
-  resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.6.30.tgz#8df921c12b1cd4f32aaabdd8130edf6b060f87ba"
-  integrity sha512-ZSZY461UPzTYYC3rqy1QiMtngk2WyXf+58MgC7tC22jkI90FXNgEl0hN3ipfn/UgZYzTW2GBcHiO7t0rSbHT7g==
+esbuild@^0.6.31:
+  version "0.6.31"
+  resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.6.31.tgz#ea0ae77064b1493db561744a24d68616a5b6a384"
+  integrity sha512-qZHtPFNAhtsLwh8FEnpA6F0ne4OiKAsHQ4HUrsshJN2LcBATiZXx7WklOWf4/4f0Z0CSL8qA+6TAOBe9szy6JQ==
 
 escalade@^3.0.2:
   version "3.0.2"
@@ -4943,7 +4943,7 @@ rimraf@^3.0.0:
   dependencies:
     glob "^7.1.3"
 
-rollup-plugin-esbuild@^2.4.2:
+rollup-plugin-esbuild@^2.5.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/rollup-plugin-esbuild/-/rollup-plugin-esbuild-2.5.0.tgz#5748352d0b688743ac64fc85fa86939e00098524"
   integrity sha512-Tfi8Zynux67j4h4xEp/OvP2EDrKk/nM9Eghe1sT2+Nw4s6ei9vsqO1ajU+Y8EFfizMk3KEfYCicBKX6QLTW33w==
@@ -4952,7 +4952,7 @@ rollup-plugin-esbuild@^2.4.2:
     joycon "^2.2.5"
     strip-json-comments "^3.1.1"
 
-rollup@^2.26.4:
+rollup@^2.26.10:
   version "2.26.10"
   resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.26.10.tgz#0ffe0390d35f07af850382f22f1b8525c7f57f07"
   integrity sha512-dUnjCWOA0h9qNX6qtcHidyatz8FAFZxVxt1dbcGtKdlJkpSxGK3G9+DLCYvtZr9v94D129ij9zUhG+xbRoqepw==
