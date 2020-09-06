@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import React, { useRef } from 'react'
 import { useFrame } from 'react-three-fiber'
-import { useGLTFLoader, Shadow, MeshDistortMaterial } from 'drei'
+import { useGLTFLoader, Shadow } from 'drei'
 import Text from './Text'
 
 import state from '../state'
@@ -17,15 +17,18 @@ export default function Model(props) {
     shadow.current.scale.y = shadow.current.scale.z = 1 + t
     shadow.current.scale.x = (1 + t) * 1.25
     group.current.rotation.x = group.current.rotation.z += 0.005
-    group.current.position.x = THREE.MathUtils.lerp(group.current.position.x, state.mouse[0] / 2., 0.05 )
-    group.current.position.z = THREE.MathUtils.lerp(group.current.position.z, state.mouse[1] / 4., 0.03 )
+    group.current.position.x = THREE.MathUtils.lerp(group.current.position.x, state.mouse[0] / 2, 0.05)
+    group.current.position.z = THREE.MathUtils.lerp(group.current.position.z, state.mouse[1] / 4, 0.03)
   })
-  
+
   return (
     <group {...props} dispose={null}>
       <group ref={group}>
         <mesh geometry={nodes.geo.geometry} castShadow receiveShadow>
-          <MeshDistortMaterial color="white" roughness={1} metalness={0.5} factor={15} speed={5} />
+          <meshPhysicalMaterial color="#ffffff" roughness={1} metalness={0.5} />
+        </mesh>
+        <mesh geometry={nodes.geo.geometry}>
+          <meshPhysicalMaterial wireframe color="#cccccc" roughness={1} metalness={0} />
         </mesh>
       </group>
       <group position={[1.25, -0.5, 0]}>
