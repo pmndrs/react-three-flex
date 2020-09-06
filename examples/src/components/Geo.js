@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import React, { useRef } from 'react'
 import { useFrame } from 'react-three-fiber'
-import { useGLTFLoader, Shadow, useTextureLoader } from 'drei'
+import { useGLTFLoader, Shadow } from 'drei'
 import Text from './Text'
 
 import state from '../state'
