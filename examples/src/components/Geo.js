@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import React, { useRef } from 'react'
 import { useFrame } from 'react-three-fiber'
-import { useGLTFLoader, Shadow } from 'drei'
+import { useGLTFLoader, MeshDistortMaterial, Shadow } from 'drei'
 import Text from './Text'
 
 import state from '../state'
@@ -25,7 +25,7 @@ export default function Model(props) {
     <group {...props} dispose={null}>
       <group ref={group}>
         <mesh geometry={nodes.geo.geometry} castShadow receiveShadow>
-          <meshPhysicalMaterial color="#ffffff" flatShading roughness={1} metalness={0.5} />
+          <MeshDistortMaterial color="#ffffff" flatShading roughness={1} metalness={0.5} factor={15} speed={5} />
         </mesh>
         <mesh geometry={nodes.geo.geometry}>
           <meshBasicMaterial wireframe />
