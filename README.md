@@ -1,6 +1,6 @@
 # react-three-flex
 
-![Release](https://github.com/react-spring/react-three-flex/workflows/Release/badge.svg)
+[![Build Status](https://img.shields.io/github/workflow/status/react-spring/react-three-flex/Release?style=flat&colorA=000000&colorB=000000)](https://github.com/react-spring/react-three-flex/releases)
 [![Version](https://img.shields.io/npm/v/react-three-flex?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/react-three-flex)
 [![Downloads](https://img.shields.io/npm/dt/react-three-flex.svg?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/react-three-flex)
 [![Discord Shield](https://discordapp.com/api/guilds/740090768164651008/widget.png?style=shield)](https://discord.gg/ZZjjNvJ)
