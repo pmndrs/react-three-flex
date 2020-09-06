@@ -236,24 +236,12 @@ export default function App() {
       <Canvas
         concurrent
         colorManagement
-        shadowMap
         noEvents
         pixelRatio={2}
         camera={{ position: [0, 0, 10], far: 1000 }}
         gl={{ powerPreference: 'high-performance', alpha: false, antialias: false, stencil: false, depth: false }}
         onCreated={({ gl }) => gl.setClearColor('#f5f5f5')}
       >
-        <spotLight
-          castShadow
-          angle={0.3}
-          penumbra={1}
-          position={[0, 10, 20]}
-          intensity={5}
-          shadow-mapSize-width={1024}
-          shadow-mapSize-height={1024}
-        />
-        <pointLight position={[-10, -10, -10]} color="white" intensity={1} />
-        <ambientLight intensity={0.4} />
         <Suspense fallback={null}>
           <Content onReflow={setPages} />
         </Suspense>

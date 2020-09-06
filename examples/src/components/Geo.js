@@ -10,6 +10,7 @@ export default function Model(props) {
   const group = useRef()
   const shadow = useRef()
   const { nodes } = useGLTFLoader('/geo.min.glb', true)
+  const matcap = useTextureLoader("/matcap.png")
 
   useFrame(({ clock }) => {
     const t = (1 + Math.sin(clock.getElapsedTime() * 1.5)) / 2
@@ -24,8 +25,8 @@ export default function Model(props) {
   return (
     <group {...props} dispose={null}>
       <group ref={group}>
-        <mesh geometry={nodes.geo.geometry} castShadow receiveShadow>
-          <meshPhysicalMaterial color="#ffffff" flatShading roughness={1} metalness={0.5} />
+        <mesh geometry={nodes.geo.geometry}>
+          <meshMatcapMaterial matcap={matcap} />
         </mesh>
         <mesh geometry={nodes.geo.geometry}>
           <meshBasicMaterial wireframe />
