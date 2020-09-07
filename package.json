@@ -51,8 +51,8 @@
     "postbuild": "tsc --emitDeclarationOnly",
     "prepublishOnly": "npm run build",
     "eslint": "eslint --fix src/**/*.{js,ts,jsx,tsx}",
-    "eslint-examples": "eslint --fix examples/**/*.{js,ts,jsx,tsx}",
-    "eslint:ci": "eslint {src,examples}/**/*.{js,ts,jsx,tsx}",
+    "eslint-examples": "eslint --fix examples/src/**/*.{js,ts,jsx,tsx}",
+    "eslint:ci": "eslint {src,examples/src}/**/*.{js,ts,jsx,tsx}",
     "test": "echo no tests yet"
   },
   "dependencies": {
