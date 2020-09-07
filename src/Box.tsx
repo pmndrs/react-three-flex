@@ -31,9 +31,12 @@ export function Box({
   justify,
 
   flexBasis,
+  basis,
   flexGrow,
+  grow,
 
   flexShrink,
+  shrink,
 
   flexWrap,
   wrap,
@@ -91,8 +94,11 @@ export function Box({
       justify,
 
       flexBasis,
+      basis,
       flexGrow,
+      grow,
       flexShrink,
+      shrink,
 
       flexWrap,
       wrap,
@@ -137,10 +143,13 @@ export function Box({
     alignSelf,
     dir,
     flexBasis,
+    basis,
     flexDir,
     flexDirection,
     flexGrow,
+    grow,
     flexShrink,
+    shrink,
     flexWrap,
     height,
     justify,

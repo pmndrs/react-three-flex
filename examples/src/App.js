@@ -33,9 +33,9 @@ function Page({ text, tag, images, textScaleFactor, onReflow, left = false }) {
     maxHeight: 6,
   }
   return (
-    <Box flexDirection="column" alignItems={left ? 'flex-start' : 'flex-end'} justifyContent="flex-start" width="100%" height="auto" minHeight="100%">
+    <Box dir="column" align={left ? 'flex-start' : 'flex-end'} justify="flex-start" width="100%" height="auto" minHeight="100%">
       <HeightReporter onReflow={onReflow} />
-      <Box flexDirection="row" width="100%" height="auto" justifyContent={left ? 'flex-end' : 'flex-start'} margin={0} flexGrow={1} flexWrap="wrap">
+      <Box dir="row" width="100%" height="auto" justify={left ? 'flex-end' : 'flex-start'} margin={0} flexGrow={1} flexWrap="wrap">
         {textures.map((texture, index) => (
           <Box key={index} {...boxProps}>
             {(width, height) => (
@@ -117,11 +117,7 @@ function Content({ onReflow }) {
   const scale = Math.min(1, viewport.width / 16)
   return (
     <group ref={group}>
-      <Flex
-        flexDirection="column"
-        position={[-viewport.width / 2, viewport.height / 2, 0]}
-        size={[viewport.width, viewport.height, 0]}
-        onReflow={handleReflow}>
+      <Flex dir="column" position={[-viewport.width / 2, viewport.height / 2, 0]} size={[viewport.width, viewport.height, 0]} onReflow={handleReflow}>
         {state.content.map((props, index) => (
           <Page
             key={index}
@@ -134,7 +130,7 @@ function Content({ onReflow }) {
             {...props}
           />
         ))}
-        <Box flexDirection="row" width="100%" height="100%" alignItems="center" justifyContent="center">
+        <Box dir="row" width="100%" height="100%" align="center" justify="center">
           <Box centerAnchor>
             {state.lines.map((props, index) => (
               <Line key={index} {...props} />
@@ -153,7 +149,7 @@ function Content({ onReflow }) {
             </Text>
           </Box>
         </Box>
-        <Box flexDirection="row" width="100%" height="100%" alignItems="center" justifyContent="center">
+        <Box dir="row" width="100%" height="100%" align="center" justify="center">
           <Box>
             <Layercard {...state.depthbox[0]} text={state.depthbox[1].text} boxWidth={bW} boxHeight={bH} map={texture} textScaleFactor={scale} />
             <Geo position={[bW / 2, -bH / 2, state.depthbox[1].depth]} />
