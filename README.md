@@ -15,6 +15,7 @@ npm install react-three-flex
 ```
 
 <p align="center">
+  <a href="https://codesandbox.io/embed/todo"><img width="274" src="https://i.imgur.com/FOqC6Ml.gif" /></a>
   <a href="https://codesandbox.io/embed/gallant-elbakyan-lvwmj"><img width="274" src="https://i.imgur.com/PrQX2uI.gif" /></a>
   <a href="https://codesandbox.io/embed/r3flex-jbgrq"><img width="274" src="https://i.imgur.com/fykLiRl.gif" /></a>
 </p>
