@@ -5,10 +5,8 @@
 [![Downloads](https://img.shields.io/npm/dt/react-three-flex.svg?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/react-three-flex)
 [![Discord Shield](https://discordapp.com/api/guilds/740090768164651008/widget.png?style=shield)](https://discord.gg/ZZjjNvJ)
 
-Placing content in THREE.js is hard.
-**`react-three-flex`** brings the web flexbox spec to [react-three-fiber](https://github.com/react-spring/react-three-fiber).
-It is based on [yoga](https://github.com/facebook/yoga), Facebook's open source layout engine for react-native.
-Think of how you would normally go about making content responsive, stick to the sides, wrap around, grids, rows, columns, padding, margin. Especially if you are working on frontend-centric projects where the camera is pointing down, forming a 2-dimensional view.
+Placing content in THREE.js is hard. **`react-three-flex`** brings the webs flexbox spec to [react-three-fiber](https://github.com/react-spring/react-three-fiber).
+It is based on [Yoga](https://github.com/facebook/yoga), Facebook's open source layout engine for react-native.
 
 ```bash
 npm install react-three-flex
