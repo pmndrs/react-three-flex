@@ -16,27 +16,28 @@ function HeightReporter({ onReflow }) {
   return null
 }
 
-function Title({ text, tag, images, textScaleFactor, onReflow, left = false }) {
+function Page({ text, tag, images, textScaleFactor, onReflow, left = false }) {
   const textures = useLoader(THREE.TextureLoader, images)
   const { viewport } = useThree()
+  const boxProps = {
+    centerAnchor: true,
+    flexGrow: 1,
+    marginTop: 1,
+    marginLeft: left * 1,
+    marginRight: !left * 1,
+    width: 'auto',
+    height: 'auto',
+    minWidth: 3,
+    minHeight: 3,
+    maxWidth: 6,
+    maxHeight: 6,
+  }
   return (
     <Box flexDirection="column" alignItems={left ? 'flex-start' : 'flex-end'} justifyContent="flex-start" width="100%" height="auto" minHeight="100%">
       <HeightReporter onReflow={onReflow} />
       <Box flexDirection="row" width="100%" height="auto" justifyContent={left ? 'flex-end' : 'flex-start'} margin={0} flexGrow={1} flexWrap="wrap">
         {textures.map((texture, index) => (
-          <Box
-            key={index}
-            centerAnchor
-            flexGrow={1}
-            marginTop={1}
-            marginLeft={left * 1}
-            marginRight={!left * 1}
-            width="auto"
-            height="auto"
-            minWidth={3}
-            minHeight={3}
-            maxWidth={6}
-            maxHeight={6}>
+          <Box key={index} {...boxProps}>
             {(width, height) => (
               <mesh>
                 <planeBufferGeometry args={[width, height]} />
@@ -69,26 +70,25 @@ function Title({ text, tag, images, textScaleFactor, onReflow, left = false }) {
   )
 }
 
-function DepthLayerCard({ depth, boxWidth, boxHeight, text, textColor, color, map, textScaleFactor }) {
+function Layercard({ depth, boxWidth, boxHeight, text, textColor, color, map, textScaleFactor }) {
   const ref = useRef()
   const { viewport, size } = useThree()
   const pageLerp = useRef(state.top / size.height)
   useFrame(() => {
     const page = (pageLerp.current = THREE.MathUtils.lerp(pageLerp.current, state.top / size.height, 0.2))
-    if (depth >= 0) ref.current.material.opacity = page < state.threshold * 1.7 ? 1 : 1 - (page - state.threshold * 1.7)
+    if (depth >= 0) ref.current.opacity = page < state.threshold * 1.7 ? 1 : 1 - (page - state.threshold * 1.7)
   })
   return (
     <>
-      <mesh ref={ref} position={[boxWidth / 2, -boxHeight / 2, depth]}>
+      <mesh position={[boxWidth / 2, -boxHeight / 2, depth]}>
         <planeBufferGeometry args={[boxWidth, boxHeight]} />
-        <meshBasicMaterial color={color} map={map} toneMapped={false} transparent opacity={1} />
+        <meshBasicMaterial ref={ref} color={color} map={map} toneMapped={false} transparent opacity={1} />
       </mesh>
       <Text
         position={[boxWidth / 2, -boxHeight / 2, depth + 1.5]}
         maxWidth={(viewport.width / 4) * 1}
         anchorX="center"
         anchorY="middle"
-        textAlign="left"
         fontSize={0.6 * textScaleFactor}
         lineHeight={1}
         letterSpacing={-0.05}
@@ -102,11 +102,8 @@ function DepthLayerCard({ depth, boxWidth, boxHeight, text, textColor, color, ma
 function Content({ onReflow }) {
   const group = useRef()
   const { viewport, size } = useThree()
-  const [boxWidth, boxHeight] = useAspect('cover', 1920, 1920, 0.5)
-  const textures = useLoader(
-    THREE.TextureLoader,
-    state.depthbox.map((props) => props.image)
-  )
+  const [bW, bH] = useAspect('cover', 1920, 1920, 0.5)
+  const texture = useLoader(THREE.TextureLoader, state.depthbox[0].image)
   const vec = new THREE.Vector3()
   const pageLerp = useRef(state.top / size.height)
   useFrame(() => {
@@ -117,15 +114,19 @@ function Content({ onReflow }) {
   })
   const handleReflow = useCallback((w, h) => onReflow((state.pages = h / viewport.height + 5.5)), [onReflow, viewport.height])
   const sizesRef = useRef([])
-  const textScaleFactor = Math.min(1, viewport.width / 16)
+  const scale = Math.min(1, viewport.width / 16)
   return (
     <group ref={group}>
-      <Flex flexDirection="column" position={[-viewport.width / 2, viewport.height / 2, 0]} size={[viewport.width, viewport.height, 0]} onReflow={handleReflow}>
+      <Flex
+        flexDirection="column"
+        position={[-viewport.width / 2, viewport.height / 2, 0]}
+        size={[viewport.width, viewport.height, 0]}
+        onReflow={handleReflow}>
         {state.content.map((props, index) => (
-          <Title
+          <Page
             key={index}
             left={!(index % 2)}
-            textScaleFactor={textScaleFactor}
+            textScaleFactor={scale}
             onReflow={(w, h) => {
               sizesRef.current[index] = h
               state.threshold = Math.max(4, (4 / (15.8 * 3)) * sizesRef.current.reduce((acc, e) => acc + e, 0))
@@ -143,8 +144,7 @@ function Content({ onReflow }) {
               position-z={0.5}
               anchorX="center"
               anchorY="middle"
-              textAlign="left"
-              fontSize={1.5 * textScaleFactor}
+              fontSize={1.5 * scale}
               lineHeight={1}
               letterSpacing={-0.05}
               color="black"
@@ -155,15 +155,8 @@ function Content({ onReflow }) {
         </Box>
         <Box flexDirection="row" width="100%" height="100%" alignItems="center" justifyContent="center">
           <Box>
-            <DepthLayerCard
-              {...state.depthbox[0]}
-              text={state.depthbox[1].text}
-              boxWidth={boxWidth}
-              boxHeight={boxHeight}
-              map={textures[0]}
-              textScaleFactor={textScaleFactor}
-            />
-            <Geo position={[boxWidth / 2, -boxHeight / 2, state.depthbox[1].depth]} />
+            <Layercard {...state.depthbox[0]} text={state.depthbox[1].text} boxWidth={bW} boxHeight={bH} map={texture} textScaleFactor={scale} />
+            <Geo position={[bW / 2, -bH / 2, state.depthbox[1].depth]} />
           </Box>
         </Box>
       </Flex>
@@ -176,11 +169,6 @@ export default function App() {
   const onScroll = (e) => (state.top = e.target.scrollTop)
   useEffect(() => void onScroll({ target: scrollArea.current }), [])
   const [pages, setPages] = useState(0)
-  useEffect(() => {
-    const setMouse = (e) => (state.mouse = [(e.clientX / window.innerWidth) * 2 - 1, (e.clientY / window.innerHeight) * 2 - 1])
-    window.addEventListener('mousemove', setMouse)
-    return () => window.removeEventListener('mousemove', setMouse)
-  }, [])
   return (
     <>
       <Canvas
@@ -192,15 +180,27 @@ export default function App() {
         camera={{ position: [0, 0, 10], far: 1000 }}
         gl={{ powerPreference: 'high-performance', alpha: false, antialias: false, stencil: false, depth: false }}
         onCreated={({ gl }) => gl.setClearColor('#f5f5f5')}>
-        <spotLight castShadow angle={0.3} penumbra={1} position={[0, 10, 20]} intensity={5} shadow-mapSize-width={1024} shadow-mapSize-height={1024} />
-        <pointLight position={[-10, -10, -10]} color="white" intensity={1} />
+        <pointLight position={[-10, -10, -10]} intensity={1} />
         <ambientLight intensity={0.4} />
+        <spotLight
+          castShadow
+          angle={0.3}
+          penumbra={1}
+          position={[0, 10, 20]}
+          intensity={5}
+          shadow-mapSize-width={1024}
+          shadow-mapSize-height={1024}
+        />
         <Suspense fallback={null}>
           <Content onReflow={setPages} />
         </Suspense>
         <Effects />
       </Canvas>
-      <div className="scrollArea" ref={scrollArea} onScroll={onScroll}>
+      <div
+        className="scrollArea"
+        ref={scrollArea}
+        onScroll={onScroll}
+        onPointerMove={(e) => (state.mouse = [(e.clientX / window.innerWidth) * 2 - 1, (e.clientY / window.innerHeight) * 2 - 1])}>
         <div style={{ height: `${pages * 100}vh` }} />
       </div>
       <Loader />
