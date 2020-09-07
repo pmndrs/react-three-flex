@@ -85,6 +85,7 @@ function Layercard({ depth, boxWidth, boxHeight, text, textColor, color, map, te
         <meshBasicMaterial ref={ref} color={color} map={map} toneMapped={false} transparent opacity={1} />
       </mesh>
       <Text
+        bold
         position={[boxWidth / 2, -boxHeight / 2, depth + 1.5]}
         maxWidth={(viewport.width / 4) * 1}
         anchorX="center"
