@@ -52,9 +52,6 @@ const Layout = () => (
     <Box centerAnchor flexGrow={1}>
       <mesh geometry={torus} />
     </Box>
-    <Box centerAnchor>
-      <mesh geometry={sphere} />
-    </Box>
   </Flex>
 )
 ```
@@ -104,10 +101,6 @@ function Outer() {
     <Flex>
       <Box width="auto" height="auto" flexGrow={1} centerAnchor>
         <Inner />
-      </Box>
-    </Flex>
-  )
-}
 ```
 
 Remember that the `useFlexSize` hook works **ONLY** if your `<Box/>` is outside the component.
@@ -132,10 +125,6 @@ function AnimatedBox() {
     <Box centerAnchor>
       <mesh>
         <boxBufferGeometry attach="geometry" args={[state ? 10 : 30, 10, 10]} />
-      </mesh>
-    </Box>
-  )
-}
 ```
 
 **This will NOT cause a reflow!**
@@ -147,20 +136,17 @@ function AnimatedBox() {
   const [state, setState] = useState(true)
   useInterval(() => setState((s) => !s), 1000)
   return (
-    <mesh>
-      <boxBufferGeometry attach="geometry" args={[state ? 10 : 30, 10, 10]} />
+    <mesh scale={[state ? 1 : 3, 1, 1]}>
+      <boxBufferGeometry attach="geometry" />
     </mesh>
   )
 }
+
 function Layout() {
   return (
     <Flex>
       <Box centerAnchor>
         <AnimatedBox />
-      </Box>
-    </Flex>
-  )
-}
 ```
 
 For every other cases (setting size with an `useFrame`, react-spring animations, `<Box/>` not rerendered) you'll need to **manually cause a reflow**, using `useReflow()` hook. Reflows requests are batched every frame, so you can call it from hundreds of components without performance issues.
@@ -178,11 +164,6 @@ function AnimatedBox() {
   return (
     <Box centerAnchor>
       <mesh ref={ref}>
-        <boxBufferGeometry attach="geometry" args={[10, 10, 10]} />
-      </mesh>
-    </Box>
-  )
-}
 ```
 
 **`<Box/>` outside of component:**
@@ -194,11 +175,7 @@ function AnimatedBox() {
   const reflow = useReflow()
   useEffect(reflow, [state])
   return (
-    <mesh ref={ref}>
-      <boxBufferGeometry attach="geometry" args={[state ? 10 : 30, 10, 10]} />
-    </mesh>
-  )
-}
+    <mesh ref={ref} scale={[state ? 1 : 3, 1, 1]}>
 ```
 
 ### Sizing
@@ -207,15 +184,7 @@ function AnimatedBox() {
 
 ```jsx
 <Flex flexDirection="row" flexWrap="wrap" size={[300, 200, 0]}>
-  <Box centerAnchor>
-    <mesh geometry={sphere} />
-  </Box>
-  <Box centerAnchor>
-    <mesh geometry={torus} />
-  </Box>
-  <Box centerAnchor>
-    <mesh geometry={icosahedron} />
-  </Box>
+  {/* ... */}
 </Flex>
 ```
 
@@ -247,9 +216,6 @@ For every `<Flex />` and `<Box />` component you can specify the margin and padd
 <Flex flexDirection="row" size={[300, 200, 0]} padding={30} margin={5}>
   <Box padding={5} marginTop={5} centerAnchor>
     <mesh geometry={sphere} />
-  </Box>
-  <Box paddingLeft={5} margin={5} centerAnchor>
-    <mesh geometry={torus} />
   </Box>
 </Flex>
 ```
@@ -283,7 +249,7 @@ To make it easier, you can use the `onReflow` callback on the root `<Flex>` comp
 
 ```jsx
 <Flex onReflow={(totalWidth, totalHeight) => ...}>
- ...
+ {/* ... */}
 </Flex>
 ```
 
@@ -329,6 +295,6 @@ Example:
 ```jsx
 // Flex with padding top set to 10, alignItems to 'center', justifyContent to 'space-around' and flexWrap to 'wrap'
 <Flex pt={10} align="center" justify="space-around" wrap="wrap">
-  <Box />
+  {/* ... */}
 </Flex>
 ```
