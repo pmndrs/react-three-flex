@@ -12,7 +12,7 @@ body,
 body {
   cursor: url('/images/ellipse.svg'), pointer;
   cursor: -webkit-image-set(url('/images/ellipse.svg') 1x, url('/images/ellipse.svg') 2x), pointer;
-  background: #f5f5f5;
+  background: #272727;
   font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, Roboto,
     Ubuntu, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 }

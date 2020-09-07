@@ -2,7 +2,9 @@ import * as THREE from 'three'
 import React, { Suspense, useEffect, useRef, useState, useCallback, useLayoutEffect } from 'react'
 import { Canvas, useThree, useFrame, useLoader } from 'react-three-fiber'
 import { Flex, Box, useFlexSize } from 'react-three-flex'
-import { useAspect, Line, Loader } from 'drei'
+import { useAspect } from 'drei/misc/useAspect'
+import { Line } from 'drei/abstractions/Line'
+import { Loader } from 'drei/prototyping/Loader'
 import Effects from './components/Effects'
 import Text from './components/Text'
 import Geo from './components/Geo'
@@ -224,13 +226,13 @@ export default function App() {
   useEffect(() => void onScroll({ target: scrollArea.current }), [])
   const [pages, setPages] = useState(0)
 
-  
   useEffect(() => {
-    const setMouse = e => state.mouse= [(e.clientX/window.innerWidth) * 2 - 1, (e.clientY/window.innerHeight) * 2 - 1]
+    const setMouse = (e) =>
+      (state.mouse = [(e.clientX / window.innerWidth) * 2 - 1, (e.clientY / window.innerHeight) * 2 - 1])
     window.addEventListener('mousemove', setMouse)
     return () => window.removeEventListener('mousemove', setMouse)
   }, [])
-  
+
   return (
     <>
       <Canvas
