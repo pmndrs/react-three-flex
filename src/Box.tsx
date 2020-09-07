@@ -1,12 +1,12 @@
-import React, { useLayoutEffect, useContext, useRef, useState, useMemo, PropsWithChildren } from 'react'
+import React, { useLayoutEffect, useRef, useMemo, useState } from 'react'
 import * as THREE from 'three'
 import Yoga from 'yoga-layout-prebuilt'
-import { ReactThreeFiber } from 'react-three-fiber'
+import { ReactThreeFiber, useFrame } from 'react-three-fiber'
 
 import { setYogaProperties, rmUndefFromObj } from './util'
 import { boxContext, flexContext } from './context'
 import { R3FlexProps } from './props'
-import { useReflow } from './hooks'
+import { useReflow, useContext } from './hooks'
 
 /**
  * Box container for 3D Objects.
@@ -70,9 +70,11 @@ export function Box({
 
   // other
   ...props
-}: PropsWithChildren<
-  { centerAnchor?: boolean } & R3FlexProps & ReactThreeFiber.Object3DNode<THREE.Group, typeof THREE.Group>
->) {
+}: {
+  centerAnchor?: boolean
+  children: React.ReactNode | ((width: number, height: number) => React.ReactNode)
+} & R3FlexProps &
+  Omit<ReactThreeFiber.Object3DNode<THREE.Group, typeof THREE.Group>, 'children'>) {
   // must memoize or the object literal will cause every dependent of flexProps to rerender everytime
   const flexProps: R3FlexProps = useMemo(() => {
     const _flexProps = {
@@ -171,36 +173,56 @@ export function Box({
     wrap,
   ])
 
-  const { rootNode, registerBox, unregisterBox, scaleFactor } = useContext(flexContext)
-  const parent = useContext(boxContext) || rootNode
+  const { registerBox, unregisterBox, scaleFactor } = useContext(flexContext)
+  const { node: parent } = useContext(boxContext)
   const group = useRef<THREE.Group>()
-  const [node] = useState(() => Yoga.Node.create())
+  const node = useMemo(() => Yoga.Node.create(), [])
   const reflow = useReflow()
 
   useLayoutEffect(() => {
     setYogaProperties(node, flexProps, scaleFactor)
-  }, [flexProps, node])
+  }, [flexProps, node, scaleFactor])
 
   // Make child known to the parents yoga instance *before* it calculates layout
   useLayoutEffect(() => {
+    if (!group.current || !parent) return
+
     parent.insertChild(node, parent.getChildCount())
-    registerBox(group.current, node, flexProps, centerAnchor)
+    registerBox(node, group.current, flexProps, centerAnchor)
 
     // Remove child on unmount
     return () => {
       parent.removeChild(node)
-      unregisterBox(group.current, node)
+      unregisterBox(node)
     }
-  }, [node, parent, flexProps, centerAnchor])
+  }, [node, parent, flexProps, centerAnchor, registerBox, unregisterBox])
 
   // We need to reflow if props change
   useLayoutEffect(() => {
     reflow()
-  }, [children, flexProps])
+  }, [children, flexProps, reflow])
+
+  const [size, setSize] = useState<[number, number]>([0, 0])
+  const epsilon = 1 / scaleFactor
+  useFrame(() => {
+    const width =
+      (typeof flexProps.width === 'number' ? flexProps.width : null) || node.getComputedWidth().valueOf() / scaleFactor
+    const height =
+      (typeof flexProps.height === 'number' ? flexProps.height : null) ||
+      node.getComputedHeight().valueOf() / scaleFactor
+
+    if (Math.abs(width - size[0]) > epsilon || Math.abs(height - size[1]) > epsilon) {
+      setSize([width, height])
+    }
+  })
+
+  const sharedBoxContext = useMemo(() => ({ node, size }), [node, size])
 
   return (
     <group ref={group} {...props}>
-      <boxContext.Provider value={node}>{children}</boxContext.Provider>
+      <boxContext.Provider value={sharedBoxContext}>
+        {typeof children === 'function' ? children(size[0], size[1]) : children}
+      </boxContext.Provider>
     </group>
   )
 }
