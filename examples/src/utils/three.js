@@ -1,3 +1,5 @@
+import lerp from 'lerp'
+
 //export { WebGLMultisampleRenderTarget } from 'three/src/renderers/WebGLMultisampleRenderTarget.js';
 //export { WebGLCubeRenderTarget } from 'three/src/renderers/WebGLCubeRenderTarget.js';
 export { WebGLRenderTarget } from 'three/src/renderers/WebGLRenderTarget.js'
@@ -29,12 +31,12 @@ export { Line } from 'three/src/objects/Line.js'
 export class Points {}
 export { Group } from 'three/src/objects/Group.js'
 //export { VideoTexture } from 'three/src/textures/VideoTexture.js';
-export { DataTexture } from 'three/src/textures/DataTexture.js';
+export { DataTexture } from 'three/src/textures/DataTexture.js'
 //export { DataTexture2DArray } from 'three/src/textures/DataTexture2DArray.js';
 //export { DataTexture3D } from 'three/src/textures/DataTexture3D.js';
 //export { CompressedTexture } from 'three/src/textures/CompressedTexture.js';
 //export { CubeTexture } from 'three/src/textures/CubeTexture.js';
-export { CanvasTexture } from 'three/src/textures/CanvasTexture.js';
+export { CanvasTexture } from 'three/src/textures/CanvasTexture.js'
 //export { DepthTexture } from 'three/src/textures/DepthTexture.js';
 export { Texture } from 'three/src/textures/Texture.js'
 //export * from 'three/src/geometries/Geometries.js'
@@ -120,7 +122,7 @@ export { InterleavedBuffer } from 'three/src/core/InterleavedBuffer.js'
 export { InstancedBufferAttribute } from 'three/src/core/InstancedBufferAttribute.js'
 //export { GLBufferAttribute } from 'three/src/core/GLBufferAttribute.js'
 export * from 'three/src/core/BufferAttribute.js'
-export { Face3 } from 'three/src/core/Face3.js'
+//export { Face3 } from 'three/src/core/Face3.js'
 export { Object3D } from 'three/src/core/Object3D.js'
 //export { Raycaster } from 'three/src/core/Raycaster.js'
 export class Raycaster {
@@ -129,8 +131,9 @@ export class Raycaster {
     return []
   }
 }
-export { Layers } from 'three/src/core/Layers.js'
-export { EventDispatcher } from 'three/src/core/EventDispatcher.js'
+//export { Layers } from 'three/src/core/Layers.js'
+export class Layers {}
+//export { EventDispatcher } from 'three/src/core/EventDispatcher.js'
 export { Clock } from 'three/src/core/Clock.js'
 //export { QuaternionLinearInterpolant } from 'three/src/math/interpolants/QuaternionLinearInterpolant.js'
 //export { LinearInterpolant } from 'three/src/math/interpolants/LinearInterpolant.js'
@@ -138,14 +141,18 @@ export { Clock } from 'three/src/core/Clock.js'
 //export { CubicInterpolant } from 'three/src/math/interpolants/CubicInterpolant.js'
 //export { Interpolant } from 'three/src/math/Interpolant.js'
 export class Interpolant {}
-export { Triangle } from 'three/src/math/Triangle.js'
-export { MathUtils } from 'three/src/math/MathUtils.js'
-export { Spherical } from 'three/src/math/Spherical.js'
-export { Cylindrical } from 'three/src/math/Cylindrical.js'
-export { Plane } from 'three/src/math/Plane.js'
-export { Frustum } from 'three/src/math/Frustum.js'
+//export { Triangle } from 'three/src/math/Triangle.js'
+//export { MathUtils } from 'three/src/math/MathUtils.js'
+
+export function MathUtils() {}
+MathUtils.lerp = lerp
+
+//export { Spherical } from 'three/src/math/Spherical.js'
+//export { Cylindrical } from 'three/src/math/Cylindrical.js'
+//export { Plane } from 'three/src/math/Plane.js'
+//export { Frustum } from 'three/src/math/Frustum.js'
 export { Sphere } from 'three/src/math/Sphere.js'
-export { Ray } from 'three/src/math/Ray.js'
+//export { Ray } from 'three/src/math/Ray.js'
 export { Matrix4 } from 'three/src/math/Matrix4.js'
 export { Matrix3 } from 'three/src/math/Matrix3.js'
 export { Box3 } from 'three/src/math/Box3.js'
@@ -183,4 +190,61 @@ export { Color } from 'three/src/math/Color.js'
 //export { ShapeUtils } from 'three/src/extras/ShapeUtils.js'
 //export { PMREMGenerator } from 'three/src/extras/PMREMGenerator.js'
 //export { WebGLUtils } from 'three/src/renderers/webgl/WebGLUtils.js'
-export * from 'three/src/constants.js'
+
+//export * from 'three/src/constants.js'
+
+export const PCFSoftShadowMap = 2
+export const FrontSide = 0
+export const BackSide = 1
+export const DoubleSide = 2
+export const FlatShading = 1
+export const ACESFilmicToneMapping = 4
+export const RepeatWrapping = 1000
+export const ClampToEdgeWrapping = 1001
+export const MirroredRepeatWrapping = 1002
+export const NearestFilter = 1003
+export const NearestMipmapNearestFilter = 1004
+export const NearestMipMapNearestFilter = 1004
+export const NearestMipmapLinearFilter = 1005
+export const NearestMipMapLinearFilter = 1005
+export const LinearFilter = 1006
+export const LinearMipmapNearestFilter = 1007
+export const LinearMipMapNearestFilter = 1007
+export const LinearMipmapLinearFilter = 1008
+export const LinearMipMapLinearFilter = 1008
+export const RGBFormat = 1022
+export const RGBAFormat = 1023
+export const LuminanceFormat = 1024
+export const LuminanceAlphaFormat = 1025
+export const RGBEFormat = RGBAFormat
+export const DepthFormat = 1026
+export const DepthStencilFormat = 1027
+export const RedFormat = 1028
+export const RedIntegerFormat = 1029
+export const RGFormat = 1030
+export const RGIntegerFormat = 1031
+export const RGBIntegerFormat = 1032
+export const RGBAIntegerFormat = 1033
+export const InterpolateDiscrete = 2300
+export const InterpolateLinear = 2301
+export const InterpolateSmooth = 2302
+export const ZeroCurvatureEnding = 2400
+export const ZeroSlopeEnding = 2401
+export const WrapAroundEnding = 2402
+export const NormalAnimationBlendMode = 2500
+export const AdditiveAnimationBlendMode = 2501
+export const TrianglesDrawMode = 0
+export const TriangleStripDrawMode = 1
+export const TriangleFanDrawMode = 2
+export const LinearEncoding = 3000
+export const sRGBEncoding = 3001
+export const GammaEncoding = 3007
+export const RGBEEncoding = 3002
+export const LogLuvEncoding = 3003
+export const RGBM7Encoding = 3004
+export const RGBM16Encoding = 3005
+export const RGBDEncoding = 3006
+export const BasicDepthPacking = 3200
+export const RGBADepthPacking = 3201
+export const TangentSpaceNormalMap = 0
+export const ObjectSpaceNormalMap = 1
