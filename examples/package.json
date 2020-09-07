@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@react-spring/web": "9.0.0-rc.3",
-    "drei": "1.5.0",
+    "drei": "1.5.1",
     "lerp": "^1.0.3",
     "postprocessing": "6.17.2",
     "react": "^0.0.0-experimental-94c0244ba",

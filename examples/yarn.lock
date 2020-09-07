@@ -3861,16 +3861,17 @@ dotenv@8.2.0:
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.2.0.tgz#97e619259ada750eea3e4ea3e26bceea5424b16a"
   integrity sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw==
 
-drei@1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/drei/-/drei-1.5.0.tgz#345e4c233f0712d9bfa1845215affc791c9ca812"
-  integrity sha512-T7z/9KjvD6JD1PFX3OoqKCcd8Wti79zk3UygMDr1+qYyjjOnnQg9jOF3Y7obzNlxAvDuItZnqXxsWU94P8i5pA==
+drei@1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/drei/-/drei-1.5.1.tgz#58361d6214936d63d7d0ac6c4cb932c0cba3ac85"
+  integrity sha512-16bSWVF0H42YzOOb0uHmPbHuMKBg9ZBG08j3zLdadacgIkUBNERio9sBQRv7W1GwnUoiHuILlYHRsWWkQbUfOg==
   dependencies:
     "@babel/runtime" "^7.11.2"
     "@react-spring/web" "^9.0.0-rc.3"
     glsl-noise "^0.0.0"
     lodash.omit "^4.5.0"
     lodash.pick "^4.4.0"
+    r3f-troika "^0.31.1"
     react-merge-refs "^1.0.0"
     stats.js "^0.17.0"
     troika-three-text "^0.31.0"
@@ -8601,6 +8602,14 @@ querystringify@^2.1.1:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/querystringify/-/querystringify-2.2.0.tgz#3345941b4153cb9d082d8eee4cda2016a9aef7f6"
   integrity sha512-FIqgj2EUvTa7R50u0rGsyTftzjYmv/a3hO345bZNrqabNqjtgiDMgmo4mkUjd+nzU5oF3dClKqFIPUKybUyqoQ==
+
+r3f-troika@^0.31.1:
+  version "0.31.1"
+  resolved "https://registry.yarnpkg.com/r3f-troika/-/r3f-troika-0.31.1.tgz#456228c63b524a20489a1f4be90015e9b345d3d3"
+  integrity sha512-d0AI2ZCpU5u9axqJ3I+KI786ltQNOJKimeuq+96Sir/sg0Nl2m5JNA9fBg+YEZ6fOR7+kcbyaycQcTbfTpYDDQ==
+  dependencies:
+    troika-three-utils "^0.31.0"
+    troika-worker-utils "^0.31.0"
 
 raf@^3.4.1:
   version "3.4.1"

@@ -1,77 +1,18 @@
-import React, { Children, createElement, forwardRef, useMemo, useRef, useLayoutEffect, useState } from 'react'
-import { Text as TextMeshImpl } from 'troika-three-text'
-import { extend, useThree } from 'react-three-fiber'
-import mergeRefs from 'react-merge-refs'
+import React, { useRef, useLayoutEffect } from 'react'
 import { useReflow } from 'react-three-flex'
+import { Text as TextImpl } from 'drei/abstractions/Text'
 
-extend({ TextMeshImpl })
-
-const Text = forwardRef(
-  (
-    {
-      font = `https://cdn.jsdelivr.net/npm/inter-ui/Inter%20(web)/Inter-Bold.woff`,
-      anchorX = 'left',
-      anchorY = 'top',
-      textAlign = 'left',
-      children,
-      maxWidth,
-      ...props
-    },
-    ref
-  ) => {
-    const { invalidate } = useThree()
-    const reflow = useReflow()
-    const textRef = useRef()
-    const [baseMtl, setBaseMtl] = useState()
-    const [nodes, text] = useMemo(() => {
-      let n = []
-      let t = ''
-      Children.forEach(children, (child) => {
-        if (typeof child === 'string') {
-          t += child
-        } else if (child && typeof child === 'object' && child.props.attach === 'material') {
-          // Instantiate the base material and grab a reference to it, but don't assign any
-          // props, and assign it as the `material`, which Troika will replace behind the scenes.
-          n.push(
-            createElement(child.type, {
-              ref: setBaseMtl,
-              attach: 'material',
-            })
-          )
-          // Once the base material has been assigned, grab the resulting upgraded material,
-          // and apply the original material props to that.
-          if (baseMtl) {
-            n.push(<primitive object={textRef.current.material} {...child.props} attach={null} />)
-          }
-        } else {
-          n.push(child)
-        }
-      })
-      return [n, t]
-    }, [children, baseMtl])
-
-    useLayoutEffect(() => {
-      textRef.current.sync(() => {
-        reflow()
-        invalidate()
-      })
-    })
-
-    return (
-      <textMeshImpl
-        ref={mergeRefs([textRef, ref])}
-        text={text}
-        anchorX={anchorX}
-        anchorY={anchorY}
-        textAlign={textAlign}
-        maxWidth={maxWidth}
-        font={font}
-        {...props}
-      >
-        {nodes}
-      </textMeshImpl>
-    )
-  }
-)
+function Text({
+  font = `https://cdn.jsdelivr.net/npm/inter-ui/Inter%20(web)/Inter-Bold.woff`,
+  anchorX = 'left',
+  anchorY = 'top',
+  textAlign = 'left',
+  ...props
+}) {
+  const reflow = useReflow()
+  const textRef = useRef()
+  useLayoutEffect(() => void textRef.current.sync(reflow))
+  return <TextImpl ref={textRef} anchorX={anchorX} anchorY={anchorY} textAlign={textAlign} font={font} {...props} />
+}
 
 export default Text
