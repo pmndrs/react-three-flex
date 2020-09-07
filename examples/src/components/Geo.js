@@ -5,14 +5,12 @@ import { useGLTFLoader } from 'drei/loaders/useGLTFLoader'
 import { MeshDistortMaterial } from 'drei/shaders/MeshDistortMaterial'
 import { Shadow } from 'drei/misc/Shadow'
 import Text from './Text'
-
 import state from '../state'
 
 export default function Model(props) {
   const group = useRef()
   const shadow = useRef()
   const { nodes } = useGLTFLoader('/geo.min.glb', true)
-
   useFrame(({ clock }) => {
     const t = (1 + Math.sin(clock.getElapsedTime() * 1.5)) / 2
     group.current.position.y = t / 3
@@ -22,7 +20,6 @@ export default function Model(props) {
     group.current.position.x = THREE.MathUtils.lerp(group.current.position.x, state.mouse[0] / 2, 0.05)
     group.current.position.z = THREE.MathUtils.lerp(group.current.position.z, state.mouse[1] / 4, 0.03)
   })
-
   return (
     <group {...props} dispose={null}>
       <group ref={group}>

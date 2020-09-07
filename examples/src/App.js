@@ -20,24 +20,9 @@ function Title({ text, tag, images, textScaleFactor, onReflow, left = false }) {
   const textures = useLoader(THREE.TextureLoader, images)
   const { viewport } = useThree()
   return (
-    <Box
-      flexDirection="column"
-      alignItems={left ? 'flex-start' : 'flex-end'}
-      justifyContent="flex-start"
-      width="100%"
-      height="auto"
-      minHeight="100%"
-    >
+    <Box flexDirection="column" alignItems={left ? 'flex-start' : 'flex-end'} justifyContent="flex-start" width="100%" height="auto" minHeight="100%">
       <HeightReporter onReflow={onReflow} />
-      <Box
-        flexDirection="row"
-        width="100%"
-        height="auto"
-        justifyContent={left ? 'flex-end' : 'flex-start'}
-        margin={0}
-        flexGrow={1}
-        flexWrap="wrap"
-      >
+      <Box flexDirection="row" width="100%" height="auto" justifyContent={left ? 'flex-end' : 'flex-start'} margin={0} flexGrow={1} flexWrap="wrap">
         {textures.map((texture, index) => (
           <Box
             key={index}
@@ -51,8 +36,7 @@ function Title({ text, tag, images, textScaleFactor, onReflow, left = false }) {
             minWidth={3}
             minHeight={3}
             maxWidth={6}
-            maxHeight={6}
-          >
+            maxHeight={6}>
             {(width, height) => (
               <mesh>
                 <planeBufferGeometry args={[width, height]} />
@@ -63,13 +47,7 @@ function Title({ text, tag, images, textScaleFactor, onReflow, left = false }) {
         ))}
       </Box>
       <Box marginLeft={1.5} marginRight={1.5} marginTop={2}>
-        <Text
-          position={[left ? 1 : -1, 0.5, 1]}
-          fontSize={1 * textScaleFactor}
-          lineHeight={1}
-          letterSpacing={-0.05}
-          maxWidth={(viewport.width / 4) * 3}
-        >
+        <Text position={[left ? 1 : -1, 0.5, 1]} fontSize={textScaleFactor} lineHeight={1} letterSpacing={-0.05} maxWidth={(viewport.width / 4) * 3}>
           {tag}
           <meshBasicMaterial color="#cccccc" toneMapped={false} />
         </Text>
@@ -83,8 +61,7 @@ function Title({ text, tag, images, textScaleFactor, onReflow, left = false }) {
           lineHeight={1}
           letterSpacing={-0.05}
           color="black"
-          maxWidth={(viewport.width / 4) * 3}
-        >
+          maxWidth={(viewport.width / 4) * 3}>
           {text}
         </Text>
       </Box>
@@ -107,7 +84,7 @@ function DepthLayerCard({ depth, boxWidth, boxHeight, text, textColor, color, ma
         <meshBasicMaterial color={color} map={map} toneMapped={false} transparent opacity={1} />
       </mesh>
       <Text
-        position={[boxWidth / 2, -boxHeight / 2, depth + 1.5]}        
+        position={[boxWidth / 2, -boxHeight / 2, depth + 1.5]}
         maxWidth={(viewport.width / 4) * 1}
         anchorX="center"
         anchorY="middle"
@@ -115,8 +92,7 @@ function DepthLayerCard({ depth, boxWidth, boxHeight, text, textColor, color, ma
         fontSize={0.6 * textScaleFactor}
         lineHeight={1}
         letterSpacing={-0.05}
-        color={textColor}
-      >
+        color={textColor}>
         {text}
       </Text>
     </>
@@ -137,25 +113,14 @@ function Content({ onReflow }) {
     const page = (pageLerp.current = THREE.MathUtils.lerp(pageLerp.current, state.top / size.height, 0.2))
     const y = page * viewport.height
     const sticky = state.threshold * viewport.height
-    group.current.position.lerp(
-      vec.set(0, page < state.threshold ? y : sticky, page < state.threshold ? 0 : page * 1.25),
-      0.1
-    )
+    group.current.position.lerp(vec.set(0, page < state.threshold ? y : sticky, page < state.threshold ? 0 : page * 1.25), 0.1)
   })
-  const handleReflow = useCallback((w, h) => onReflow((state.pages = h / viewport.height + 5.5)), [
-    onReflow,
-    viewport.height,
-  ])
+  const handleReflow = useCallback((w, h) => onReflow((state.pages = h / viewport.height + 5.5)), [onReflow, viewport.height])
   const sizesRef = useRef([])
   const textScaleFactor = Math.min(1, viewport.width / 16)
   return (
     <group ref={group}>
-      <Flex
-        flexDirection="column"
-        position={[-viewport.width / 2, viewport.height / 2, 0]}
-        size={[viewport.width, viewport.height, 0]}
-        onReflow={handleReflow}
-      >
+      <Flex flexDirection="column" position={[-viewport.width / 2, viewport.height / 2, 0]} size={[viewport.width, viewport.height, 0]} onReflow={handleReflow}>
         {state.content.map((props, index) => (
           <Title
             key={index}
@@ -170,22 +135,9 @@ function Content({ onReflow }) {
         ))}
         <Box flexDirection="row" width="100%" height="100%" alignItems="center" justifyContent="center">
           <Box centerAnchor>
-            <Line
-              points={[
-                [-20, 0, 0],
-                [-9, 0, 0],
-              ]}
-              color="black"
-              lineWidth={0.5}
-            />
-            <Line
-              points={[
-                [20, 0, 0],
-                [9, 0, 0],
-              ]}
-              color="black"
-              lineWidth={0.5}
-            />
+            {state.lines.map((props, index) => (
+              <Line key={index} {...props} />
+            ))}
             <Text
               bold
               position-z={0.5}
@@ -196,8 +148,7 @@ function Content({ onReflow }) {
               lineHeight={1}
               letterSpacing={-0.05}
               color="black"
-              maxWidth={(viewport.width / 4) * 3}
-            >
+              maxWidth={(viewport.width / 4) * 3}>
               {state.depthbox[0].text}
             </Text>
           </Box>
@@ -225,14 +176,11 @@ export default function App() {
   const onScroll = (e) => (state.top = e.target.scrollTop)
   useEffect(() => void onScroll({ target: scrollArea.current }), [])
   const [pages, setPages] = useState(0)
-
   useEffect(() => {
-    const setMouse = (e) =>
-      (state.mouse = [(e.clientX / window.innerWidth) * 2 - 1, (e.clientY / window.innerHeight) * 2 - 1])
+    const setMouse = (e) => (state.mouse = [(e.clientX / window.innerWidth) * 2 - 1, (e.clientY / window.innerHeight) * 2 - 1])
     window.addEventListener('mousemove', setMouse)
     return () => window.removeEventListener('mousemove', setMouse)
   }, [])
-
   return (
     <>
       <Canvas
@@ -243,17 +191,8 @@ export default function App() {
         pixelRatio={2}
         camera={{ position: [0, 0, 10], far: 1000 }}
         gl={{ powerPreference: 'high-performance', alpha: false, antialias: false, stencil: false, depth: false }}
-        onCreated={({ gl }) => gl.setClearColor('#f5f5f5')}
-      >
-        <spotLight
-          castShadow
-          angle={0.3}
-          penumbra={1}
-          position={[0, 10, 20]}
-          intensity={5}
-          shadow-mapSize-width={1024}
-          shadow-mapSize-height={1024}
-        />
+        onCreated={({ gl }) => gl.setClearColor('#f5f5f5')}>
+        <spotLight castShadow angle={0.3} penumbra={1} position={[0, 10, 20]} intensity={5} shadow-mapSize-width={1024} shadow-mapSize-height={1024} />
         <pointLight position={[-10, -10, -10]} color="white" intensity={1} />
         <ambientLight intensity={0.4} />
         <Suspense fallback={null}>

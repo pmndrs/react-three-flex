@@ -25,11 +25,14 @@ const state = {
     {
       depth: -5,
       textColor: '#272727',
-      text:
-        'For why should it stop\nhere rather than here?\nSo that a thing\nwill either be at rest\nor must be moved\nad infinitum.',
+      text: 'For why should it stop\nhere rather than here?\nSo that a thing\nwill either be at rest\nor must be moved\nad infinitum.',
       image: imgur('04zTfWB'),
     },
   ],
+  lines: [
+    { points: [[-20, 0, 0], [-9, 0, 0]], color: "black", lineWidth: 0.5 },
+    { points: [[20, 0, 0], [9, 0, 0]], color: "black", lineWidth: 0.5 },
+  ]
 }
 
 export default state

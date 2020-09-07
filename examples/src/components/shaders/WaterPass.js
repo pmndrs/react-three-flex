@@ -25,11 +25,8 @@ const WaterShader = {
     uniform sampler2D tex;
     varying vec2 vUv;
     void main() { 
-
       if (byp<1) {
-        
         vec2 uv = vUv;
-
         float frequency = 4.0;
         float amplitude = 0.015 * factor;
         float x = uv.y * frequency + time * .7; 
@@ -38,13 +35,9 @@ const WaterShader = {
         uv.y += .5 * amplitude * sin(y);
         vec4 rgba = texture2D(tex, uv);
         gl_FragColor = rgba;
-        
       } else {
-        
         gl_FragColor = texture2D(tex, vUv);
-
       }
-
     }`,
 }
 
