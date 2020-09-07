@@ -21,7 +21,7 @@ function Page({ text, tag, images, textScaleFactor, onReflow, left = false }) {
   const { viewport } = useThree()
   const boxProps = {
     centerAnchor: true,
-    flexGrow: 1,
+    grow: 1,
     marginTop: 1,
     marginLeft: left * 1,
     marginRight: !left * 1,
@@ -35,7 +35,7 @@ function Page({ text, tag, images, textScaleFactor, onReflow, left = false }) {
   return (
     <Box dir="column" align={left ? 'flex-start' : 'flex-end'} justify="flex-start" width="100%" height="auto" minHeight="100%">
       <HeightReporter onReflow={onReflow} />
-      <Box dir="row" width="100%" height="auto" justify={left ? 'flex-end' : 'flex-start'} margin={0} flexGrow={1} flexWrap="wrap">
+      <Box dir="row" width="100%" height="auto" justify={left ? 'flex-end' : 'flex-start'} margin={0} grow={1} wrap="wrap">
         {textures.map((texture, index) => (
           <Box key={index} {...boxProps}>
             {(width, height) => (
