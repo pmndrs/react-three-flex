@@ -75,7 +75,7 @@ function Layercard({ depth, boxWidth, boxHeight, text, textColor, color, map, te
   const { viewport, size } = useThree()
   const pageLerp = useRef(state.top / size.height)
   useFrame(() => {
-    const page = (pageLerp.current = THREE.MathUtils.lerp(pageLerp.current, state.top / size.height, 0.2))
+    const page = (pageLerp.current = THREE.MathUtils.lerp(pageLerp.current, state.top / size.height, 0.15))
     if (depth >= 0) ref.current.opacity = page < state.threshold * 1.7 ? 1 : 1 - (page - state.threshold * 1.7)
   })
   return (
@@ -108,10 +108,10 @@ function Content({ onReflow }) {
   const vec = new THREE.Vector3()
   const pageLerp = useRef(state.top / size.height)
   useFrame(() => {
-    const page = (pageLerp.current = THREE.MathUtils.lerp(pageLerp.current, state.top / size.height, 0.2))
+    const page = (pageLerp.current = THREE.MathUtils.lerp(pageLerp.current, state.top / size.height, 0.15))
     const y = page * viewport.height
     const sticky = state.threshold * viewport.height
-    group.current.position.lerp(vec.set(0, page < state.threshold ? y : sticky, page < state.threshold ? 0 : page * 1.25), 0.1)
+    group.current.position.lerp(vec.set(0, page < state.threshold ? y : sticky, page < state.threshold ? 0 : page * 1.25), 0.15)
   })
   const handleReflow = useCallback((w, h) => onReflow((state.pages = h / viewport.height + 5.5)), [onReflow, viewport.height])
   const sizesRef = useRef([])
