@@ -1,10 +1,10 @@
-import React, { useLayoutEffect, useMemo, useState, useCallback, PropsWithChildren, useRef } from 'react'
+import React, { useLayoutEffect, useMemo, useCallback, PropsWithChildren, useRef } from 'react'
 import Yoga, { YogaNode } from 'yoga-layout-prebuilt'
 import { Vector3, Group, Box3 } from 'three'
-import { useFrame, useThree } from 'react-three-fiber'
+import { useFrame, useThree, ReactThreeFiber } from 'react-three-fiber'
 
-import { setYogaProperties, rmUndefFromObj, vectorFromObject, Axis } from './util'
-import { boxContext, flexContext } from './context'
+import { setYogaProperties, rmUndefFromObj, vectorFromObject, Axis, getDepthAxis, getFlex2DSize } from './util'
+import { boxContext, flexContext, SharedFlexContext, SharedBoxContext } from './context'
 import type { R3FlexProps, FlexYogaDirection, FlexPlane } from './props'
 
 type FlexProps = PropsWithChildren<
@@ -12,14 +12,14 @@ type FlexProps = PropsWithChildren<
     /**
      * Root container position
      */
-    position: [number, number, number]
     size: [number, number, number]
     yogaDirection: FlexYogaDirection
     plane: FlexPlane
     scaleFactor?: number
     onReflow?: (totalWidth: number, totalHeight: number) => void
   }> &
-    R3FlexProps
+    R3FlexProps &
+    Omit<ReactThreeFiber.Object3DNode<THREE.Group, typeof Group>, 'children'>
 >
 
 /**
@@ -31,7 +31,6 @@ export function Flex({
   yogaDirection = 'ltr',
   plane = 'xy',
   children,
-  position = [0, 0, 0],
   scaleFactor = 100,
   onReflow,
 
@@ -187,91 +186,91 @@ export function Flex({
     wrap,
   ])
 
-  const [rootNode] = useState(() => Yoga.Node.create())
+  // Keeps track of the yoga nodes of the children and the related wrapper groups
+  const boxesRef = useRef<{ node: YogaNode; group: Group; flexProps: R3FlexProps; centerAnchor: boolean }[]>([])
+  const registerBox = useCallback(
+    (node: YogaNode, group: Group, flexProps: R3FlexProps, centerAnchor: boolean = false) => {
+      const i = boxesRef.current.findIndex((b) => b.node === node)
+      if (i !== -1) {
+        boxesRef.current.splice(i, 1)
+      }
+      boxesRef.current.push({ group, node, flexProps, centerAnchor })
+    },
+    []
+  )
+  const unregisterBox = useCallback((node: YogaNode) => {
+    const i = boxesRef.current.findIndex((b) => b.node === node)
+    if (i !== -1) {
+      boxesRef.current.splice(i, 1)
+    }
+  }, [])
+
+  // Reference to the yoga native node
+  const node = useMemo(() => Yoga.Node.create(), [])
   useLayoutEffect(() => {
-    setYogaProperties(rootNode, flexProps, scaleFactor)
-  }, [rootNode, flexProps])
+    setYogaProperties(node, flexProps, scaleFactor)
+  }, [node, flexProps, scaleFactor])
 
+  // Mechanism for invalidating and recalculating layout
   const { invalidate } = useThree()
-
   const dirtyRef = useRef(true)
   const requestReflow = useCallback(() => {
     dirtyRef.current = true
     invalidate()
   }, [invalidate])
 
-  // Keeps track of the yoga nodes of the children and the related wrapper groups
-  const boxesRef = useRef<{ group: Group; node: YogaNode; flexProps: R3FlexProps; centerAnchor: boolean }[]>([])
-  const registerBox = useCallback((group: Group, node: YogaNode, flexProps: R3FlexProps, centerAnchor?: boolean) => {
-    const i = boxesRef.current.findIndex((b) => b.group === group && b.node === node)
-    if (i !== -1) {
-      boxesRef.current.splice(i, 1)
-    }
+  // We need to reflow everything if flex props changes
+  useLayoutEffect(() => {
+    requestReflow()
+  }, [children, flexProps, requestReflow])
 
-    boxesRef.current.push({ group, node, flexProps, centerAnchor })
-  }, [])
-  const unregisterBox = useCallback((group: Group, node: YogaNode) => {
-    const i = boxesRef.current.findIndex((b) => b.group === group && b.node === node)
-    if (i !== -1) {
-      boxesRef.current.splice(i, 1)
-    }
-  }, [])
+  // Common variables for reflow
+  const boundingBox = useMemo(() => new Box3(), [])
+  const vec = useMemo(() => new Vector3(), [])
+  const mainAxis = plane[0] as Axis
+  const crossAxis = plane[1] as Axis
+  const depthAxis = getDepthAxis(plane)
+  const [flexWidth, flexHeight] = getFlex2DSize(size, plane)
+  const yogaDirection_ =
+    yogaDirection === 'ltr' ? Yoga.DIRECTION_LTR : yogaDirection === 'rtl' ? Yoga.DIRECTION_RTL : yogaDirection
 
-  const state = useMemo(() => {
-    const sizeVec3 = new Vector3(...size)
-    const mainAxis = plane[0] as Axis
-    const crossAxis = plane[1] as Axis
-    const depthAxis = ['x', 'y', 'z'].find((axis: Axis) => ![mainAxis, crossAxis].includes(axis))
-    const flexWidth = sizeVec3[mainAxis]
-    const flexHeight = sizeVec3[crossAxis]
-    const rootStart = new Vector3(...position).addScaledVector(new Vector3(size[0], size[1], size[2]), 0.5)
-    const yogaDirection_ =
-      yogaDirection === 'ltr' ? Yoga.DIRECTION_LTR : yogaDirection === 'rtl' ? Yoga.DIRECTION_RTL : yogaDirection
-    return {
-      rootNode,
-      depthAxis,
-      mainAxis,
-      crossAxis,
-      sizeVec3,
-      flexWidth,
-      flexHeight,
-      rootStart,
-      yogaDirection: yogaDirection_,
+  // Shared context for flex and box
+  const sharedFlexContext = useMemo<SharedFlexContext>(
+    () => ({
       requestReflow,
       registerBox,
       unregisterBox,
       scaleFactor,
-    }
-  }, [rootNode, plane, position, size, requestReflow, registerBox, unregisterBox, scaleFactor])
-
-  // We need to reflow everything if flex props changes
-  useLayoutEffect(() => {
-    requestReflow()
-  }, [state, children, flexProps, requestReflow])
+    }),
+    [requestReflow, registerBox, unregisterBox, scaleFactor]
+  )
+  const sharedBoxContext = useMemo<SharedBoxContext>(() => ({ node, size: [flexWidth, flexHeight] }), [
+    node,
+    flexWidth,
+    flexHeight,
+  ])
 
   // Handles the reflow procedure
-  const boundingBox = useMemo(() => new Box3(), [])
-  const vec = useMemo(() => new Vector3(), [])
-  const reflow = useCallback(() => {
+  function reflow() {
     // Recalc all the sizes
     boxesRef.current.forEach(({ group, node, flexProps }) => {
       const scaledWidth = typeof flexProps.width === 'number' ? flexProps.width * scaleFactor : flexProps.width
       const scaledHeight = typeof flexProps.height === 'number' ? flexProps.height * scaleFactor : flexProps.height
 
-      if (flexProps.width !== undefined && flexProps.height !== undefined) {
+      if (scaledWidth !== undefined && scaledHeight !== undefined) {
         // Forced size, no need to calculate bounding box
         node.setWidth(scaledWidth)
         node.setHeight(scaledHeight)
       } else {
         // No size specified, calculate bounding box
         boundingBox.setFromObject(group).getSize(vec)
-        node.setWidth(scaledWidth || vec[state.mainAxis] * scaleFactor)
-        node.setHeight(scaledHeight || vec[state.crossAxis] * scaleFactor)
+        node.setWidth(scaledWidth || vec[mainAxis] * scaleFactor)
+        node.setHeight(scaledHeight || vec[crossAxis] * scaleFactor)
       }
     })
 
     // Perform yoga layout calculation
-    rootNode.calculateLayout(state.flexWidth * scaleFactor, state.flexHeight * scaleFactor, state.yogaDirection)
+    node.calculateLayout(flexWidth * scaleFactor, flexHeight * scaleFactor, yogaDirection_)
 
     let minX = 0
     let maxX = 0
@@ -282,9 +281,9 @@ export function Flex({
     boxesRef.current.forEach(({ group, node, centerAnchor }) => {
       const { left, top, width, height } = node.getComputedLayout()
       const position = vectorFromObject({
-        [state.mainAxis]: (left + (centerAnchor ? width / 2 : 0)) / scaleFactor,
-        [state.crossAxis]: -(top + (centerAnchor ? height / 2 : 0)) / scaleFactor,
-        [state.depthAxis]: 0,
+        [mainAxis]: (left + (centerAnchor ? width / 2 : 0)) / scaleFactor,
+        [crossAxis]: -(top + (centerAnchor ? height / 2 : 0)) / scaleFactor,
+        [depthAxis]: 0,
       } as any)
       minX = Math.min(minX, left)
       minY = Math.min(minY, top)
@@ -293,11 +292,12 @@ export function Flex({
       group.position.copy(position)
     })
 
+    // Call the reflow event to update resulting size
     onReflow && onReflow((maxX - minX) / scaleFactor, (maxY - minY) / scaleFactor)
 
     // Ask react-three-fiber to perform a render (invalidateFrameLoop)
     invalidate()
-  }, [boundingBox, vec, state, invalidate])
+  }
 
   // We check if we have to reflow every frame
   // This way we can batch the reflow if we have multiple reflow requests
@@ -308,23 +308,11 @@ export function Flex({
     }
   })
 
-  const positionOffset = useMemo(
-    () => ({
-      [state.mainAxis]: -state.rootStart[state.mainAxis],
-      [state.crossAxis]: state.rootStart[state.crossAxis],
-      [state.depthAxis]: -state.rootStart[state.depthAxis] + state.sizeVec3[state.depthAxis] / 2,
-    }),
-    [state]
-  )
-
   return (
-    <group
-      position={[position[0] + positionOffset.x, position[1] + positionOffset.y, position[2] + positionOffset.z]}
-      {...props}
-    >
-      <boxContext.Provider value={null}>
-        <flexContext.Provider value={state}>{children}</flexContext.Provider>
-      </boxContext.Provider>
+    <group {...props}>
+      <flexContext.Provider value={sharedFlexContext}>
+        <boxContext.Provider value={sharedBoxContext}>{children}</boxContext.Provider>
+      </flexContext.Provider>
     </group>
   )
 }

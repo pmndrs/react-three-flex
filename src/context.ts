@@ -1,23 +1,38 @@
 import { createContext } from 'react'
 import { YogaNode } from 'yoga-layout-prebuilt'
-import { Vector3, Group } from 'three'
-import { Axis } from './util'
-import { FlexYogaDirection, R3FlexProps } from './props'
+import { Group } from 'three'
+import { R3FlexProps } from './props'
 
-export const flexContext = createContext<{
-  rootNode: YogaNode
-  depthAxis: string
-  mainAxis: Axis
-  crossAxis: Axis
-  sizeVec3: Vector3
-  flexWidth: number
-  flexHeight: number
+export interface SharedFlexContext {
   scaleFactor: number
-  rootStart: Vector3
-  yogaDirection: FlexYogaDirection
   requestReflow(): void
-  registerBox(group: Group, node: YogaNode, flexProps: R3FlexProps, centerAnchor?: boolean): void
-  unregisterBox(group: Group, node: YogaNode): void
-}>(null)
+  registerBox(node: YogaNode, group: Group, flexProps: R3FlexProps, centerAnchor?: boolean): void
+  unregisterBox(node: YogaNode): void
+}
 
-export const boxContext = createContext<YogaNode>(null)
+const initialSharedFlexContext: SharedFlexContext = {
+  scaleFactor: 100,
+  requestReflow() {
+    console.warn('Flex not initialized! Please report')
+  },
+  registerBox() {
+    console.warn('Flex not initialized! Please report')
+  },
+  unregisterBox() {
+    console.warn('Flex not initialized! Please report')
+  },
+}
+
+export const flexContext = createContext<SharedFlexContext>(initialSharedFlexContext)
+
+export interface SharedBoxContext {
+  node: YogaNode | null
+  size: [number, number]
+}
+
+const initialSharedBoxContext: SharedBoxContext = {
+  node: null,
+  size: [0, 0],
+}
+
+export const boxContext = createContext<SharedBoxContext>(initialSharedBoxContext)

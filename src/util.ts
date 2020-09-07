@@ -1,6 +1,6 @@
 import { Vector3 } from 'three'
 import Yoga, { YogaNode } from 'yoga-layout-prebuilt'
-import { R3FlexProps } from './props'
+import { R3FlexProps, FlexPlane } from './props'
 
 export const capitalize = (s: string) => s[0].toUpperCase() + s.slice(1)
 
@@ -8,39 +8,39 @@ export const jsxPropToYogaProp = (s: string) => s.toUpperCase().replace('-', '_'
 
 export const setYogaProperties = (node: YogaNode, props: R3FlexProps, scaleFactor: number) => {
   return Object.keys(props).forEach((name) => {
-    const value = props[name]
-    const scaledValue = value * scaleFactor
+    const value = props[name as keyof R3FlexProps]
 
     if (typeof value === 'string') {
       switch (name) {
         case 'flexDir':
         case 'dir':
         case 'flexDirection':
-          return node.setFlexDirection(Yoga[`FLEX_DIRECTION_${jsxPropToYogaProp(value)}`])
+          return node.setFlexDirection((Yoga as any)[`FLEX_DIRECTION_${jsxPropToYogaProp(value)}`])
         case 'align':
         case 'alignItems':
-          return node.setAlignItems(Yoga[`ALIGN_${jsxPropToYogaProp(value)}`])
+          return node.setAlignItems((Yoga as any)[`ALIGN_${jsxPropToYogaProp(value)}`])
         case 'justify':
         case 'justifyContent':
-          return node.setJustifyContent(Yoga[`JUSTIFY_${jsxPropToYogaProp(value)}`])
+          return node.setJustifyContent((Yoga as any)[`JUSTIFY_${jsxPropToYogaProp(value)}`])
         case 'wrap':
         case 'flexWrap':
-          return node.setFlexWrap(Yoga[`WRAP_${jsxPropToYogaProp(value)}`])
+          return node.setFlexWrap((Yoga as any)[`WRAP_${jsxPropToYogaProp(value)}`])
 
         default:
-          return node[`set${capitalize(name)}`](value)
+          return (node[`set${capitalize(name)}` as keyof YogaNode] as any)(value)
       }
-    } else {
+    } else if (typeof value === 'number') {
+      const scaledValue = value * scaleFactor
       switch (name) {
         case 'align':
-          return node.setAlignItems(value)
+          return node.setAlignItems(value as any)
         case 'justify':
-          return node.setJustifyContent(value)
+          return node.setJustifyContent(value as any)
         case 'flexDir':
         case 'dir':
-          return node.setFlexDirection(value)
+          return node.setFlexDirection(value as any)
         case 'wrap':
-          return node.setFlexWrap(value)
+          return node.setFlexWrap(value as any)
         case 'padding':
         case 'p':
           return node.setPadding(Yoga.EDGE_ALL, scaledValue)
@@ -74,7 +74,7 @@ export const setYogaProperties = (node: YogaNode, props: R3FlexProps, scaleFacto
           return node.setMargin(Yoga.EDGE_BOTTOM, scaledValue)
 
         default:
-          return node[`set${capitalize(name)}`](typeof value === 'number' ? scaledValue : value)
+          return (node[`set${capitalize(name)}` as keyof YogaNode] as any)(scaledValue)
       }
     }
   })
@@ -83,6 +83,29 @@ export const setYogaProperties = (node: YogaNode, props: R3FlexProps, scaleFacto
 export const vectorFromObject = ({ x, y, z }: { x: number; y: number; z: number }) => new Vector3(x, y, z)
 
 export type Axis = 'x' | 'y' | 'z'
+export const axes: Axis[] = ['x', 'y', 'z']
+
+export function getDepthAxis(plane: FlexPlane) {
+  switch (plane) {
+    case 'xy':
+      return 'z'
+    case 'yz':
+      return 'x'
+    case 'xz':
+      return 'y'
+  }
+}
+
+export function getFlex2DSize(sizes: [number, number, number], plane: FlexPlane) {
+  switch (plane) {
+    case 'xy':
+      return [sizes[0], sizes[1]]
+    case 'yz':
+      return [sizes[1], sizes[2]]
+    case 'xz':
+      return [sizes[0], sizes[2]]
+  }
+}
 
 export const rmUndefFromObj = (obj: Record<string, any>) =>
   Object.keys(obj).forEach((key) => (obj[key] === undefined ? delete obj[key] : {}))
