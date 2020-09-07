@@ -68,7 +68,6 @@ function Title({ text, tag, images, textScaleFactor, onReflow, left = false }) {
           fontSize={1 * textScaleFactor}
           lineHeight={1}
           letterSpacing={-0.05}
-          font="https://cdn.jsdelivr.net/npm/inter-ui/Inter%20(web)/Inter-Regular.woff"
           maxWidth={(viewport.width / 4) * 3}
         >
           {tag}
@@ -77,6 +76,7 @@ function Title({ text, tag, images, textScaleFactor, onReflow, left = false }) {
       </Box>
       <Box marginLeft={left ? 1.5 : 1} marginRight={left ? 1 : 1.5} marginBottom={1}>
         <Text
+          bold
           position-z={0.5}
           textAlign={left ? 'left' : 'right'}
           fontSize={1.5 * textScaleFactor}
@@ -107,8 +107,7 @@ function DepthLayerCard({ depth, boxWidth, boxHeight, text, textColor, color, ma
         <meshBasicMaterial color={color} map={map} toneMapped={false} transparent opacity={1} />
       </mesh>
       <Text
-        position={[boxWidth / 2, -boxHeight / 2, depth + 1.5]}
-        // maxWidth={boxWidth}
+        position={[boxWidth / 2, -boxHeight / 2, depth + 1.5]}        
         maxWidth={(viewport.width / 4) * 1}
         anchorX="center"
         anchorY="middle"
@@ -188,6 +187,7 @@ function Content({ onReflow }) {
               lineWidth={0.5}
             />
             <Text
+              bold
               position-z={0.5}
               anchorX="center"
               anchorY="middle"
