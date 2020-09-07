@@ -7,7 +7,7 @@
     "drei": "1.5.2",
     "lerp": "^1.0.3",
     "postprocessing": "6.17.2",
-    "react": "^0.0.0-experimental-94c0244ba",
+    "react": "^0.14.0",
     "react-dom": "^0.0.0-experimental-94c0244ba",
     "react-postprocessing": "1.2.0",
     "react-scripts": "3.4.3",
