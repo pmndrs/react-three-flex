@@ -331,4 +331,4 @@ Example:
 </Flex>
 ```
 
-You can find a full list of props inside [`R3FlexProps` type](https://github.com/react-spring/react-three-flex/blob/d6dbd7fd5501d1122f7eb121d620affd1af24988/src/props.ts#L29).
+You can find a full list of props inside [`R3FlexProps` type](https://github.com/react-spring/react-three-flex/blob/master/src/props.ts).
