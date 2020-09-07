@@ -25,6 +25,9 @@ export const setYogaProperties = (node: YogaNode, props: R3FlexProps, scaleFacto
         case 'wrap':
         case 'flexWrap':
           return node.setFlexWrap((Yoga as any)[`WRAP_${jsxPropToYogaProp(value)}`])
+        case 'basis':
+        case 'flexBasis':
+          return node.setFlexBasis(value)
 
         default:
           return (node[`set${capitalize(name)}` as keyof YogaNode] as any)(value)
@@ -32,6 +35,15 @@ export const setYogaProperties = (node: YogaNode, props: R3FlexProps, scaleFacto
     } else if (typeof value === 'number') {
       const scaledValue = value * scaleFactor
       switch (name) {
+        case 'basis':
+        case 'flexBasis':
+          return node.setFlexBasis(scaledValue)
+        case 'grow':
+        case 'flexGrow':
+          return node.setFlexGrow(scaledValue)
+        case 'shrink':
+        case 'flexShrink':
+          return node.setFlexShrink(scaledValue)
         case 'align':
           return node.setAlignItems(value as any)
         case 'justify':
