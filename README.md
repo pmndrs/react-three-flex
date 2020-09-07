@@ -289,6 +289,8 @@ To make it easier, you can use the `onReflow` callback on the root `<Flex>` comp
 
 ## API
 
+You can find a full list of props [here](https://github.com/react-spring/react-three-flex/blob/master/src/props.ts).
+
 ```jsx
 <Flex
   size={[1, 1, 1]} // Total size of the flex container, see above
@@ -330,5 +332,3 @@ Example:
   <Box />
 </Flex>
 ```
-
-You can find a full list of props inside [`R3FlexProps` type](https://github.com/react-spring/react-three-flex/blob/master/src/props.ts).
