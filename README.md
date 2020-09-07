@@ -5,7 +5,7 @@
 [![Downloads](https://img.shields.io/npm/dt/react-three-flex.svg?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/react-three-flex)
 [![Discord Shield](https://discordapp.com/api/guilds/740090768164651008/widget.png?style=shield)](https://discord.gg/ZZjjNvJ)
 
-Placing content in threejs is hard.
+Placing content in THREE.js is hard.
 **`react-three-flex`** brings the web flexbox spec to [react-three-fiber](https://github.com/react-spring/react-three-fiber).
 It is based on [yoga](https://github.com/facebook/yoga), Facebook's open source layout engine for react-native.
 Think of how you would normally go about making content responsive, stick to the sides, wrap around, grids, rows, columns, padding, margin. Especially if you are working on frontend-centric projects where the camera is pointing down, forming a 2-dimensional view.
@@ -39,7 +39,7 @@ npm install react-three-flex
 
 ## Usage
 
-You simply create layouts by wrapping your 3D objects in different `<Box />` instances inside a `<Flex />` container. This way they will be automatically placed in the 3D space following the flexbox specification, just like in the DOM.
+Simply create layouts by wrapping your 3D objects in different `<Box />` instances inside a `<Flex />` container. This way they will be automatically placed in the 3D space following the flexbox specification just like in the DOM.
 
 ```jsx
 import { Flex, Box } from 'react-three-flex'
@@ -56,11 +56,11 @@ const Layout = () => (
 )
 ```
 
-You can tweak the container and the boxes using standard CSS flex properties, like `flexDirection` or `justifyContent` for the container and `flexGrow` for the boxes. There are also _shorthands_, like `align` and `justify`. See props docs below for more info.
+You can tweak the container and the boxes using standard CSS flex properties, like `flexDirection` or `justifyContent` for the container and `flexGrow` for the boxes. There are also _shorthands_, like `align` and `justify`. See the props docs below for more info.
 
 ### Anchors
 
-When positioning items, `react-three-flex` needs to know where the object anchor is: Yoga Layout expects the object position to be relative to the upper left corner, same as the DOM.
+When positioning items, `react-three-flex` needs to know where the object anchor is: Yoga Layout expects the object position to be relative to the upper left corner, which is the same as the DOM expects.
 
 Most THREE.js geometries, though, are positioned relative to the object center. To tell `react-three-flex` that your `<Box />` positioning is relative to the center you need to set the `centerAnchor` prop to true.
 
@@ -78,7 +78,7 @@ If you nest `<Box />` elements, though, you need to set it to false. See [Nestin
 
 By default `react-three-flex` controls elements position only. In some cases you may want to control element sizing too. Since `react-three-flex` has no information about how the inner content size works, you need to set your content size manually. To do so `react-three-flex` provides you the container size in two ways:
 
-- By using a **children render function**:
+- Using a **children render function**:
 
 ```jsx
 <Flex>
@@ -88,7 +88,7 @@ By default `react-three-flex` controls elements position only. In some cases you
 </Flex>
 ```
 
-- By using an **hook**:
+- Using a **hook**:
 
 ```jsx
 function Inner() {
@@ -107,7 +107,7 @@ Remember that the `useFlexSize` hook works **ONLY** if your `<Box/>` is outside 
 
 ### Invalidation and Reflow
 
-While DOM's Flexbox has full control over all the changes of the tree, `react-three-flex` runs on React, hence it has no way to know if a children size or shape has changed. For performance reasons Flex layout calculation _does not run every frame_, and it has to be triggered manually in some cases.
+While the DOM's Flexbox has full control over all the changes of the tree, `react-three-flex` runs on React, hence it has no way to know if a children size or shape has changed. For performance reasons Flex layout calculation _does not run every frame_, and it has to be triggered manually in some cases.
 
 **What will trigger a reflow:**
 
@@ -149,7 +149,7 @@ function Layout() {
         <AnimatedBox />
 ```
 
-For every other cases (setting size with an `useFrame`, react-spring animations, `<Box/>` not rerendered) you'll need to **manually cause a reflow**, using `useReflow()` hook. Reflows requests are batched every frame, so you can call it from hundreds of components without performance issues.
+For every other case (setting size with the `useFrame` hook, performing `react-spring` animation, or `<Box/>` are not rerendered) you'll need to **manually cause a reflow**, using the `useReflow()` hook. Reflows requests are batched every frame so you can call it from hundreds of components without performance issues.
 
 **Animation with useFrame():**
 
@@ -180,7 +180,7 @@ function AnimatedBox() {
 
 ### Sizing
 
-`react-three-flex` differs from DOM Flexbox in that it rely on a parent container for the root flex. It is required to specify its dimensions using `size` prop for wrapping and to be responsive.
+`react-three-flex` differs from DOM Flexbox in that it relies on a parent container for the root flex. It is required to specify its dimensions using `size` prop for wrapping and to be responsive.
 
 ```jsx
 <Flex flexDirection="row" flexWrap="wrap" size={[300, 200, 0]}>
@@ -188,7 +188,7 @@ function AnimatedBox() {
 </Flex>
 ```
 
-**⚠️ WATCH OUT!** Yoga flexbox engine uses integer numbers to perform layout calculation, so to preserve precision `react-three-flex` multiplies every element size and flex prop by the `scaleFactor` of the root flex container. By default it's `100`, and works well for small scenes. If you use a different scene scale, make sure to tweak it accordingly.
+**⚠️ WATCH OUT!** Yoga flexbox engine uses whole integer numbers to perform layout calculation to preserve precision - `react-three-flex` multiplies every element size and flex prop by the `scaleFactor` of the root flex container. By default it's `100`, and works well for small scenes. If you use a different scene scale, make sure to tweak it accordingly.
 
 ![Bounds](./docs/bounds.png)
 
@@ -196,7 +196,7 @@ function AnimatedBox() {
 
 Another important difference with DOM Flexbox is that you have to specify the plane of the container in 3D. The elements will be positioned in the 2D plane given by the two axes, using width and height calculated along the two axes.
 
-The 2D flex container width and height will be calculated by looking at the `size` prop with respect of the chosen axes (100 for xy and 200 for y in this example).
+The 2D flex container width and height will be calculated by looking at the `size` prop with respect of the chosen axes (`100` for `xy` and `200` for `y` in this example).
 
 The default plane is `xy`, the other possibilites are `yz` and `xz`.
 
@@ -244,8 +244,8 @@ Since a `<Flex />` component works the same way as a DOM one, you can easily mak
 
 ### Measuring the container
 
-When building responsive layouts, you might need to syncronize the size of the 3D Flex container with the DOM, for example, to syncronize scroll position or the height of a scroll container.
-To make it easier, you can use the `onReflow` callback on the root `<Flex>` component, that will be called every time the flex layout is recalculated - e.g. when any content changes.
+When building responsive layouts you might need to syncronize the size of the 3D Flex container with the DOM, for example to synchronize scroll position or to modify the height of a scroll container.
+To make it easier, you can use the `onReflow` prop on the root `<Flex>` component that will be called every time the flex layout is recalculated - e.g. when any content changes.
 
 ```jsx
 <Flex onReflow={(totalWidth, totalHeight) => ...}>
@@ -280,7 +280,7 @@ You can find a full list of props [here](https://github.com/react-spring/react-t
 </Box>
 ```
 
-Or you can pass a function as children:
+Or you can pass a **function as children**:
 
 ```jsx
 <Box>{(width, height) => <Model width={width} height={height} />}</Box>
@@ -288,7 +288,7 @@ Or you can pass a function as children:
 
 ### Flexbox props
 
-Both `<Flex/>` and `<Box />` components shares the same Flexbox props API from Yoga. The library also provides string and number inputs for convenience and shorthands.
+Both `<Flex/>` and `<Box />` components share the same Flexbox props API from Yoga. The library also provides string and number inputs for convenience and shorthands.
 
 Example:
 
