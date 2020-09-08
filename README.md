@@ -3,7 +3,7 @@
 [![Build Status](https://img.shields.io/github/workflow/status/react-spring/react-three-flex/Release?style=flat&colorA=000000&colorB=000000)](https://github.com/react-spring/react-three-flex/releases)
 [![Version](https://img.shields.io/npm/v/react-three-flex?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/react-three-flex)
 [![Downloads](https://img.shields.io/npm/dt/react-three-flex.svg?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/react-three-flex)
-[![Discord Shield](https://img.shields.io/discord/740090768164651008?tyle=flat&colorA=000000&colorB=000000&label=discord&logo=discord&logoColor=ffffff)](https://discord.gg/ZZjjNvJ)
+[![Discord Shield](https://img.shields.io/discord/740090768164651008?style=flat&colorA=000000&colorB=000000&label=discord&logo=discord&logoColor=ffffff)](https://discord.gg/ZZjjNvJ)
 
 Placing content in THREE.js is hard. **`react-three-flex`** brings the webs flexbox spec to [react-three-fiber](https://github.com/react-spring/react-three-fiber).
 It is based on [Yoga](https://github.com/facebook/yoga), Facebook's open source layout engine for react-native.
