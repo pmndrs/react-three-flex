@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import React, { Suspense, useEffect, useRef, useState, useCallback, useLayoutEffect } from 'react'
 import { Canvas, useThree, useFrame, useLoader } from 'react-three-fiber'
-import { Flex, Box, useFlexSize } from 'react-three-flex'
+import { Flex, Box, useFlexSize } from '../../src/index'
 import { useAspect } from 'drei/misc/useAspect'
 import { Line } from 'drei/abstractions/Line'
 import { Loader } from 'drei/prototyping/Loader'
