@@ -1637,11 +1637,6 @@
   dependencies:
     "@types/yargs-parser" "*"
 
-"@types/yoga-layout@1.9.2":
-  version "1.9.2"
-  resolved "https://registry.yarnpkg.com/@types/yoga-layout/-/yoga-layout-1.9.2.tgz#efaf9e991a7390dc081a0b679185979a83a9639a"
-  integrity sha512-S9q47ByT2pPvD65IvrWp7qppVMpk9WGMbVq9wbWZOHg6tnXSD4vyhao6nOSBwwfDdV2p3Kx9evA9vI+XWTfDvw==
-
 "@typescript-eslint/eslint-plugin@^2.10.0":
   version "2.34.0"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/eslint-plugin/-/eslint-plugin-2.34.0.tgz#6f8ce8a46c7dea4a6f1d171d2bb8fbae6dac2be9"
@@ -8830,13 +8825,6 @@ react-three-fiber@5.0.0-beta.12:
     tiny-emitter "^2.1.0"
     utility-types "^3.10.0"
 
-react-three-flex@0.5.2:
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/react-three-flex/-/react-three-flex-0.5.2.tgz#d6670f4e3f1b6f332d654010bd37f49298912e11"
-  integrity sha512-XciDjhZBnd1s/1LQtawg3vLBEh/Wp2yRzTKjq9tnpw9x2oxqRa2yVpn7LCxR1DPu2s/pKFUuT/TGtGqB3wCJoA==
-  dependencies:
-    yoga-layout-prebuilt "^1.9.6"
-
 react-use-measure@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/react-use-measure/-/react-use-measure-2.0.1.tgz#4f23f94c832cd4512da55acb300d1915dcbf3ae8"
@@ -11086,13 +11074,6 @@ yargs@^13.3.0, yargs@^13.3.2:
     which-module "^2.0.0"
     y18n "^4.0.0"
     yargs-parser "^13.1.2"
-
-yoga-layout-prebuilt@^1.9.6:
-  version "1.9.6"
-  resolved "https://registry.yarnpkg.com/yoga-layout-prebuilt/-/yoga-layout-prebuilt-1.9.6.tgz#98dde95bbf8e6e12835876e9305f1e995c4bb801"
-  integrity sha512-Wursw6uqLXLMjBAO4SEShuzj8+EJXhCF71/rJ7YndHTkRAYSU0GY3OghRqfAk9HPUAAFMuqp3U1Wl+01vmGRQQ==
-  dependencies:
-    "@types/yoga-layout" "1.9.2"
 
 zustand@3.1.0, zustand@^3.0.3:
   version "3.1.0"

@@ -2474,11 +2474,6 @@
   dependencies:
     "@types/yargs-parser" "*"
 
-"@types/yoga-layout@1.9.2":
-  version "1.9.2"
-  resolved "https://registry.yarnpkg.com/@types/yoga-layout/-/yoga-layout-1.9.2.tgz#efaf9e991a7390dc081a0b679185979a83a9639a"
-  integrity sha512-S9q47ByT2pPvD65IvrWp7qppVMpk9WGMbVq9wbWZOHg6tnXSD4vyhao6nOSBwwfDdV2p3Kx9evA9vI+XWTfDvw==
-
 "@typescript-eslint/eslint-plugin@^3.7.1":
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/eslint-plugin/-/eslint-plugin-3.10.1.tgz#7e061338a1383f59edc204c605899f93dc2e2c8f"
@@ -9482,7 +9477,7 @@ react-popper@^1.3.7:
     typed-styles "^0.0.7"
     warning "^4.0.2"
 
-react-promise-suspense@^0.3.2:
+react-promise-suspense@^0.3.2, react-promise-suspense@^0.3.3:
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/react-promise-suspense/-/react-promise-suspense-0.3.3.tgz#b085c7e0ac22b85fd3d605b1c4f181cda4310bc9"
   integrity sha512-OdehKsCEWYoV6pMcwxbvJH99UrbXylmXJ1QpEL9OfHaUBzcAihyfSJV8jFq325M/wW9iKc/BoiLROXxMul+MxA==
@@ -11729,9 +11724,7 @@ yargs@^15.3.1:
     y18n "^4.0.0"
     yargs-parser "^18.1.2"
 
-yoga-layout-prebuilt@^1.9.6:
-  version "1.9.6"
-  resolved "https://registry.yarnpkg.com/yoga-layout-prebuilt/-/yoga-layout-prebuilt-1.9.6.tgz#98dde95bbf8e6e12835876e9305f1e995c4bb801"
-  integrity sha512-Wursw6uqLXLMjBAO4SEShuzj8+EJXhCF71/rJ7YndHTkRAYSU0GY3OghRqfAk9HPUAAFMuqp3U1Wl+01vmGRQQ==
-  dependencies:
-    "@types/yoga-layout" "1.9.2"
+yoga-wasm-slim@^0.0.6:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/yoga-wasm-slim/-/yoga-wasm-slim-0.0.6.tgz#0b1604a28f6453260c0b772d45b9d4cf5b11380d"
+  integrity sha512-H8vUiyp+wbmU4vHl87Jt0vaAZiyItKhheCnE4/Rku2pUQdvWfbrqU+GlB4bTbVIxZu7ZUwcex6Zcg7+KcQerOQ==
