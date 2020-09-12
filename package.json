@@ -56,7 +56,8 @@
     "test": "echo no tests yet"
   },
   "dependencies": {
-    "yoga-layout-prebuilt": "^1.9.6"
+    "react-promise-suspense": "^0.3.3",
+    "yoga-wasm-slim": "^0.0.6"
   },
   "devDependencies": {
     "@babel/core": "7.11.0",

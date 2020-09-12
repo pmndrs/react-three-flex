@@ -1,93 +1,143 @@
 import { Vector3 } from 'three'
-import Yoga, { YogaNode } from 'yoga-layout-prebuilt'
+import Yoga, { YogaApi, YGNodeRef, CONSTANTS } from 'yoga-wasm-slim'
+import usePromise from 'react-promise-suspense'
 import { R3FlexProps, FlexPlane } from './props'
+
+let yogaGlobalInstance: YogaApi | null = null
+export function useYogaAsync(path: string): YogaApi {
+  return usePromise(
+    async (path: string) => {
+      if (!yogaGlobalInstance) {
+        const yoga = await Yoga({ locateFile: (file) => path + file })
+        yogaGlobalInstance = yoga
+      }
+      return yogaGlobalInstance
+    },
+    [path]
+  )
+}
 
 export const capitalize = (s: string) => s[0].toUpperCase() + s.slice(1)
 
 export const jsxPropToYogaProp = (s: string) => s.toUpperCase().replace('-', '_')
 
-export const setYogaProperties = (node: YogaNode, props: R3FlexProps, scaleFactor: number) => {
+export function setPropertyString(
+  yogaInstance: YogaApi,
+  node: YGNodeRef,
+  name: string,
+  value: string | number,
+  scaleFactor: number,
+  ...additionalParams: any[]
+) {
+  if (typeof value === 'number') {
+    ;(yogaInstance as any)[`_YGNodeStyleSet${name}`](node, ...additionalParams, value * scaleFactor)
+  } else if (value.endsWith('%')) {
+    ;(yogaInstance as any)[`_YGNodeStyleSet${name}Percent`](node, ...additionalParams, parseFloat(value))
+  } else if (value === 'auto') {
+    ;(yogaInstance as any)[`_YGNodeStyleSet${name}Auto`](node, ...additionalParams)
+  } else if (value.endsWith('px')) {
+    ;(yogaInstance as any)[`_YGNodeStyleSet${name}`](node, ...additionalParams, parseFloat(value) * scaleFactor)
+  }
+}
+
+export const setYogaProperties = (yogaInstance: YogaApi, node: YGNodeRef, props: R3FlexProps, scaleFactor: number) => {
   return Object.keys(props).forEach((name) => {
     const value = props[name as keyof R3FlexProps]
 
-    if (typeof value === 'string') {
-      switch (name) {
-        case 'flexDir':
-        case 'dir':
-        case 'flexDirection':
-          return node.setFlexDirection((Yoga as any)[`FLEX_DIRECTION_${jsxPropToYogaProp(value)}`])
-        case 'align':
-        case 'alignItems':
-          return node.setAlignItems((Yoga as any)[`ALIGN_${jsxPropToYogaProp(value)}`])
-        case 'justify':
-        case 'justifyContent':
-          return node.setJustifyContent((Yoga as any)[`JUSTIFY_${jsxPropToYogaProp(value)}`])
-        case 'wrap':
-        case 'flexWrap':
-          return node.setFlexWrap((Yoga as any)[`WRAP_${jsxPropToYogaProp(value)}`])
-        case 'basis':
-        case 'flexBasis':
-          return node.setFlexBasis(value)
+    if (!value) return
 
-        default:
-          return (node[`set${capitalize(name)}` as keyof YogaNode] as any)(value)
-      }
-    } else if (typeof value === 'number') {
-      const scaledValue = value * scaleFactor
-      switch (name) {
-        case 'basis':
-        case 'flexBasis':
-          return node.setFlexBasis(scaledValue)
-        case 'grow':
-        case 'flexGrow':
-          return node.setFlexGrow(scaledValue)
-        case 'shrink':
-        case 'flexShrink':
-          return node.setFlexShrink(scaledValue)
-        case 'align':
-          return node.setAlignItems(value as any)
-        case 'justify':
-          return node.setJustifyContent(value as any)
-        case 'flexDir':
-        case 'dir':
-          return node.setFlexDirection(value as any)
-        case 'wrap':
-          return node.setFlexWrap(value as any)
-        case 'padding':
-        case 'p':
-          return node.setPadding(Yoga.EDGE_ALL, scaledValue)
-        case 'paddingLeft':
-        case 'pl':
-          return node.setPadding(Yoga.EDGE_LEFT, scaledValue)
-        case 'paddingRight':
-        case 'pr':
-          return node.setPadding(Yoga.EDGE_RIGHT, scaledValue)
-        case 'paddingTop':
-        case 'pt':
-          return node.setPadding(Yoga.EDGE_TOP, scaledValue)
-        case 'paddingBottom':
-        case 'pb':
-          return node.setPadding(Yoga.EDGE_BOTTOM, scaledValue)
+    switch (name) {
+      case 'flexDir':
+      case 'dir':
+      case 'flexDirection':
+        return yogaInstance._YGNodeStyleSetFlexDirection(
+          node,
+          CONSTANTS[`FLEX_DIRECTION_${jsxPropToYogaProp(value as string)}` as keyof typeof CONSTANTS]
+        )
+      case 'align':
+      case 'alignItems':
+        return yogaInstance._YGNodeStyleSetAlignItems(
+          node,
+          CONSTANTS[`ALIGN_${jsxPropToYogaProp(value as string)}` as keyof typeof CONSTANTS]
+        )
+      case 'alignContent':
+        return yogaInstance._YGNodeStyleSetAlignContent(
+          node,
+          CONSTANTS[`ALIGN_${jsxPropToYogaProp(value as string)}` as keyof typeof CONSTANTS]
+        )
+      case 'alignSelf':
+        return yogaInstance._YGNodeStyleSetAlignSelf(
+          node,
+          CONSTANTS[`ALIGN_${jsxPropToYogaProp(value as string)}` as keyof typeof CONSTANTS]
+        )
+      case 'justify':
+      case 'justifyContent':
+        return yogaInstance._YGNodeStyleSetJustifyContent(
+          node,
+          CONSTANTS[`JUSTIFY_${jsxPropToYogaProp(value as string)}` as keyof typeof CONSTANTS]
+        )
+      case 'wrap':
+      case 'flexWrap':
+        return yogaInstance._YGNodeStyleSetFlexWrap(
+          node,
+          CONSTANTS[`WRAP_${jsxPropToYogaProp(value as string)}` as keyof typeof CONSTANTS]
+        )
 
-        case 'margin':
-        case 'm':
-          return node.setMargin(Yoga.EDGE_ALL, scaledValue)
-        case 'marginLeft':
-        case 'ml':
-          return node.setMargin(Yoga.EDGE_LEFT, scaledValue)
-        case 'marginRight':
-        case 'mr':
-          return node.setMargin(Yoga.EDGE_RIGHT, scaledValue)
-        case 'marginTop':
-        case 'mt':
-          return node.setMargin(Yoga.EDGE_TOP, scaledValue)
-        case 'marginBottom':
-        case 'mb':
-          return node.setMargin(Yoga.EDGE_BOTTOM, scaledValue)
+      case 'basis':
+      case 'flexBasis':
+        return setPropertyString(yogaInstance, node, 'FlexBasis', value, scaleFactor)
+      case 'grow':
+      case 'flexGrow':
+        return setPropertyString(yogaInstance, node, 'FlexGrow', value, scaleFactor)
+      case 'shrink':
+      case 'flexShrink':
+        return setPropertyString(yogaInstance, node, 'FlexShrink', value, scaleFactor)
 
-        default:
-          return (node[`set${capitalize(name)}` as keyof YogaNode] as any)(scaledValue)
-      }
+      case 'width':
+        return setPropertyString(yogaInstance, node, 'Width', value, scaleFactor)
+      case 'height':
+        return setPropertyString(yogaInstance, node, 'Height', value, scaleFactor)
+
+      case 'maxHeight':
+        return setPropertyString(yogaInstance, node, 'MaxWidth', value, scaleFactor)
+      case 'maxWidth':
+        return setPropertyString(yogaInstance, node, 'MaxHeight', value, scaleFactor)
+      case 'minHeight':
+        return setPropertyString(yogaInstance, node, 'MinWidth', value, scaleFactor)
+      case 'minWidth':
+        return setPropertyString(yogaInstance, node, 'MinHeight', value, scaleFactor)
+
+      case 'padding':
+      case 'p':
+        return setPropertyString(yogaInstance, node, 'Padding', value, scaleFactor, CONSTANTS.EDGE_ALL)
+      case 'paddingLeft':
+      case 'pl':
+        return setPropertyString(yogaInstance, node, 'Padding', value, scaleFactor, CONSTANTS.EDGE_LEFT)
+      case 'paddingRight':
+      case 'pr':
+        return setPropertyString(yogaInstance, node, 'Padding', value, scaleFactor, CONSTANTS.EDGE_RIGHT)
+      case 'paddingTop':
+      case 'pt':
+        return setPropertyString(yogaInstance, node, 'Padding', value, scaleFactor, CONSTANTS.EDGE_TOP)
+      case 'paddingBottom':
+      case 'pb':
+        return setPropertyString(yogaInstance, node, 'Padding', value, scaleFactor, CONSTANTS.EDGE_BOTTOM)
+
+      case 'margin':
+      case 'm':
+        return setPropertyString(yogaInstance, node, 'Margin', value, scaleFactor, CONSTANTS.EDGE_ALL)
+      case 'marginLeft':
+      case 'ml':
+        return setPropertyString(yogaInstance, node, 'Margin', value, scaleFactor, CONSTANTS.EDGE_LEFT)
+      case 'marginRight':
+      case 'mr':
+        return setPropertyString(yogaInstance, node, 'Margin', value, scaleFactor, CONSTANTS.EDGE_RIGHT)
+      case 'marginTop':
+      case 'mt':
+        return setPropertyString(yogaInstance, node, 'Margin', value, scaleFactor, CONSTANTS.EDGE_TOP)
+      case 'marginBottom':
+      case 'mb':
+        return setPropertyString(yogaInstance, node, 'Margin', value, scaleFactor, CONSTANTS.EDGE_BOTTOM)
     }
   })
 }
