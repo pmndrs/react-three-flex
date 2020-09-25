@@ -1,9 +1,9 @@
 import * as THREE from 'three'
 import React, { useRef } from 'react'
 import { useFrame } from 'react-three-fiber'
-import { useGLTFLoader } from 'drei/loaders/useGLTFLoader'
-import { MeshDistortMaterial } from 'drei/shaders/MeshDistortMaterial'
-import { Shadow } from 'drei/misc/Shadow'
+import { useGLTFLoader } from '@react-three/drei/loaders/useGLTFLoader'
+import { MeshDistortMaterial } from '@react-three/drei/shaders/MeshDistortMaterial'
+import { Shadow } from '@react-three/drei/misc/Shadow'
 import Text from './Text'
 import state from '../state'
 
