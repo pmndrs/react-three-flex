@@ -12,7 +12,7 @@
     "react": "^0.0.0-experimental-94c0244ba",
     "react-dom": "^0.0.0-experimental-94c0244ba",
     "react-scripts": "3.4.3",
-    "react-three-fiber": "^5.0.0",
+    "react-three-fiber": "^5.0.1",
     "three": "0.120.1",
     "troika-three-text": "https://github.com/jmatsushita/troika-three-text",
     "zustand": "3.1.0"
