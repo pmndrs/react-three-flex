@@ -1,5 +1,5 @@
 {
-  "name": "react-three-flex",
+  "name": "@react-three/flex",
   "version": "0.5.2",
   "description": "`<Flex />` component for the 3D World.",
   "keywords": [
@@ -15,12 +15,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/react-spring/react-three-flex.git"
+    "url": "git+https://github.com/pmndrs/react-three-flex.git"
   },
   "bugs": {
-    "url": "https://github.com/react-spring/react-three-flex/issues"
+    "url": "https://github.com/pmndrs/react-three-flex/issues"
   },
-  "homepage": "https://github.com/react-spring/react-three-flex#readme",
+  "homepage": "https://github.com/pmndrs/react-three-flex#readme",
   "license": "MIT",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
@@ -100,18 +100,18 @@
     "prettier": "^2.0.5",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-three-fiber": "^4.2.20",
+    "react-three-fiber": "^5.0.1",
     "rimraf": "^3.0.2",
     "rollup": "^2.26.10",
     "rollup-plugin-size-snapshot": "^0.12.0",
     "rollup-plugin-terser": "^7.0.2",
-    "three": "^0.119.1",
+    "three": "^0.120.1",
     "ts-jest": "^26.1.3",
     "typescript": "^3.9.7"
   },
   "peerDependencies": {
     "react": "^16.13.1",
-    "react-three-fiber": "^4.2.20",
-    "three": "^0.119.1"
+    "react-three-fiber": ">=5.0",
+    "three": "^0.120.1"
   }
 }

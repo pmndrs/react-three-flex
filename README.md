@@ -1,15 +1,15 @@
 # react-three-flex
 
-[![Build Status](https://img.shields.io/github/workflow/status/react-spring/react-three-flex/Release?style=flat&colorA=000000&colorB=000000)](https://github.com/react-spring/react-three-flex/releases)
-[![Version](https://img.shields.io/npm/v/react-three-flex?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/react-three-flex)
-[![Downloads](https://img.shields.io/npm/dt/react-three-flex.svg?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/react-three-flex)
+[![Build Status](https://img.shields.io/github/workflow/status/pmndrs/react-three-flex/Release?style=flat&colorA=000000&colorB=000000)](https://github.com/pmndrs/react-three-flex/releases)
+[![Version](https://img.shields.io/npm/v/react-three/flex?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/@react-three/flex)
+[![Downloads](https://img.shields.io/npm/dt/react-three/flex.svg?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/@react-three/flex)
 [![Discord Shield](https://img.shields.io/discord/740090768164651008?style=flat&colorA=000000&colorB=000000&label=discord&logo=discord&logoColor=ffffff)](https://discord.gg/ZZjjNvJ)
 
-Placing content in THREE.js is hard. **`react-three-flex`** brings the webs flexbox spec to [react-three-fiber](https://github.com/react-spring/react-three-fiber).
+Placing content in THREE.js is hard. **`react-three-flex`** brings the webs flexbox spec to [react-three-fiber](https://github.com/pmndrs/react-three-fiber).
 It is based on [Yoga](https://github.com/facebook/yoga), Facebook's open source layout engine for react-native.
 
 ```bash
-npm install react-three-flex
+npm install @react-three/flex
 ```
 
 <p align="center">
@@ -40,7 +40,7 @@ npm install react-three-flex
 Simply create layouts by wrapping your 3D objects in different `<Box />` instances inside a `<Flex />` container. This way they will be automatically placed in the 3D space following the flexbox specification just like in the DOM.
 
 ```jsx
-import { Flex, Box } from 'react-three-flex'
+import { Flex, Box } from '@react-three/flex'
 
 const Layout = () => (
   <Flex justifyContent="center" alignItems="center">
@@ -74,7 +74,7 @@ If you nest `<Box />` elements, though, you need to set it to false. See [Nestin
 
 ### Stretching
 
-By default `react-three-flex` controls elements position only. In some cases you may want to control element sizing too. Since `react-three-flex` has no information about how the inner content size works, you need to set your content size manually. To do so `react-three-flex` provides you the container size in two ways:
+By default `@react-three/flex` controls elements position only. In some cases you may want to control element sizing too. Since `@react-three/flex` has no information about how the inner content size works, you need to set your content size manually. To do so `@react-three/flex` provides you the container size in two ways:
 
 - Using a **children render function**:
 
@@ -105,7 +105,7 @@ Remember that the `useFlexSize` hook works **ONLY** if your `<Box/>` is outside 
 
 ### Invalidation and Reflow
 
-While the DOM's Flexbox has full control over all the changes of the tree, `react-three-flex` runs on React, hence it has no way to know if a children size or shape has changed. For performance reasons Flex layout calculation _does not run every frame_, and it has to be triggered manually in some cases.
+While the DOM's Flexbox has full control over all the changes of the tree, `@react-threeflex` runs on React, hence it has no way to know if a children size or shape has changed. For performance reasons Flex layout calculation _does not run every frame_, and it has to be triggered manually in some cases.
 
 **What will trigger a reflow:**
 
@@ -178,7 +178,7 @@ function AnimatedBox() {
 
 ### Sizing
 
-`react-three-flex` differs from DOM Flexbox in that it relies on a parent container for the root flex. It is required to specify its dimensions using `size` prop for wrapping and to be responsive.
+`@react-three/flex` differs from DOM Flexbox in that it relies on a parent container for the root flex. It is required to specify its dimensions using `size` prop for wrapping and to be responsive.
 
 ```jsx
 <Flex flexDirection="row" flexWrap="wrap" size={[300, 200, 0]}>
@@ -186,7 +186,7 @@ function AnimatedBox() {
 </Flex>
 ```
 
-**⚠️ WATCH OUT!** Yoga flexbox engine uses whole integer numbers to perform layout calculation to preserve precision - `react-three-flex` multiplies every element size and flex prop by the `scaleFactor` of the root flex container. By default it's `100`, and works well for small scenes. If you use a different scene scale, make sure to tweak it accordingly.
+**⚠️ WATCH OUT!** Yoga flexbox engine uses whole integer numbers to perform layout calculation to preserve precision - `@react-three/flex` multiplies every element size and flex prop by the `scaleFactor` of the root flex container. By default it's `100`, and works well for small scenes. If you use a different scene scale, make sure to tweak it accordingly.
 
 ![Bounds](./docs/bounds.png)
 
@@ -253,7 +253,7 @@ To make it easier, you can use the `onReflow` prop on the root `<Flex>` componen
 
 ## API
 
-You can find a full list of props [here](https://github.com/react-spring/react-three-flex/blob/master/src/props.ts).
+You can find a full list of props [here](https://github.com/pmndrs/react-three-flex/blob/master/src/props.ts).
 
 ```jsx
 <Flex
