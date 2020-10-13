@@ -61,11 +61,11 @@ export type R3FlexProps = Partial<{
 
   // Grow & shrink
   flexGrow: number
-  // Shorthand for flexBasis
+  // Shorthand for flexGrow
   grow: number
 
   flexShrink: number
-  // Shorthand for flexBasis
+  // Shorthand for flexShrink
   shrink: number
 
   // Height & width
