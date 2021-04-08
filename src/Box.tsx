@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useRef, useMemo, useState } from 'react'
 import * as THREE from 'three'
 import Yoga from 'yoga-layout-prebuilt'
-import { ReactThreeFiber, useFrame } from 'react-three-fiber'
+import { ReactThreeFiber, useFrame } from '@react-three/fiber'
 
 import { setYogaProperties, rmUndefFromObj } from './util'
 import { boxContext, flexContext } from './context'
