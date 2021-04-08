@@ -1,10 +1,8 @@
 import * as THREE from 'three'
 import React, { Suspense, useEffect, useRef, useState, useCallback, useLayoutEffect } from 'react'
-import { Canvas, useThree, useFrame, useLoader } from 'react-three-fiber'
-import { Flex, Box, useFlexSize } from 'react-three-flex'
-import { useAspect } from '@react-three/drei/misc/useAspect'
-import { Line } from '@react-three/drei/abstractions/Line'
-import { Loader } from '@react-three/drei/prototyping/Loader'
+import { Canvas, useThree, useFrame, useLoader } from '@react-three/fiber'
+import { Flex, Box, useFlexSize } from '@react-three/flex'
+import { Line, Loader, useAspect } from '@react-three/drei'
 import Effects from './components/Effects'
 import Text from './components/Text'
 import Geo from './components/Geo'
@@ -103,7 +101,7 @@ function Layercard({ depth, boxWidth, boxHeight, text, textColor, color, map, te
 function Content({ onReflow }) {
   const group = useRef()
   const { viewport, size } = useThree()
-  const [bW, bH] = useAspect('cover', 1920, 1920, 0.5)
+  const [bW, bH] = useAspect(1920, 1920, 0.5)
   const texture = useLoader(THREE.TextureLoader, state.depthbox[0].image)
   const vec = new THREE.Vector3()
   const pageLerp = useRef(state.top / size.height)
@@ -169,11 +167,9 @@ export default function App() {
   return (
     <>
       <Canvas
-        concurrent
-        colorManagement
-        shadowMap
+        shadows
         noEvents
-        pixelRatio={2}
+        dpr={2}
         camera={{ position: [0, 0, 10], far: 1000 }}
         gl={{ powerPreference: 'high-performance', alpha: false, antialias: false, stencil: false, depth: false }}
         onCreated={({ gl }) => gl.setClearColor('#f5f5f5')}>
