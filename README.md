@@ -15,7 +15,7 @@ npm install @react-three/flex
 <p align="center">
   <a href="https://codesandbox.io/embed/7psew"><img width="274" src="https://i.imgur.com/FOqC6Ml.gif" /></a>
   <a href="https://codesandbox.io/embed/gallant-elbakyan-lvwmj"><img width="274" src="https://i.imgur.com/PrQX2uI.gif" /></a>
-  <a href="https://codesandbox.io/embed/r3flex-jbgrq"><img width="274" src="https://i.imgur.com/fykLiRl.gif" /></a>
+  <a href="https://codesandbox.io/embed/r3flex-kbs4y"><img width="274" src="https://i.imgur.com/fykLiRl.gif" /></a>
 </p>
 <p align="middle">
   <i>These demos are real, you can click them! They contain the full code, too.</i>
