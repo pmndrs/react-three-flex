@@ -7,7 +7,7 @@ import { setYogaProperties, rmUndefFromObj, vectorFromObject, Axis, getDepthAxis
 import { boxContext, flexContext, SharedFlexContext, SharedBoxContext } from './context'
 import type { R3FlexProps, FlexYogaDirection, FlexPlane } from './props'
 
-type FlexProps = PropsWithChildren<
+export type FlexProps = PropsWithChildren<
   Partial<{
     /**
      * Root container position
