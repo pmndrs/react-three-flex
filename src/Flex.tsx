@@ -17,6 +17,7 @@ export type FlexProps = PropsWithChildren<
     plane: FlexPlane
     scaleFactor?: number
     onReflow?: (totalWidth: number, totalHeight: number) => void
+    disableSizeRecalc?: boolean
   }> &
     R3FlexProps &
     Omit<ReactThreeFiber.Object3DNode<THREE.Group, typeof Group>, 'children'>
@@ -33,6 +34,7 @@ export function Flex({
   children,
   scaleFactor = 100,
   onReflow,
+  disableSizeRecalc,
 
   // flex props
 
@@ -253,30 +255,31 @@ export function Flex({
     }),
     [requestReflow, registerBox, unregisterBox, scaleFactor]
   )
-  const sharedBoxContext = useMemo<SharedBoxContext>(() => ({ node, size: [flexWidth, flexHeight] }), [
-    node,
-    flexWidth,
-    flexHeight,
-  ])
+  const sharedBoxContext = useMemo<SharedBoxContext>(
+    () => ({ node, size: [flexWidth, flexHeight] }),
+    [node, flexWidth, flexHeight]
+  )
 
   // Handles the reflow procedure
   function reflow() {
-    // Recalc all the sizes
-    boxesRef.current.forEach(({ group, node, flexProps }) => {
-      const scaledWidth = typeof flexProps.width === 'number' ? flexProps.width * scaleFactor : flexProps.width
-      const scaledHeight = typeof flexProps.height === 'number' ? flexProps.height * scaleFactor : flexProps.height
+    if (!disableSizeRecalc) {
+      // Recalc all the sizes
+      boxesRef.current.forEach(({ group, node, flexProps }) => {
+        const scaledWidth = typeof flexProps.width === 'number' ? flexProps.width * scaleFactor : flexProps.width
+        const scaledHeight = typeof flexProps.height === 'number' ? flexProps.height * scaleFactor : flexProps.height
 
-      if (scaledWidth !== undefined && scaledHeight !== undefined) {
-        // Forced size, no need to calculate bounding box
-        node.setWidth(scaledWidth)
-        node.setHeight(scaledHeight)
-      } else {
-        // No size specified, calculate bounding box
-        boundingBox.setFromObject(group).getSize(vec)
-        node.setWidth(scaledWidth || vec[mainAxis] * scaleFactor)
-        node.setHeight(scaledHeight || vec[crossAxis] * scaleFactor)
-      }
-    })
+        if (scaledWidth !== undefined && scaledHeight !== undefined) {
+          // Forced size, no need to calculate bounding box
+          node.setWidth(scaledWidth)
+          node.setHeight(scaledHeight)
+        } else {
+          // No size specified, calculate bounding box
+          boundingBox.setFromObject(group).getSize(vec)
+          node.setWidth(scaledWidth || vec[mainAxis] * scaleFactor)
+          node.setHeight(scaledHeight || vec[crossAxis] * scaleFactor)
+        }
+      })
+    }
 
     // Perform yoga layout calculation
     node.calculateLayout(flexWidth * scaleFactor, flexHeight * scaleFactor, yogaDirection_)
