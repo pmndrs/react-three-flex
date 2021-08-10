@@ -17,8 +17,14 @@ export const setYogaProperties = (node: YogaNode, props: R3FlexProps, scaleFacto
         case 'flexDirection':
           return node.setFlexDirection((Yoga as any)[`FLEX_DIRECTION_${jsxPropToYogaProp(value)}`])
         case 'align':
+          node.setAlignItems((Yoga as any)[`ALIGN_${jsxPropToYogaProp(value)}`])
+          return node.setAlignContent((Yoga as any)[`ALIGN_${jsxPropToYogaProp(value)}`])
+        case 'alignContent':
+          return node.setAlignContent((Yoga as any)[`ALIGN_${jsxPropToYogaProp(value)}`])
         case 'alignItems':
           return node.setAlignItems((Yoga as any)[`ALIGN_${jsxPropToYogaProp(value)}`])
+        case 'alignSelf':
+          return node.setAlignSelf((Yoga as any)[`ALIGN_${jsxPropToYogaProp(value)}`])
         case 'justify':
         case 'justifyContent':
           return node.setJustifyContent((Yoga as any)[`JUSTIFY_${jsxPropToYogaProp(value)}`])
