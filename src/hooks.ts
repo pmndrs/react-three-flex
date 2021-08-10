@@ -20,7 +20,7 @@ export function useFlexSize() {
   return size
 }
 
-export function useNode() {
+export function useFlexNode() {
   const { node } = useContext(boxContext)
   return node
 }
@@ -31,7 +31,7 @@ export function useNode() {
  */
 export function useSetSize(): (width: number, height: number) => void {
   const { requestReflow, scaleFactor } = useContext(flexContext)
-  const node = useNode()
+  const node = useFlexNode()
 
   const sync = useCallback(
     (width: number, height: number) => {
