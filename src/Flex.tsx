@@ -253,11 +253,10 @@ export function Flex({
     }),
     [requestReflow, registerBox, unregisterBox, scaleFactor]
   )
-  const sharedBoxContext = useMemo<SharedBoxContext>(() => ({ node, size: [flexWidth, flexHeight] }), [
-    node,
-    flexWidth,
-    flexHeight,
-  ])
+  const sharedBoxContext = useMemo<SharedBoxContext>(
+    () => ({ node, size: [flexWidth, flexHeight] }),
+    [node, flexWidth, flexHeight]
+  )
 
   // Handles the reflow procedure
   function reflow() {
