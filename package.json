@@ -53,7 +53,9 @@
     "eslint": "eslint src --fix --ext=js,ts,tsx,jsx",
     "eslint-examples": "eslint examples/src --fix --ext=js,ts,tsx,jsx",
     "eslint:ci": "eslint src examples/src --fix --ext=js,ts,tsx,jsx",
-    "test": "echo no tests yet"
+    "test": "echo no tests yet",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "dependencies": {
     "yoga-layout-prebuilt": "^1.9.6"
@@ -68,11 +70,15 @@
     "@babel/preset-env": "7.15.0",
     "@babel/preset-react": "7.14.5",
     "@babel/preset-typescript": "^7.10.4",
+    "@react-three/drei": "^7.3.1",
     "@react-three/fiber": "^7.0.6",
     "@rollup/plugin-babel": "^5.2.0",
     "@rollup/plugin-commonjs": "^20.0.0",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.0.4",
+    "@storybook/addon-controls": "^6.3.7",
+    "@storybook/addon-storysource": "^6.3.7",
+    "@storybook/react": "^6.3.7",
     "@types/jest": "^26.0.8",
     "@types/node": "^16.4.13",
     "@types/react": "^17.0.16",
@@ -81,6 +87,7 @@
     "@types/three": "^0.131.0",
     "@typescript-eslint/eslint-plugin": "^4.29.1",
     "@typescript-eslint/parser": "^4.29.1",
+    "babel-loader": "^8.2.2",
     "eslint": "^7.6.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-import-resolver-alias": "^1.1.2",
