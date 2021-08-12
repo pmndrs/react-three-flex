@@ -1,4 +1,4 @@
-import { Vector3 } from 'three'
+import { Box3, Matrix4, Object3D, Vector3 } from 'three'
 import Yoga, { YogaNode } from 'yoga-layout-prebuilt'
 import { R3FlexProps, FlexPlane } from './props'
 
@@ -127,3 +127,31 @@ export function getFlex2DSize(sizes: [number, number, number], plane: FlexPlane)
 
 export const rmUndefFromObj = (obj: Record<string, any>) =>
   Object.keys(obj).forEach((key) => (obj[key] === undefined ? delete obj[key] : {}))
+
+/**
+ * Adapted code from https://github.com/mrdoob/three.js/issues/11967
+ * Calculates oriented bounding box size
+ * Essentially it negates flex root rotation to provide proper number
+ * E.g. if root flex group rotatet 45 degress, a cube box of size 1 will report sizes of sqrt(2)
+ * but it should still be 1
+ *
+ * NB: This doesn't work when object itself is rotated (well, for now)
+ */
+export const getOBBSize = (object: Object3D, root: Object3D, bb: Box3, size: Vector3) => {
+  object.updateMatrix()
+  const oldMatrix = object.matrix
+  const oldMatrixAutoUpdate = object.matrixAutoUpdate
+
+  root.updateMatrixWorld()
+  const m = new Matrix4().copy(root.matrixWorld).invert()
+  object.matrix = m
+  // to prevent matrix being reassigned
+  object.matrixAutoUpdate = false
+  root.updateMatrixWorld()
+
+  bb.setFromObject(object).getSize(size)
+
+  object.matrix = oldMatrix
+  object.matrixAutoUpdate = oldMatrixAutoUpdate
+  root.updateMatrixWorld()
+}
