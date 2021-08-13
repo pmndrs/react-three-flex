@@ -3,16 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@react-spring/web": "9.0.0",
+    "@react-spring/web": "9.2.4",
     "@react-three/drei": "7.4.0",
-    "@react-three/fiber": "^6.0.9",
+    "@react-three/fiber": "^7.0.6",
     "@react-three/flex": "0.6.1",
-    "@react-three/postprocessing": "2.0.2",
+    "@react-three/postprocessing": "2.0.5",
     "lerp": "^1.0.3",
     "postprocessing": "6.22.3",
     "react": "^0.0.0-experimental-94c0244ba",
     "react-dom": "^0.0.0-experimental-94c0244ba",
-    "react-scripts": "3.4.3",
+    "react-scripts": "4.0.3",
     "three": "0.131.3",
     "troika-three-text": "^0.42.0",
     "zustand": "3.5.8"
@@ -42,6 +42,6 @@
     "customize-cra": "^1.0.0",
     "customize-cra-react-refresh": "^1.1.0",
     "react-app-rewired": "^2.1.6",
-    "webpack-bundle-analyzer": "^3.8.0"
+    "webpack-bundle-analyzer": "^4.4.2"
   }
 }
