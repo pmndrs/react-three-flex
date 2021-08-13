@@ -4,18 +4,18 @@
   "private": true,
   "dependencies": {
     "@react-spring/web": "9.0.0",
-    "@react-three/drei": "4.0.4",
-    "@react-three/flex": "0.6.0",
+    "@react-three/drei": "7.4.0",
+    "@react-three/fiber": "^6.0.9",
+    "@react-three/flex": "0.6.1",
     "@react-three/postprocessing": "2.0.2",
     "lerp": "^1.0.3",
-    "postprocessing": "6.21.3",
+    "postprocessing": "6.22.3",
     "react": "^0.0.0-experimental-94c0244ba",
     "react-dom": "^0.0.0-experimental-94c0244ba",
     "react-scripts": "3.4.3",
-    "@react-three/fiber": "^6.0.9",
-    "three": "0.126.1",
-    "troika-three-text": "^0.40.0",
-    "zustand": "3.4.1"
+    "three": "0.131.3",
+    "troika-three-text": "^0.42.0",
+    "zustand": "3.5.8"
   },
   "scripts": {
     "start": "react-app-rewired start",
