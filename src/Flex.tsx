@@ -2,6 +2,7 @@ import React, { useLayoutEffect, useMemo, useCallback, PropsWithChildren, useRef
 import Yoga, { YogaNode } from 'yoga-layout-prebuilt'
 import { Vector3, Group, Box3, Object3D } from 'three'
 import { useFrame, useThree, ReactThreeFiber } from '@react-three/fiber'
+import mergeRefs from 'react-merge-refs'
 
 import {
   setYogaProperties,
@@ -37,76 +38,76 @@ interface BoxesItem {
   centerAnchor: boolean
 }
 
-/**
- * Flex container. Can contain Boxes
- */
-export function Flex({
-  // Non flex props
-  size = [1, 1, 1],
-  yogaDirection = 'ltr',
-  plane = 'xy',
-  children,
-  scaleFactor = 100,
-  onReflow,
-  disableSizeRecalc,
+function FlexImpl(
+  {
+    // Non flex props
+    size = [1, 1, 1],
+    yogaDirection = 'ltr',
+    plane = 'xy',
+    children,
+    scaleFactor = 100,
+    onReflow,
+    disableSizeRecalc,
 
-  // flex props
+    // flex props
 
-  flexDirection,
-  flexDir,
-  dir,
+    flexDirection,
+    flexDir,
+    dir,
 
-  alignContent,
-  alignItems,
-  alignSelf,
-  align,
+    alignContent,
+    alignItems,
+    alignSelf,
+    align,
 
-  justifyContent,
-  justify,
+    justifyContent,
+    justify,
 
-  flexBasis,
-  basis,
-  flexGrow,
-  grow,
-  flexShrink,
-  shrink,
+    flexBasis,
+    basis,
+    flexGrow,
+    grow,
+    flexShrink,
+    shrink,
 
-  flexWrap,
-  wrap,
+    flexWrap,
+    wrap,
 
-  margin,
-  m,
-  marginBottom,
-  marginLeft,
-  marginRight,
-  marginTop,
-  mb,
-  ml,
-  mr,
-  mt,
+    margin,
+    m,
+    marginBottom,
+    marginLeft,
+    marginRight,
+    marginTop,
+    mb,
+    ml,
+    mr,
+    mt,
 
-  padding,
-  p,
-  paddingBottom,
-  paddingLeft,
-  paddingRight,
-  paddingTop,
-  pb,
-  pl,
-  pr,
-  pt,
+    padding,
+    p,
+    paddingBottom,
+    paddingLeft,
+    paddingRight,
+    paddingTop,
+    pb,
+    pl,
+    pr,
+    pt,
 
-  height,
-  width,
+    height,
+    width,
 
-  maxHeight,
-  maxWidth,
-  minHeight,
-  minWidth,
+    maxHeight,
+    maxWidth,
+    minHeight,
+    minWidth,
 
-  // other
-  ...props
-}: FlexProps) {
+    // other
+    ...props
+  }: FlexProps,
+  ref: React.Ref<Group>
+) {
   // must memoize or the object literal will cause every dependent of flexProps to rerender everytime
   const flexProps: R3FlexProps = useMemo(() => {
     const _flexProps = {
@@ -343,10 +344,17 @@ export function Flex({
   })
 
   return (
-    <group ref={rootGroup} {...props}>
+    <group ref={mergeRefs([rootGroup, ref])} {...props}>
       <flexContext.Provider value={sharedFlexContext}>
         <boxContext.Provider value={sharedBoxContext}>{children}</boxContext.Provider>
       </flexContext.Provider>
     </group>
   )
 }
+
+/**
+ * Flex container. Can contain Boxes
+ */
+export const Flex = React.forwardRef<THREE.Group, FlexProps>(FlexImpl)
+
+Flex.displayName = 'Flex'
