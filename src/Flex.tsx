@@ -214,10 +214,16 @@ export function Flex({
   const registerBox = useCallback(
     (node: YogaNode, group: Group, flexProps: R3FlexProps, centerAnchor: boolean = false) => {
       const i = boxesRef.current.findIndex((b) => b.node === node)
+      const boxItem = { group, node, flexProps, centerAnchor }
       if (i !== -1) {
-        boxesRef.current.splice(i, 1)
+        //node already contained: update box
+        boxesRef.current[i] = boxItem
+        return false
+      } else {
+        //node not contained: insert new box
+        boxesRef.current.push(boxItem)
+        return true
       }
-      boxesRef.current.push({ group, node, flexProps, centerAnchor })
     },
     []
   )
