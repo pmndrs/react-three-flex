@@ -15,11 +15,6 @@ export function useReflow() {
   return requestReflow
 }
 
-export function useFlexSize() {
-  const { size } = useContext(boxContext)
-  return size
-}
-
 export function useFlexNode() {
   const { node } = useContext(boxContext)
   return node
