@@ -2,9 +2,9 @@ import React, { useLayoutEffect, useMemo } from 'react'
 import Yoga from 'yoga-layout-prebuilt'
 
 import { setYogaProperties, rmUndefFromObj } from './util'
-import { boxContext, flexContext } from './context'
+import { boxNodeContext, boxIndexContext, flexContext } from './context'
 import { R3FlexProps } from './props'
-import { useReflow, useContext } from './hooks'
+import { useContext, useFlexNode, useBoxIndex } from './hooks'
 
 /**
  * Box container for 3D Objects.
@@ -71,6 +71,9 @@ export function Box({
 
   onUpdateTransformation,
 
+  measureFunc,
+  aspectRatio,
+
   // other
   ...props
 }: {
@@ -132,6 +135,9 @@ export function Box({
       maxWidth,
       minHeight,
       minWidth,
+
+      measureFunc,
+      aspectRatio,
     }
 
     rmUndefFromObj(_flexProps)
@@ -180,43 +186,30 @@ export function Box({
     pt,
     width,
     wrap,
+    measureFunc,
+    aspectRatio,
   ])
 
-  const { registerBox, unregisterBox, scaleFactor } = useContext(flexContext)
-  const { node: parent } = useContext(boxContext)
-  const node = useMemo(() => Yoga.Node.create(), [])
-  const reflow = useReflow()
+  const { registerBox, unregisterBox, updateBox, scaleFactor } = useContext(flexContext)
+  const parent = useFlexNode()
+  const index = useBoxIndex()
+  const node = useMemo(() => Yoga.Node.create(), [index])
 
   useLayoutEffect(() => {
     setYogaProperties(node, flexProps, scaleFactor)
   }, [flexProps, node, scaleFactor])
 
+  //register and unregister box
   useLayoutEffect(() => {
     if (!parent) return
+    registerBox(node, parent, index)
+    return () => unregisterBox(node)
+  }, [node, index, parent, registerBox, unregisterBox])
 
-    // Remove child on unmount
-    return () => {
-      parent.removeChild(node)
-      unregisterBox(node)
-    }
-  }, [node, parent])
-
-  // Make child known to the parents yoga instance *before* it calculates layout
+  //update box properties
   useLayoutEffect(() => {
-    if (!parent) return
+    updateBox(node, flexProps, onUpdateTransformation, centerAnchor)
+  }, [node, flexProps, centerAnchor, onUpdateTransformation, updateBox])
 
-    if (registerBox(node, flexProps, onUpdateTransformation, centerAnchor)) {
-      //newly registered node: add it to the parent
-      parent.insertChild(node, parent.getChildCount())
-    }
-  }, [node, parent, flexProps, centerAnchor, onUpdateTransformation, registerBox, unregisterBox])
-
-  // We need to reflow if props change
-  useLayoutEffect(() => {
-    reflow()
-  }, [children, flexProps, reflow])
-
-  const sharedBoxContext = useMemo(() => ({ node }), [node])
-
-  return <boxContext.Provider value={sharedBoxContext}>{children}</boxContext.Provider>
+  return <boxNodeContext.Provider value={node}>{children}</boxNodeContext.Provider>
 }

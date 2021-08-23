@@ -5,7 +5,13 @@ import { R3FlexProps } from './props'
 export interface SharedFlexContext {
   scaleFactor: number
   requestReflow(): void
-  registerBox(node: YogaNode, flexProps: R3FlexProps, onUpdateTransformation: (x: number, y: number, width: number, height: number) => void, centerAnchor?: boolean): boolean
+  registerBox(node: YogaNode, parent: YogaNode, index: number): void
+  updateBox(
+    node: YogaNode,
+    flexProps: R3FlexProps,
+    onUpdateTransformation: (x: number, y: number, width: number, height: number) => void,
+    centerAnchor?: boolean
+  ): void
   unregisterBox(node: YogaNode): void
 }
 
@@ -16,7 +22,10 @@ const initialSharedFlexContext: SharedFlexContext = {
   },
   registerBox() {
     console.warn('Flex not initialized! Please report')
-    return false
+    return 0
+  },
+  updateBox() {
+    console.warn('Flex not initialized! Please report')
   },
   unregisterBox() {
     console.warn('Flex not initialized! Please report')
@@ -25,12 +34,6 @@ const initialSharedFlexContext: SharedFlexContext = {
 
 export const flexContext = createContext<SharedFlexContext>(initialSharedFlexContext)
 
-export interface SharedBoxContext {
-  node: YogaNode | null
-}
+export const boxNodeContext = createContext<YogaNode | null>(null)
 
-const initialSharedBoxContext: SharedBoxContext = {
-  node: null
-}
-
-export const boxContext = createContext<SharedBoxContext>(initialSharedBoxContext)
+export const boxIndexContext = createContext<number>(-1)

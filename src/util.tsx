@@ -1,4 +1,7 @@
+import React, { ReactNode } from 'react'
+import { useMemo } from 'react'
 import Yoga, { YogaNode } from 'yoga-layout-prebuilt'
+import { boxIndexContext } from './context'
 import { R3FlexProps, FlexPlane } from './props'
 
 export const capitalize = (s: string) => s[0].toUpperCase() + s.slice(1)
@@ -89,23 +92,27 @@ export const setYogaProperties = (node: YogaNode, props: R3FlexProps, scaleFacto
         case 'marginBottom':
         case 'mb':
           return node.setMargin(Yoga.EDGE_BOTTOM, scaledValue)
-
+        case 'aspectRatio':
+          return node.setAspectRatio(value)
         default:
           return (node[`set${capitalize(name)}` as keyof YogaNode] as any)(scaledValue)
+      }
+    } else if (typeof value === 'function') {
+      switch (name) {
+        case 'measureFunc':
+          return node.setMeasureFunc(value)
       }
     }
   })
 }
 
-
 export type Axis = 'x' | 'y' | 'z'
 export const axes: Axis[] = ['x', 'y', 'z']
 
-
 export function getAxis(searchAxis: Axis, axes: Array<Axis>, values: Array<number>) {
   const index = axes.findIndex((axis, i) => axis === searchAxis)
-  if(index == -1) {
-    throw new Error(`unable to find axis "${searchAxis}" in [${axes.join(", ")}] `)
+  if (index == -1) {
+    throw new Error(`unable to find axis "${searchAxis}" in [${axes.join(', ')}] `)
   }
   return values[index]
 }
@@ -134,3 +141,19 @@ export function getFlex2DSize(sizes: [number, number, number], plane: FlexPlane)
 
 export const rmUndefFromObj = (obj: Record<string, any>) =>
   Object.keys(obj).forEach((key) => (obj[key] === undefined ? delete obj[key] : {}))
+
+/**
+ * need to be applied where new childs emerge (if a wrapper of any kind is in between the underlying childs can't be indexed)
+ * @param children
+ * @returns
+ */
+export function indexChildren(children: React.ReactNode) {
+  return React.Children.map(children, (child, index) => (
+    <boxIndexContext.Provider value={index}>{child}</boxIndexContext.Provider>
+  ))
+}
+
+export function IndexChildren({ children }: { children: React.ReactNode }) {
+  const child = useMemo(() => indexChildren(children), [children])
+  return <>{child}</>
+}

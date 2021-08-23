@@ -2,7 +2,7 @@ import React, { useLayoutEffect, useMemo, useCallback, PropsWithChildren, useRef
 import Yoga, { YogaNode } from 'yoga-layout-prebuilt'
 
 import { setYogaProperties, rmUndefFromObj, Axis, getDepthAxis, getFlex2DSize, getAxis } from './util'
-import { boxContext, flexContext, SharedFlexContext, SharedBoxContext } from './context'
+import { boxIndexContext, boxNodeContext, flexContext, SharedFlexContext } from './context'
 import type { R3FlexProps, FlexYogaDirection, FlexPlane } from './props'
 
 export type FlexProps = PropsWithChildren<
@@ -21,9 +21,12 @@ export type FlexProps = PropsWithChildren<
 >
 interface BoxesItem {
   node: YogaNode
-  flexProps: R3FlexProps
-  centerAnchor: boolean
-  onUpdateTransformation: (x: number, y: number, width: number, height: number) => void
+  parent: YogaNode
+  yogaIndex: number
+  reactIndex: number
+  flexProps?: R3FlexProps
+  centerAnchor?: boolean
+  onUpdateTransformation?: (x: number, y: number, width: number, height: number) => void
 }
 
 /**
@@ -93,6 +96,9 @@ export function Flex({
   minHeight,
   minWidth,
 
+  measureFunc,
+  aspectRatio,
+
   // other
   ...props
 }: FlexProps) {
@@ -150,6 +156,9 @@ export function Flex({
       maxWidth,
       minHeight,
       minWidth,
+
+      measureFunc,
+      aspectRatio,
     }
 
     rmUndefFromObj(_flexProps)
@@ -198,27 +207,31 @@ export function Flex({
     pt,
     width,
     wrap,
+    measureFunc,
+    aspectRatio,
   ])
 
   // Keeps track of the yoga nodes of the children and the related wrapper groups
   const boxesRef = useRef<BoxesItem[]>([])
-  const registerBox = useCallback(
+  const registerBox = useCallback((node: YogaNode, parent: YogaNode, index: number) => {
+    boxesRef.current.push({ node, reactIndex: index, yogaIndex: -1, parent })
+    //TODO: defer just like the reflow
+    updateRealBoxIndices(boxesRef.current, parent)
+    requestReflow()
+  }, [])
+  const updateBox = useCallback(
     (
       node: YogaNode,
       flexProps: R3FlexProps,
       onUpdateTransformation: (x: number, y: number, width: number, height: number) => void,
-      centerAnchor: boolean = false
+      centerAnchor?: boolean
     ) => {
       const i = boxesRef.current.findIndex((b) => b.node === node)
-      const boxItem = { node, flexProps, centerAnchor, onUpdateTransformation }
       if (i !== -1) {
-        //node already contained: update box
-        boxesRef.current[i] = boxItem
-        return false
+        boxesRef.current[i] = { ...boxesRef.current[i], flexProps, onUpdateTransformation, centerAnchor }
+        requestReflow()
       } else {
-        //node not contained: insert new box
-        boxesRef.current.push(boxItem)
-        return true
+        console.warn(`unable to unregister box (node could not be found)`)
       }
     },
     []
@@ -226,7 +239,14 @@ export function Flex({
   const unregisterBox = useCallback((node: YogaNode) => {
     const i = boxesRef.current.findIndex((b) => b.node === node)
     if (i !== -1) {
+      const { parent, node } = boxesRef.current[i]
       boxesRef.current.splice(i, 1)
+      parent.removeChild(node)
+      //TODO: defer just like the reflow
+      updateRealBoxIndices(boxesRef.current, parent)
+      requestReflow()
+    } else {
+      console.warn(`unable to unregister box (node could not be found)`)
     }
   }, [])
 
@@ -251,7 +271,7 @@ export function Flex({
   // We need to reflow everything if flex props changes
   useLayoutEffect(() => {
     requestReflow()
-  }, [children, flexProps, requestReflow])
+  }, [flexProps, requestReflow])
 
   // Common variables for reflow
   const mainAxis = plane[0] as Axis
@@ -266,14 +286,11 @@ export function Flex({
     () => ({
       requestReflow,
       registerBox,
+      updateBox,
       unregisterBox,
       scaleFactor,
     }),
     [requestReflow, registerBox, unregisterBox, scaleFactor]
-  )
-  const sharedBoxContext = useMemo<SharedBoxContext>(
-    () => ({ node, size: [flexWidth, flexHeight] }),
-    [node, flexWidth, flexHeight]
   )
 
   // Handles the reflow procedure
@@ -291,9 +308,9 @@ export function Flex({
       const { left, top, width: computedWidth, height: computedHeight } = node.getComputedLayout()
 
       const width =
-        (typeof flexProps.width === 'number' ? flexProps.width : null) || computedWidth.valueOf() / scaleFactor
+        (typeof flexProps?.width === 'number' ? flexProps.width : null) || computedWidth.valueOf() / scaleFactor
       const height =
-        (typeof flexProps.height === 'number' ? flexProps.height : null) || computedHeight.valueOf() / scaleFactor
+        (typeof flexProps?.height === 'number' ? flexProps.height : null) || computedHeight.valueOf() / scaleFactor
 
       const axesValues = [
         (left + (centerAnchor ? width / 2 : 0)) / scaleFactor,
@@ -302,7 +319,8 @@ export function Flex({
       ]
       const axes: Array<Axis> = [mainAxis, crossAxis, depthAxis]
 
-      onUpdateTransformation(getAxis('x', axes, axesValues), getAxis('y', axes, axesValues), width, height)
+      onUpdateTransformation &&
+        onUpdateTransformation(getAxis('x', axes, axesValues), getAxis('y', axes, axesValues), width, height)
 
       minX = Math.min(minX, left)
       minY = Math.min(minY, top)
@@ -314,9 +332,38 @@ export function Flex({
     onReflow && onReflow((maxX - minX) / scaleFactor, (maxY - minY) / scaleFactor)
   }
 
+  const indexedChildren = useMemo(
+    () =>
+      React.Children.map(children, (child, index) => (
+        <boxIndexContext.Provider value={index}>{child}</boxIndexContext.Provider>
+      )),
+    [children]
+  )
+
   return (
     <flexContext.Provider value={sharedFlexContext}>
-      <boxContext.Provider value={sharedBoxContext}>{children}</boxContext.Provider>
+      <boxNodeContext.Provider value={node}>{indexedChildren}</boxNodeContext.Provider>
     </flexContext.Provider>
   )
+}
+
+/**
+ * aligns react index with an ordered continous yogaIndex
+ * @param boxesItems all boxes
+ * @param parent the parent in which the reordering should happen
+ */
+function updateRealBoxIndices(boxesItems: Array<BoxesItem>, parent: YogaNode): void {
+  //could be done without the filter more efficiently with another data structure (e.g. map with parent as key)
+  boxesItems
+    .filter(({ parent: boxParent }) => boxParent === parent)
+    .sort(({ reactIndex: r1 }, { reactIndex: r2 }) => r1 - r2)
+    .forEach((box, index) => {
+      if (box.yogaIndex != index) {
+        if (box.yogaIndex != -1) {
+          parent.removeChild(box.node)
+        }
+        parent.insertChild(box.node, index)
+        box.yogaIndex = index
+      }
+    })
 }

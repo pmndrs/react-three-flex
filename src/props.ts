@@ -1,4 +1,11 @@
-import { YogaFlexDirection, YogaAlign, YogaJustifyContent, YogaFlexWrap, YogaDirection } from 'yoga-layout-prebuilt'
+import {
+  YogaFlexDirection,
+  YogaAlign,
+  YogaJustifyContent,
+  YogaFlexWrap,
+  YogaDirection,
+  YogaMeasureMode,
+} from 'yoga-layout-prebuilt'
 
 export type FlexYogaDirection = YogaDirection | 'ltr' | 'rtl'
 export type FlexPlane = 'xy' | 'yz' | 'xz'
@@ -117,4 +124,13 @@ export type R3FlexProps = Partial<{
   marginBottom: Value
   // Shorthand for marginBottom
   mb: Value
+
+  measureFunc: (
+    width: number,
+    widthMeasureMode: YogaMeasureMode,
+    height: number,
+    heightMeasureMode: YogaMeasureMode
+  ) => { width?: number; height?: number } | null
+
+  aspectRatio: number
 }>
