@@ -8,6 +8,7 @@ export interface SharedFlexContext {
   registerBox(node: YogaNode, parent: YogaNode, index: number): void
   updateBox(
     node: YogaNode,
+    index: number,
     flexProps: R3FlexProps,
     onUpdateTransformation: (x: number, y: number, width: number, height: number) => void,
     centerAnchor?: boolean
@@ -35,5 +36,3 @@ const initialSharedFlexContext: SharedFlexContext = {
 export const flexContext = createContext<SharedFlexContext>(initialSharedFlexContext)
 
 export const boxNodeContext = createContext<YogaNode | null>(null)
-
-export const boxIndexContext = createContext<number>(-1)

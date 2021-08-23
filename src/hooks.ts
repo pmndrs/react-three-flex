@@ -1,6 +1,6 @@
 import { useCallback, useContext as useContextImpl } from 'react'
 import { Mesh, Vector3 } from 'three'
-import { flexContext, boxNodeContext, boxIndexContext } from './context'
+import { flexContext, boxNodeContext } from './context'
 
 export function useContext<T>(context: React.Context<T>) {
   let result = useContextImpl(context)
@@ -12,16 +12,6 @@ export function useContext<T>(context: React.Context<T>) {
 
 export function useFlexNode() {
   return useContext(boxNodeContext)
-}
-
-export function useBoxIndex() {
-  const boxIndex = useContextImpl(boxIndexContext)
-  if (boxIndex == null) {
-    console.warn(
-      'You must place this hook/component under a <IndexChildren/> component directly above the use of multiple children!'
-    )
-  }
-  return boxIndex
 }
 
 /**

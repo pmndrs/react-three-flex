@@ -2,7 +2,7 @@ import React, { useLayoutEffect, useMemo, useCallback, PropsWithChildren, useRef
 import Yoga, { YogaNode } from 'yoga-layout-prebuilt'
 
 import { setYogaProperties, rmUndefFromObj, Axis, getDepthAxis, getFlex2DSize, getAxis } from './util'
-import { boxIndexContext, boxNodeContext, flexContext, SharedFlexContext } from './context'
+import { boxNodeContext, flexContext, SharedFlexContext } from './context'
 import type { R3FlexProps, FlexYogaDirection, FlexPlane } from './props'
 
 export type FlexProps = PropsWithChildren<
@@ -213,22 +213,31 @@ export function Flex({
 
   // Keeps track of the yoga nodes of the children and the related wrapper groups
   const boxesRef = useRef<BoxesItem[]>([])
+  const dirtyParents = useRef<Set<YogaNode>>(new Set())
+
   const registerBox = useCallback((node: YogaNode, parent: YogaNode, index: number) => {
     boxesRef.current.push({ node, reactIndex: index, yogaIndex: -1, parent })
-    //TODO: defer just like the reflow
-    updateRealBoxIndices(boxesRef.current, parent)
+    dirtyParents.current.add(parent)
     requestReflow()
   }, [])
   const updateBox = useCallback(
     (
       node: YogaNode,
+      index: number,
       flexProps: R3FlexProps,
       onUpdateTransformation: (x: number, y: number, width: number, height: number) => void,
       centerAnchor?: boolean
     ) => {
       const i = boxesRef.current.findIndex((b) => b.node === node)
       if (i !== -1) {
-        boxesRef.current[i] = { ...boxesRef.current[i], flexProps, onUpdateTransformation, centerAnchor }
+        boxesRef.current[i] = {
+          ...boxesRef.current[i],
+          reactIndex: index,
+          flexProps,
+          onUpdateTransformation,
+          centerAnchor,
+        }
+        dirtyParents.current.add(boxesRef.current[i].parent)
         requestReflow()
       } else {
         console.warn(`unable to unregister box (node could not be found)`)
@@ -242,8 +251,7 @@ export function Flex({
       const { parent, node } = boxesRef.current[i]
       boxesRef.current.splice(i, 1)
       parent.removeChild(node)
-      //TODO: defer just like the reflow
-      updateRealBoxIndices(boxesRef.current, parent)
+      dirtyParents.current.add(parent)
       requestReflow()
     } else {
       console.warn(`unable to unregister box (node could not be found)`)
@@ -295,6 +303,9 @@ export function Flex({
 
   // Handles the reflow procedure
   function reflow() {
+    dirtyParents.current.forEach((parent) => updateRealBoxIndices(boxesRef.current, parent))
+    dirtyParents.current.clear()
+
     // Perform yoga layout calculation
     node.calculateLayout(flexWidth * scaleFactor, flexHeight * scaleFactor, yogaDirection_)
 
@@ -320,7 +331,12 @@ export function Flex({
       const axes: Array<Axis> = [mainAxis, crossAxis, depthAxis]
 
       onUpdateTransformation &&
-        onUpdateTransformation(getAxis('x', axes, axesValues), getAxis('y', axes, axesValues), width, height)
+        onUpdateTransformation(
+          NaNToZero(getAxis('x', axes, axesValues)),
+          NaNToZero(getAxis('y', axes, axesValues)),
+          NaNToZero(width),
+          NaNToZero(height)
+        )
 
       minX = Math.min(minX, left)
       minY = Math.min(minY, top)
@@ -332,17 +348,9 @@ export function Flex({
     onReflow && onReflow((maxX - minX) / scaleFactor, (maxY - minY) / scaleFactor)
   }
 
-  const indexedChildren = useMemo(
-    () =>
-      React.Children.map(children, (child, index) => (
-        <boxIndexContext.Provider value={index}>{child}</boxIndexContext.Provider>
-      )),
-    [children]
-  )
-
   return (
     <flexContext.Provider value={sharedFlexContext}>
-      <boxNodeContext.Provider value={node}>{indexedChildren}</boxNodeContext.Provider>
+      <boxNodeContext.Provider value={node}>{children}</boxNodeContext.Provider>
     </flexContext.Provider>
   )
 }
@@ -366,4 +374,8 @@ function updateRealBoxIndices(boxesItems: Array<BoxesItem>, parent: YogaNode): v
         box.yogaIndex = index
       }
     })
+}
+
+function NaNToZero(val: number) {
+  return isNaN(val) ? 0 : val
 }

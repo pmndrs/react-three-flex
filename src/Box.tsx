@@ -2,9 +2,9 @@ import React, { useLayoutEffect, useMemo } from 'react'
 import Yoga from 'yoga-layout-prebuilt'
 
 import { setYogaProperties, rmUndefFromObj } from './util'
-import { boxNodeContext, boxIndexContext, flexContext } from './context'
+import { boxNodeContext, flexContext } from './context'
 import { R3FlexProps } from './props'
-import { useContext, useFlexNode, useBoxIndex } from './hooks'
+import { useContext, useFlexNode } from './hooks'
 
 /**
  * Box container for 3D Objects.
@@ -74,12 +74,15 @@ export function Box({
   measureFunc,
   aspectRatio,
 
+  index,
+
   // other
   ...props
 }: {
   onUpdateTransformation: (x: number, y: number, width: number, height: number) => void
   centerAnchor?: boolean
   children: React.ReactNode
+  index?: number
 } & R3FlexProps) {
   // must memoize or the object literal will cause every dependent of flexProps to rerender everytime
   const flexProps: R3FlexProps = useMemo(() => {
@@ -192,8 +195,7 @@ export function Box({
 
   const { registerBox, unregisterBox, updateBox, scaleFactor } = useContext(flexContext)
   const parent = useFlexNode()
-  const index = useBoxIndex()
-  const node = useMemo(() => Yoga.Node.create(), [index])
+  const node = useMemo(() => Yoga.Node.create(), [])
 
   useLayoutEffect(() => {
     setYogaProperties(node, flexProps, scaleFactor)
@@ -202,14 +204,14 @@ export function Box({
   //register and unregister box
   useLayoutEffect(() => {
     if (!parent) return
-    registerBox(node, parent, index)
+    registerBox(node, parent, index ?? 0)
     return () => unregisterBox(node)
-  }, [node, index, parent, registerBox, unregisterBox])
+  }, [node, parent, registerBox, unregisterBox])
 
   //update box properties
   useLayoutEffect(() => {
-    updateBox(node, flexProps, onUpdateTransformation, centerAnchor)
-  }, [node, flexProps, centerAnchor, onUpdateTransformation, updateBox])
+    updateBox(node, index ?? 0, flexProps, onUpdateTransformation, centerAnchor)
+  }, [node, index, flexProps, centerAnchor, onUpdateTransformation, updateBox])
 
   return <boxNodeContext.Provider value={node}>{children}</boxNodeContext.Provider>
 }

@@ -1,7 +1,4 @@
-import React, { ReactNode } from 'react'
-import { useMemo } from 'react'
 import Yoga, { YogaNode } from 'yoga-layout-prebuilt'
-import { boxIndexContext } from './context'
 import { R3FlexProps, FlexPlane } from './props'
 
 export const capitalize = (s: string) => s[0].toUpperCase() + s.slice(1)
@@ -141,19 +138,3 @@ export function getFlex2DSize(sizes: [number, number, number], plane: FlexPlane)
 
 export const rmUndefFromObj = (obj: Record<string, any>) =>
   Object.keys(obj).forEach((key) => (obj[key] === undefined ? delete obj[key] : {}))
-
-/**
- * need to be applied where new childs emerge (if a wrapper of any kind is in between the underlying childs can't be indexed)
- * @param children
- * @returns
- */
-export function indexChildren(children: React.ReactNode) {
-  return React.Children.map(children, (child, index) => (
-    <boxIndexContext.Provider value={index}>{child}</boxIndexContext.Provider>
-  ))
-}
-
-export function IndexChildren({ children }: { children: React.ReactNode }) {
-  const child = useMemo(() => indexChildren(children), [children])
-  return <>{child}</>
-}
