@@ -4,7 +4,7 @@ import Yoga from 'yoga-layout-prebuilt'
 import { ReactThreeFiber, useFrame } from '@react-three/fiber'
 
 import { setYogaProperties, rmUndefFromObj } from './util'
-import { boxContext, flexContext } from './context'
+import { boxContext, flexContext, SharedBoxContext } from './context'
 import { R3FlexProps } from './props'
 import { useReflow, useContext } from './hooks'
 
@@ -75,7 +75,7 @@ export function Box({
   ...props
 }: {
   centerAnchor?: boolean
-  children: React.ReactNode | ((width: number, height: number) => React.ReactNode)
+  children: React.ReactNode | ((width: number, height: number, centerAnchor?: boolean) => React.ReactNode)
 } & R3FlexProps &
   Omit<ReactThreeFiber.Object3DNode<THREE.Group, typeof THREE.Group>, 'children'>) {
   // must memoize or the object literal will cause every dependent of flexProps to rerender everytime
@@ -225,12 +225,12 @@ export function Box({
     }
   })
 
-  const sharedBoxContext = useMemo(() => ({ node, size }), [node, size])
+  const sharedBoxContext = useMemo<SharedBoxContext>(() => ({ node, size, centerAnchor }), [node, size, centerAnchor])
 
   return (
     <group ref={group} {...props}>
       <boxContext.Provider value={sharedBoxContext}>
-        {typeof children === 'function' ? children(size[0], size[1]) : children}
+        {typeof children === 'function' ? children(size[0], size[1], centerAnchor) : children}
       </boxContext.Provider>
     </group>
   )

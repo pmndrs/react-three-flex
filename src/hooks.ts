@@ -25,6 +25,11 @@ export function useFlexNode() {
   return node
 }
 
+export function useCenterAnchor() {
+  const { centerAnchor } = useContext(boxContext)
+  return centerAnchor
+}
+
 /**
  * explicitly set the size of the box's yoga node
  * @requires that the surrounding Flex-Element has `disableSizeRecalc` set to `true`
