@@ -37,12 +37,6 @@ interface BoxesItem {
   centerAnchor: boolean
 }
 
-// This is not very performant
-// We should probably optimize it, options are
-// * Memoization
-// * Precalculation of this when registering a box
-const hasBoxChildren = (boxes: BoxesItem[], children: Object3D[]) => boxes.some(({ group }) => children.includes(group))
-
 /**
  * Flex container. Can contain Boxes
  */
@@ -294,7 +288,7 @@ export function Flex({
           // Forced size, no need to calculate bounding box
           node.setWidth(scaledWidth)
           node.setHeight(scaledHeight)
-        } else if (!hasBoxChildren(boxesRef.current, group.children)) {
+        } else if (node.getChildCount() === 0) {
           // No size specified, calculate size
           if (rootGroup.current) {
             getOBBSize(group, rootGroup.current, boundingBox, vec)
