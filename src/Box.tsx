@@ -192,17 +192,23 @@ export function Box({
     setYogaProperties(node, flexProps, scaleFactor)
   }, [flexProps, node, scaleFactor])
 
-  // Make child known to the parents yoga instance *before* it calculates layout
   useLayoutEffect(() => {
-    if (!group.current || !parent) return
-
-    parent.insertChild(node, parent.getChildCount())
-    registerBox(node, group.current, flexProps, centerAnchor)
+    if (!parent) return
 
     // Remove child on unmount
     return () => {
       parent.removeChild(node)
       unregisterBox(node)
+    }
+  }, [node, parent])
+
+  // Make child known to the parents yoga instance *before* it calculates layout
+  useLayoutEffect(() => {
+    if (!group.current || !parent) return
+
+    if (registerBox(node, group.current, flexProps, centerAnchor)) {
+      //newly registered node: add it to the parent
+      parent.insertChild(node, parent.getChildCount())
     }
   }, [node, parent, flexProps, centerAnchor, registerBox, unregisterBox])
 
