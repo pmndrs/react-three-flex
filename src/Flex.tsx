@@ -11,6 +11,7 @@ import {
   getDepthAxis,
   getFlex2DSize,
   getOBBSize,
+  getRootShift,
 } from './util'
 import { boxContext, flexContext, SharedFlexContext, SharedBoxContext } from './context'
 import type { R3FlexProps, FlexYogaDirection, FlexPlane } from './props'
@@ -26,6 +27,10 @@ export type FlexProps = PropsWithChildren<
     scaleFactor?: number
     onReflow?: (totalWidth: number, totalHeight: number) => void
     disableSizeRecalc?: boolean
+    /** Centers flex container in position.
+     *
+     * !NB center is based on provided flex size, not on the actual content */
+    centerAnchor?: boolean
   }> &
     R3FlexProps &
     Omit<ReactThreeFiber.Object3DNode<THREE.Group, typeof Group>, 'children'>
@@ -49,6 +54,7 @@ export function Flex({
   scaleFactor = 100,
   onReflow,
   disableSizeRecalc,
+  centerAnchor: rootCenterAnchor,
 
   // flex props
 
@@ -272,8 +278,8 @@ export function Flex({
     [requestReflow, registerBox, unregisterBox, scaleFactor]
   )
   const sharedBoxContext = useMemo<SharedBoxContext>(
-    () => ({ node, size: [flexWidth, flexHeight] }),
-    [node, flexWidth, flexHeight]
+    () => ({ node, size: [flexWidth, flexHeight], centerAnchor: rootCenterAnchor }),
+    [node, flexWidth, flexHeight, rootCenterAnchor]
   )
 
   // Handles the reflow procedure
@@ -306,6 +312,9 @@ export function Flex({
     // Perform yoga layout calculation
     node.calculateLayout(flexWidth * scaleFactor, flexHeight * scaleFactor, yogaDirection_)
 
+    const rootWidth = node.getComputedWidth()
+    const rootHeight = node.getComputedHeight()
+
     let minX = 0
     let maxX = 0
     let minY = 0
@@ -314,15 +323,19 @@ export function Flex({
     // Reposition after recalculation
     boxesRef.current.forEach(({ group, node, centerAnchor }) => {
       const { left, top, width, height } = node.getComputedLayout()
+      const [mainAxisShift, crossAxisShift] = getRootShift(rootCenterAnchor, rootWidth, rootHeight, node)
+
       const position = vectorFromObject({
-        [mainAxis]: (left + (centerAnchor ? width / 2 : 0)) / scaleFactor,
-        [crossAxis]: -(top + (centerAnchor ? height / 2 : 0)) / scaleFactor,
+        [mainAxis]: (mainAxisShift + left + (centerAnchor ? width / 2 : 0)) / scaleFactor,
+        [crossAxis]: -(crossAxisShift + top + (centerAnchor ? height / 2 : 0)) / scaleFactor,
         [depthAxis]: 0,
       } as any)
+
       minX = Math.min(minX, left)
       minY = Math.min(minY, top)
       maxX = Math.max(maxX, left + width)
       maxY = Math.max(maxY, top + height)
+
       group.position.copy(position)
     })
 
