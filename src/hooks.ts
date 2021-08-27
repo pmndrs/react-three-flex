@@ -1,4 +1,4 @@
-import { useCallback, useContext as useContextImpl } from 'react'
+import { useCallback, useContext as useContextImpl, useMemo } from 'react'
 import { Mesh, Vector3 } from 'three'
 import { flexContext, boxContext } from './context'
 
@@ -15,9 +15,16 @@ export function useReflow() {
   return requestReflow
 }
 
+/**
+ * @returns [width, height, centerAnchor]
+ */
 export function useFlexSize() {
-  const { size } = useContext(boxContext)
-  return size
+  const {
+    size: [width, height],
+    centerAnchor,
+  } = useContext(boxContext)
+  const value = useMemo(() => [width, height, centerAnchor] as const, [width, height, centerAnchor])
+  return value
 }
 
 export function useFlexNode() {

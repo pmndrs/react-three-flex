@@ -28,6 +28,7 @@ export const flexContext = createContext<SharedFlexContext>(initialSharedFlexCon
 export interface SharedBoxContext {
   node: YogaNode | null
   size: [number, number]
+  centerAnchor?: boolean
 }
 
 const initialSharedBoxContext: SharedBoxContext = {
