@@ -1,14 +1,15 @@
 import { createContext } from 'react'
 import { YogaNode } from 'yoga-layout-prebuilt'
-import { R3FlexProps } from './props'
+import { FlexPlane, R3FlexProps } from './props'
 
 export interface SharedFlexContext {
   scaleFactor: number
+  plane: FlexPlane
   requestReflow(): void
-  registerBox(node: YogaNode, parent: YogaNode, index: number): void
+  registerBox(node: YogaNode, parent: YogaNode): void
   updateBox(
     node: YogaNode,
-    index: number,
+    index: number | undefined,
     flexProps: R3FlexProps,
     onUpdateTransformation: (x: number, y: number, width: number, height: number) => void,
     centerAnchor?: boolean
@@ -17,6 +18,7 @@ export interface SharedFlexContext {
 }
 
 const initialSharedFlexContext: SharedFlexContext = {
+  plane: 'xy',
   scaleFactor: 100,
   requestReflow() {
     console.warn('Flex not initialized! Please report')

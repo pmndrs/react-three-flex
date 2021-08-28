@@ -4,6 +4,7 @@ import Yoga, { YogaNode } from 'yoga-layout-prebuilt'
 import { setYogaProperties, rmUndefFromObj, Axis, getDepthAxis, getFlex2DSize, getAxis } from './util'
 import { boxNodeContext, flexContext, SharedFlexContext } from './context'
 import type { R3FlexProps, FlexYogaDirection, FlexPlane } from './props'
+import { Group } from 'three'
 
 export type FlexProps = PropsWithChildren<
   Partial<{
@@ -23,7 +24,7 @@ interface BoxesItem {
   node: YogaNode
   parent: YogaNode
   yogaIndex: number
-  reactIndex: number
+  reactIndex: number | undefined
   flexProps?: R3FlexProps
   centerAnchor?: boolean
   onUpdateTransformation?: (x: number, y: number, width: number, height: number) => void
@@ -211,19 +212,21 @@ export function Flex({
     aspectRatio,
   ])
 
+  const rootGroup = useRef<Group>()
+
   // Keeps track of the yoga nodes of the children and the related wrapper groups
   const boxesRef = useRef<BoxesItem[]>([])
   const dirtyParents = useRef<Set<YogaNode>>(new Set())
 
-  const registerBox = useCallback((node: YogaNode, parent: YogaNode, index: number) => {
-    boxesRef.current.push({ node, reactIndex: index, yogaIndex: -1, parent })
+  const registerBox = useCallback((node: YogaNode, parent: YogaNode) => {
+    boxesRef.current.push({ node, reactIndex: undefined, yogaIndex: -1, parent })
     dirtyParents.current.add(parent)
     requestReflow()
   }, [])
   const updateBox = useCallback(
     (
       node: YogaNode,
-      index: number,
+      index: number | undefined,
       flexProps: R3FlexProps,
       onUpdateTransformation: (x: number, y: number, width: number, height: number) => void,
       centerAnchor?: boolean
@@ -258,12 +261,6 @@ export function Flex({
     }
   }, [])
 
-  // Reference to the yoga native node
-  const node = useMemo(() => Yoga.Node.create(), [])
-  useLayoutEffect(() => {
-    setYogaProperties(node, flexProps, scaleFactor)
-  }, [node, flexProps, scaleFactor])
-
   // Mechanism for invalidating and recalculating layout
   const reflowTimeout = useRef<number | undefined>(undefined)
 
@@ -276,10 +273,13 @@ export function Flex({
     }
   }, [maxUps])
 
-  // We need to reflow everything if flex props changes
+  // Reference to the yoga native node
+  const node = useMemo(() => Yoga.Node.create(), [])
   useLayoutEffect(() => {
+    setYogaProperties(node, flexProps, scaleFactor)
+    // We need to reflow everything if flex props changes
     requestReflow()
-  }, [flexProps, requestReflow])
+  }, [node, flexProps, scaleFactor])
 
   // Common variables for reflow
   const mainAxis = plane[0] as Axis
@@ -292,13 +292,14 @@ export function Flex({
   // Shared context for flex and box
   const sharedFlexContext = useMemo<SharedFlexContext>(
     () => ({
+      plane,
       requestReflow,
       registerBox,
       updateBox,
       unregisterBox,
       scaleFactor,
     }),
-    [requestReflow, registerBox, unregisterBox, scaleFactor]
+    [plane, requestReflow, registerBox, unregisterBox, scaleFactor]
   )
 
   // Handles the reflow procedure
@@ -316,26 +317,17 @@ export function Flex({
 
     // Reposition after recalculation
     boxesRef.current.forEach(({ node, centerAnchor, onUpdateTransformation, flexProps }) => {
-      const { left, top, width: computedWidth, height: computedHeight } = node.getComputedLayout()
+      const { left, top, width, height } = node.getComputedLayout()
 
-      const width =
-        (typeof flexProps?.width === 'number' ? flexProps.width : null) || computedWidth.valueOf() / scaleFactor
-      const height =
-        (typeof flexProps?.height === 'number' ? flexProps.height : null) || computedHeight.valueOf() / scaleFactor
-
-      const axesValues = [
-        (left + (centerAnchor ? width / 2 : 0)) / scaleFactor,
-        -(top + (centerAnchor ? height / 2 : 0)) / scaleFactor,
-        0,
-      ]
+      const axesValues = [left + (centerAnchor ? width / 2 : 0), -(top + (centerAnchor ? height / 2 : 0)), 0]
       const axes: Array<Axis> = [mainAxis, crossAxis, depthAxis]
 
       onUpdateTransformation &&
         onUpdateTransformation(
-          NaNToZero(getAxis('x', axes, axesValues)),
-          NaNToZero(getAxis('y', axes, axesValues)),
-          NaNToZero(width),
-          NaNToZero(height)
+          NaNToZero(getAxis('x', axes, axesValues)) / scaleFactor,
+          NaNToZero(getAxis('y', axes, axesValues)) / scaleFactor,
+          NaNToZero(width) / scaleFactor,
+          NaNToZero(height) / scaleFactor
         )
 
       minX = Math.min(minX, left)
@@ -362,18 +354,40 @@ export function Flex({
  */
 function updateRealBoxIndices(boxesItems: Array<BoxesItem>, parent: YogaNode): void {
   //could be done without the filter more efficiently with another data structure (e.g. map with parent as key)
-  boxesItems
-    .filter(({ parent: boxParent }) => boxParent === parent)
-    .sort(({ reactIndex: r1 }, { reactIndex: r2 }) => r1 - r2)
-    .forEach((box, index) => {
-      if (box.yogaIndex != index) {
-        if (box.yogaIndex != -1) {
-          parent.removeChild(box.node)
-        }
-        parent.insertChild(box.node, index)
-        box.yogaIndex = index
+  sortIndex(boxesItems.filter(({ parent: boxParent }) => boxParent === parent)).forEach((box, index) => {
+    if (box.yogaIndex != index) {
+      if (box.yogaIndex != -1) {
+        parent.removeChild(box.node)
       }
-    })
+      parent.insertChild(box.node, index)
+      box.yogaIndex = index
+    }
+  })
+}
+
+function sortIndex(boxes: Array<BoxesItem>): Array<BoxesItem> {
+  //split array
+  const { unindexed, indexed } = boxes.reduce<{ indexed: Array<BoxesItem>; unindexed: Array<BoxesItem> }>(
+    ({ indexed, unindexed }, box) => ({
+      indexed: box.reactIndex != null ? [...indexed, box] : indexed,
+      unindexed: box.reactIndex == null ? [...unindexed, box] : unindexed,
+    }),
+    { indexed: [], unindexed: [] }
+  )
+  //sort after react Index
+  const result = indexed.sort(({ reactIndex: r1 }, { reactIndex: r2 }) => r1! - r2!)
+  //fillup array
+  let i = 0
+  let nextUnindexed = unindexed.shift()
+  while (nextUnindexed != null) {
+    const boxAtIndex = result[i]
+    if (boxAtIndex == null || (boxAtIndex.reactIndex != null && boxAtIndex.reactIndex > i)) {
+      result.splice(i, 0, nextUnindexed)
+      nextUnindexed = unindexed.shift()
+    }
+    i++
+  }
+  return result
 }
 
 function NaNToZero(val: number) {

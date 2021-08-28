@@ -1,3 +1,4 @@
+import { Box3, Matrix4, Object3D, Vector3 } from 'three'
 import Yoga, { YogaNode } from 'yoga-layout-prebuilt'
 import { R3FlexProps, FlexPlane } from './props'
 
@@ -33,6 +34,10 @@ export const setYogaProperties = (node: YogaNode, props: R3FlexProps, scaleFacto
         case 'basis':
         case 'flexBasis':
           return node.setFlexBasis(value)
+        case 'width':
+          return node.setWidth(value)
+        case 'height':
+          return node.setHeight(value)
 
         default:
           return (node[`set${capitalize(name)}` as keyof YogaNode] as any)(value)
@@ -43,6 +48,10 @@ export const setYogaProperties = (node: YogaNode, props: R3FlexProps, scaleFacto
         case 'basis':
         case 'flexBasis':
           return node.setFlexBasis(scaledValue)
+        case 'width':
+          return node.setWidth(scaledValue)
+        case 'height':
+          return node.setHeight(scaledValue)
         case 'grow':
         case 'flexGrow':
           return node.setFlexGrow(scaledValue)
@@ -107,7 +116,7 @@ export type Axis = 'x' | 'y' | 'z'
 export const axes: Axis[] = ['x', 'y', 'z']
 
 export function getAxis(searchAxis: Axis, axes: Array<Axis>, values: Array<number>) {
-  const index = axes.findIndex((axis, i) => axis === searchAxis)
+  const index = axes.findIndex((axis) => axis === searchAxis)
   if (index == -1) {
     throw new Error(`unable to find axis "${searchAxis}" in [${axes.join(', ')}] `)
   }
@@ -138,3 +147,26 @@ export function getFlex2DSize(sizes: [number, number, number], plane: FlexPlane)
 
 export const rmUndefFromObj = (obj: Record<string, any>) =>
   Object.keys(obj).forEach((key) => (obj[key] === undefined ? delete obj[key] : {}))
+
+export const getOBBSize = (object: Object3D, root: Object3D | undefined, bb: Box3, size: Vector3) => {
+  if (root == null) {
+    bb.setFromObject(object).getSize(size)
+  } else {
+    object.updateMatrix()
+    const oldMatrix = object.matrix
+    const oldMatrixAutoUpdate = object.matrixAutoUpdate
+
+    root.updateMatrixWorld()
+    const m = new Matrix4().copy(root.matrixWorld).invert()
+    object.matrix = m
+    // to prevent matrix being reassigned
+    object.matrixAutoUpdate = false
+    root.updateMatrixWorld()
+
+    bb.setFromObject(object).getSize(size)
+
+    object.matrix = oldMatrix
+    object.matrixAutoUpdate = oldMatrixAutoUpdate
+    root.updateMatrixWorld()
+  }
+}

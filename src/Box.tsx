@@ -1,10 +1,18 @@
-import React, { useLayoutEffect, useMemo } from 'react'
-import Yoga from 'yoga-layout-prebuilt'
+import React, { useMemo, useRef, useState } from 'react'
 
-import { setYogaProperties, rmUndefFromObj } from './util'
+import { Axis, getOBBSize, rmUndefFromObj } from './util'
 import { boxNodeContext, flexContext } from './context'
-import { R3FlexProps } from './props'
-import { useContext, useFlexNode } from './hooks'
+import { R3FlexProps, Value } from './props'
+import { useBox } from './useBox'
+import { useCallback } from 'react'
+import { GroupProps } from '@react-three/fiber'
+import { useEffect } from 'react'
+import { Box3, Group, Vector3 } from 'three'
+import { useContext } from 'react'
+import { createContext } from 'react'
+
+const boundingBox = new Box3()
+const vec = new Vector3()
 
 /**
  * Box container for 3D Objects.
@@ -193,25 +201,64 @@ export function Box({
     aspectRatio,
   ])
 
-  const { registerBox, unregisterBox, updateBox, scaleFactor } = useContext(flexContext)
-  const parent = useFlexNode()
-  const node = useMemo(() => Yoga.Node.create(), [])
+  const [[x, y, w, h], setTransformation] = useState([0, 0, 0, 0] as [number, number, number, number])
 
-  useLayoutEffect(() => {
-    setYogaProperties(node, flexProps, scaleFactor)
-  }, [flexProps, node, scaleFactor])
+  const { plane, scaleFactor } = useContext(flexContext)
 
-  //register and unregister box
-  useLayoutEffect(() => {
-    if (!parent) return
-    registerBox(node, parent, index ?? 0)
-    return () => unregisterBox(node)
-  }, [node, parent, registerBox, unregisterBox])
+  const [sizeProps, setOverrideProps] = useState<{ width?: Value; height?: Value }>({})
 
-  //update box properties
-  useLayoutEffect(() => {
-    updateBox(node, index ?? 0, flexProps, onUpdateTransformation, centerAnchor)
-  }, [node, index, flexProps, centerAnchor, onUpdateTransformation, updateBox])
+  const combinedProps = useMemo(() => ({ ...sizeProps, ...flexProps }), [sizeProps, flexProps])
 
-  return <boxNodeContext.Provider value={node}>{children}</boxNodeContext.Provider>
+  const referenceGroup = useContext(boxReferenceContext)
+
+  const node = useBox(
+    combinedProps,
+    centerAnchor,
+    index,
+    useCallback((...params: [x: number, y: number, w: number, h: number]) => setTransformation(params), [])
+  )
+
+  const group = useRef<THREE.Group>()
+  useEffect(() => {
+    if (width == null && height == null && group.current != null && node.getChildCount() === 0) {
+      getOBBSize(group.current, referenceGroup.current, boundingBox, vec)
+      const mainAxis = plane[0] as Axis
+      const crossAxis = plane[1] as Axis
+      setOverrideProps({
+        width: vec[mainAxis] * scaleFactor,
+        height: vec[crossAxis] * scaleFactor,
+      })
+    } else {
+      setOverrideProps({})
+    }
+  }, [children, width, height])
+
+  const size = useMemo<[number, number]>(() => [w, h], [w, h])
+
+  return (
+    <group position-x={x} position-y={y}>
+      <boxNodeContext.Provider value={node}>
+        <boxSizeContext.Provider value={size}>
+          {useMemo(() => (typeof children === 'function' ? children(w, h) : children), [w, h, children])}
+        </boxSizeContext.Provider>
+      </boxNodeContext.Provider>
+    </group>
+  )
+}
+
+const boxReferenceContext = createContext<React.MutableRefObject<Group | undefined>>(null as any)
+
+export function BoxReferenceGroup({ children, ...props }: GroupProps) {
+  const ref = useRef<Group>()
+  return (
+    <group ref={ref} {...props}>
+      <boxReferenceContext.Provider value={ref}>{children}</boxReferenceContext.Provider>
+    </group>
+  )
+}
+
+export const boxSizeContext = createContext<[number, number]>(null as any)
+
+export function useFlexSize() {
+  return useContext(boxSizeContext)
 }
