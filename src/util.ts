@@ -155,3 +155,20 @@ export const getOBBSize = (object: Object3D, root: Object3D, bb: Box3, size: Vec
   object.matrixAutoUpdate = oldMatrixAutoUpdate
   root.updateMatrixWorld()
 }
+
+const getIsTopLevelChild = (node: YogaNode) => !node.getParent()?.getParent()
+
+/** @returns [mainAxisShift, crossAxisShift] */
+export const getRootShift = (
+  rootCenterAnchor: boolean | undefined,
+  rootWidth: number,
+  rootHeight: number,
+  node: YogaNode
+) => {
+  if (!rootCenterAnchor || !getIsTopLevelChild(node)) {
+    return [0, 0]
+  }
+  const mainAxisShift = -rootWidth / 2
+  const crossAxisShift = -rootHeight / 2
+  return [mainAxisShift, crossAxisShift] as const
+}
