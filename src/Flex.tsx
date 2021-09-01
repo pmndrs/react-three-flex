@@ -3,7 +3,15 @@ import Yoga, { YogaNode } from 'yoga-layout-prebuilt'
 import { Vector3, Group, Box3, Object3D } from 'three'
 import { useFrame, useThree, ReactThreeFiber } from '@react-three/fiber'
 
-import { setYogaProperties, rmUndefFromObj, vectorFromObject, Axis, getDepthAxis, getFlex2DSize } from './util'
+import {
+  setYogaProperties,
+  rmUndefFromObj,
+  vectorFromObject,
+  Axis,
+  getDepthAxis,
+  getFlex2DSize,
+  getOBBSize,
+} from './util'
 import { boxContext, flexContext, SharedFlexContext, SharedBoxContext } from './context'
 import type { R3FlexProps, FlexYogaDirection, FlexPlane } from './props'
 
@@ -28,12 +36,6 @@ interface BoxesItem {
   flexProps: R3FlexProps
   centerAnchor: boolean
 }
-
-// This is not very performant
-// We should probably optimize it, options are
-// * Memoization
-// * Precalculation of this when registering a box
-const hasBoxChildren = (boxes: BoxesItem[], children: Object3D[]) => boxes.some(({ group }) => children.includes(group))
 
 /**
  * Flex container. Can contain Boxes
@@ -209,6 +211,8 @@ export function Flex({
     wrap,
   ])
 
+  const rootGroup = useRef<Group>()
+
   // Keeps track of the yoga nodes of the children and the related wrapper groups
   const boxesRef = useRef<BoxesItem[]>([])
   const registerBox = useCallback(
@@ -290,9 +294,15 @@ export function Flex({
           // Forced size, no need to calculate bounding box
           node.setWidth(scaledWidth)
           node.setHeight(scaledHeight)
-        } else if (!hasBoxChildren(boxesRef.current, group.children)) {
-          // No size specified, calculate bounding box
-          boundingBox.setFromObject(group).getSize(vec)
+        } else if (node.getChildCount() === 0) {
+          // No size specified, calculate size
+          if (rootGroup.current) {
+            getOBBSize(group, rootGroup.current, boundingBox, vec)
+          } else {
+            // rootGroup ref is missing for some reason, let's just use usual bounding box
+            boundingBox.setFromObject(group).getSize(vec)
+          }
+
           node.setWidth(scaledWidth || vec[mainAxis] * scaleFactor)
           node.setHeight(scaledHeight || vec[crossAxis] * scaleFactor)
         }
@@ -339,7 +349,7 @@ export function Flex({
   })
 
   return (
-    <group {...props}>
+    <group ref={rootGroup} {...props}>
       <flexContext.Provider value={sharedFlexContext}>
         <boxContext.Provider value={sharedBoxContext}>{children}</boxContext.Provider>
       </flexContext.Provider>
