@@ -8,6 +8,7 @@ export interface SharedFlexContext {
   requestReflow(): void
   registerBox(node: YogaNode, group: Group, flexProps: R3FlexProps, centerAnchor?: boolean): boolean
   unregisterBox(node: YogaNode): void
+  notInitialized?: boolean
 }
 
 const initialSharedFlexContext: SharedFlexContext = {
@@ -22,6 +23,7 @@ const initialSharedFlexContext: SharedFlexContext = {
   unregisterBox() {
     console.warn('Flex not initialized! Please report')
   },
+  notInitialized: true,
 }
 
 export const flexContext = createContext<SharedFlexContext>(initialSharedFlexContext)
@@ -30,11 +32,13 @@ export interface SharedBoxContext {
   node: YogaNode | null
   size: [number, number]
   centerAnchor?: boolean
+  notInitialized?: boolean
 }
 
 const initialSharedBoxContext: SharedBoxContext = {
   node: null,
   size: [0, 0],
+  notInitialized: true,
 }
 
 export const boxContext = createContext<SharedBoxContext>(initialSharedBoxContext)

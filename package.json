@@ -1,6 +1,6 @@
 {
   "name": "@react-three/flex",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "description": "`<Flex />` component for the 3D World.",
   "keywords": [
     "react",

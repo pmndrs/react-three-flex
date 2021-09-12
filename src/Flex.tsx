@@ -1,7 +1,8 @@
 import React, { useLayoutEffect, useMemo, useCallback, PropsWithChildren, useRef } from 'react'
 import Yoga, { YogaNode } from 'yoga-layout-prebuilt'
-import { Vector3, Group, Box3, Object3D } from 'three'
+import * as THREE from 'three'
 import { useFrame, useThree, ReactThreeFiber } from '@react-three/fiber'
+import mergeRefs from 'react-merge-refs'
 
 import {
   setYogaProperties,
@@ -11,6 +12,7 @@ import {
   getDepthAxis,
   getFlex2DSize,
   getOBBSize,
+  getRootShift,
 } from './util'
 import { boxContext, flexContext, SharedFlexContext, SharedBoxContext } from './context'
 import type { R3FlexProps, FlexYogaDirection, FlexPlane } from './props'
@@ -26,87 +28,92 @@ export type FlexProps = PropsWithChildren<
     scaleFactor?: number
     onReflow?: (totalWidth: number, totalHeight: number) => void
     disableSizeRecalc?: boolean
+    /** Centers flex container in position.
+     *
+     * !NB center is based on provided flex size, not on the actual content */
+    centerAnchor?: boolean
   }> &
     R3FlexProps &
-    Omit<ReactThreeFiber.Object3DNode<THREE.Group, typeof Group>, 'children'>
+    Omit<ReactThreeFiber.Object3DNode<THREE.Group, typeof THREE.Group>, 'children'>
 >
 interface BoxesItem {
   node: YogaNode
-  group: Group
+  group: THREE.Group
   flexProps: R3FlexProps
   centerAnchor: boolean
 }
 
-/**
- * Flex container. Can contain Boxes
- */
-export function Flex({
-  // Non flex props
-  size = [1, 1, 1],
-  yogaDirection = 'ltr',
-  plane = 'xy',
-  children,
-  scaleFactor = 100,
-  onReflow,
-  disableSizeRecalc,
+function FlexImpl(
+  {
+    // Non flex props
+    size = [1, 1, 1],
+    yogaDirection = 'ltr',
+    plane = 'xy',
+    children,
+    scaleFactor = 100,
+    onReflow,
+    disableSizeRecalc,
+    centerAnchor: rootCenterAnchor,
 
-  // flex props
+    // flex props
 
-  flexDirection,
-  flexDir,
-  dir,
+    flexDirection,
+    flexDir,
+    dir,
 
-  alignContent,
-  alignItems,
-  alignSelf,
-  align,
+    alignContent,
+    alignItems,
+    alignSelf,
+    align,
 
-  justifyContent,
-  justify,
+    justifyContent,
+    justify,
 
-  flexBasis,
-  basis,
-  flexGrow,
-  grow,
-  flexShrink,
-  shrink,
+    flexBasis,
+    basis,
+    flexGrow,
+    grow,
+    flexShrink,
+    shrink,
 
-  flexWrap,
-  wrap,
+    flexWrap,
+    wrap,
 
-  margin,
-  m,
-  marginBottom,
-  marginLeft,
-  marginRight,
-  marginTop,
-  mb,
-  ml,
-  mr,
-  mt,
+    margin,
+    m,
+    marginBottom,
+    marginLeft,
+    marginRight,
+    marginTop,
+    mb,
+    ml,
+    mr,
+    mt,
 
-  padding,
-  p,
-  paddingBottom,
-  paddingLeft,
-  paddingRight,
-  paddingTop,
-  pb,
-  pl,
-  pr,
-  pt,
+    padding,
+    p,
+    paddingBottom,
+    paddingLeft,
+    paddingRight,
+    paddingTop,
+    pb,
+    pl,
+    pr,
+    pt,
 
-  height,
-  width,
+    height,
+    width,
 
-  maxHeight,
-  maxWidth,
-  minHeight,
-  minWidth,
+    maxHeight,
+    maxWidth,
+    minHeight,
+    minWidth,
 
-  // other
-  ...props
-}: FlexProps) {
+    // other
+    ...props
+  }: FlexProps,
+  ref: React.Ref<THREE.Group>
+) {
   // must memoize or the object literal will cause every dependent of flexProps to rerender everytime
   const flexProps: R3FlexProps = useMemo(() => {
     const _flexProps = {
@@ -211,12 +218,12 @@ export function Flex({
     wrap,
   ])
 
-  const rootGroup = useRef<Group>()
+  const rootGroup = useRef<THREE.Group>()
 
   // Keeps track of the yoga nodes of the children and the related wrapper groups
   const boxesRef = useRef<BoxesItem[]>([])
   const registerBox = useCallback(
-    (node: YogaNode, group: Group, flexProps: R3FlexProps, centerAnchor: boolean = false) => {
+    (node: YogaNode, group: THREE.Group, flexProps: R3FlexProps, centerAnchor: boolean = false) => {
       const i = boxesRef.current.findIndex((b) => b.node === node)
       const boxItem = { group, node, flexProps, centerAnchor }
       if (i !== -1) {
@@ -258,8 +265,8 @@ export function Flex({
   }, [children, flexProps, requestReflow])
 
   // Common variables for reflow
-  const boundingBox = useMemo(() => new Box3(), [])
-  const vec = useMemo(() => new Vector3(), [])
+  const boundingBox = useMemo(() => new THREE.Box3(), [])
+  const vec = useMemo(() => new THREE.Vector3(), [])
   const mainAxis = plane[0] as Axis
   const crossAxis = plane[1] as Axis
   const depthAxis = getDepthAxis(plane)
@@ -278,8 +285,8 @@ export function Flex({
     [requestReflow, registerBox, unregisterBox, scaleFactor]
   )
   const sharedBoxContext = useMemo<SharedBoxContext>(
-    () => ({ node, size: [flexWidth, flexHeight] }),
-    [node, flexWidth, flexHeight]
+    () => ({ node, size: [flexWidth, flexHeight], centerAnchor: rootCenterAnchor }),
+    [node, flexWidth, flexHeight, rootCenterAnchor]
   )
 
   // Handles the reflow procedure
@@ -312,6 +319,9 @@ export function Flex({
     // Perform yoga layout calculation
     node.calculateLayout(flexWidth * scaleFactor, flexHeight * scaleFactor, yogaDirection_)
 
+    const rootWidth = node.getComputedWidth()
+    const rootHeight = node.getComputedHeight()
+
     let minX = 0
     let maxX = 0
     let minY = 0
@@ -320,15 +330,19 @@ export function Flex({
     // Reposition after recalculation
     boxesRef.current.forEach(({ group, node, centerAnchor }) => {
       const { left, top, width, height } = node.getComputedLayout()
+      const [mainAxisShift, crossAxisShift] = getRootShift(rootCenterAnchor, rootWidth, rootHeight, node)
+
       const position = vectorFromObject({
-        [mainAxis]: (left + (centerAnchor ? width / 2 : 0)) / scaleFactor,
-        [crossAxis]: -(top + (centerAnchor ? height / 2 : 0)) / scaleFactor,
+        [mainAxis]: (mainAxisShift + left + (centerAnchor ? width / 2 : 0)) / scaleFactor,
+        [crossAxis]: -(crossAxisShift + top + (centerAnchor ? height / 2 : 0)) / scaleFactor,
         [depthAxis]: 0,
       } as any)
+
       minX = Math.min(minX, left)
       minY = Math.min(minY, top)
       maxX = Math.max(maxX, left + width)
       maxY = Math.max(maxY, top + height)
+
       group.position.copy(position)
     })
 
@@ -349,10 +363,17 @@ export function Flex({
   })
 
   return (
-    <group ref={rootGroup} {...props}>
+    <group ref={mergeRefs([rootGroup, ref])} {...props}>
       <flexContext.Provider value={sharedFlexContext}>
         <boxContext.Provider value={sharedBoxContext}>{children}</boxContext.Provider>
       </flexContext.Provider>
     </group>
   )
 }
+
+/**
+ * Flex container. Can contain Boxes
+ */
+export const Flex = React.forwardRef<THREE.Group, FlexProps>(FlexImpl)
+
+Flex.displayName = 'Flex'

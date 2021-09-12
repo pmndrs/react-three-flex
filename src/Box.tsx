@@ -2,82 +2,84 @@ import React, { useLayoutEffect, useRef, useMemo, useState } from 'react'
 import * as THREE from 'three'
 import Yoga from 'yoga-layout-prebuilt'
 import { ReactThreeFiber, useFrame } from '@react-three/fiber'
+import mergeRefs from 'react-merge-refs'
 
 import { setYogaProperties, rmUndefFromObj } from './util'
 import { boxContext, flexContext, SharedBoxContext } from './context'
 import { R3FlexProps } from './props'
 import { useReflow, useContext } from './hooks'
 
-/**
- * Box container for 3D Objects.
- * For containing Boxes use `<Flex />`.
- */
-export function Box({
-  // Non-flex props
-  children,
-  centerAnchor,
-
-  // flex props
-  flexDirection,
-  flexDir,
-  dir,
-
-  alignContent,
-  alignItems,
-  alignSelf,
-  align,
-
-  justifyContent,
-  justify,
-
-  flexBasis,
-  basis,
-  flexGrow,
-  grow,
-
-  flexShrink,
-  shrink,
-
-  flexWrap,
-  wrap,
-
-  margin,
-  m,
-  marginBottom,
-  marginLeft,
-  marginRight,
-  marginTop,
-  mb,
-  ml,
-  mr,
-  mt,
-
-  padding,
-  p,
-  paddingBottom,
-  paddingLeft,
-  paddingRight,
-  paddingTop,
-  pb,
-  pl,
-  pr,
-  pt,
-
-  height,
-  width,
-
-  maxHeight,
-  maxWidth,
-  minHeight,
-  minWidth,
-
-  // other
-  ...props
-}: {
+export type BoxProps = {
   centerAnchor?: boolean
   children: React.ReactNode | ((width: number, height: number, centerAnchor?: boolean) => React.ReactNode)
 } & R3FlexProps &
-  Omit<ReactThreeFiber.Object3DNode<THREE.Group, typeof THREE.Group>, 'children'>) {
+  Omit<ReactThreeFiber.Object3DNode<THREE.Group, typeof THREE.Group>, 'children'>
+
+function BoxImpl(
+  {
+    // Non-flex props
+    children,
+    centerAnchor,
+
+    // flex props
+    flexDirection,
+    flexDir,
+    dir,
+
+    alignContent,
+    alignItems,
+    alignSelf,
+    align,
+
+    justifyContent,
+    justify,
+
+    flexBasis,
+    basis,
+    flexGrow,
+    grow,
+
+    flexShrink,
+    shrink,
+
+    flexWrap,
+    wrap,
+
+    margin,
+    m,
+    marginBottom,
+    marginLeft,
+    marginRight,
+    marginTop,
+    mb,
+    ml,
+    mr,
+    mt,
+
+    padding,
+    p,
+    paddingBottom,
+    paddingLeft,
+    paddingRight,
+    paddingTop,
+    pb,
+    pl,
+    pr,
+    pt,
+
+    height,
+    width,
+
+    maxHeight,
+    maxWidth,
+    minHeight,
+    minWidth,
+
+    // other
+    ...props
+  }: BoxProps,
+  ref: React.Ref<THREE.Group>
+) {
   // must memoize or the object literal will cause every dependent of flexProps to rerender everytime
   const flexProps: R3FlexProps = useMemo(() => {
     const _flexProps = {
@@ -234,10 +236,18 @@ export function Box({
   const sharedBoxContext = useMemo<SharedBoxContext>(() => ({ node, size, centerAnchor }), [node, size, centerAnchor])
 
   return (
-    <group ref={group} {...props}>
+    <group ref={mergeRefs([group, ref])} {...props}>
       <boxContext.Provider value={sharedBoxContext}>
         {typeof children === 'function' ? children(size[0], size[1], centerAnchor) : children}
       </boxContext.Provider>
     </group>
   )
 }
+
+/**
+ * Box container for 3D Objects.
+ * For containing Boxes use `<Flex />`.
+ */
+export const Box = React.forwardRef<THREE.Group, BoxProps>(BoxImpl)
+
+Box.displayName = 'Box'
