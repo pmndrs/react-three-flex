@@ -6,6 +6,8 @@ import {
   YogaDirection,
   YogaMeasureMode,
 } from 'yoga-layout-prebuilt'
+import { rmUndefFromObj } from "./util"
+import { useMemo } from "react"
 
 export type FlexYogaDirection = YogaDirection | 'ltr' | 'rtl'
 export type FlexPlane = 'xy' | 'yz' | 'xz'
@@ -134,3 +136,14 @@ export type R3FlexProps = Partial<{
 
   aspectRatio: number
 }>
+
+export function useProps(props: R3FlexProps): R3FlexProps {
+  return useMemo(() => {
+    const _flexProps = {
+      ...props
+    }
+
+    rmUndefFromObj(_flexProps)
+    return _flexProps
+  }, Object.values(props))
+}

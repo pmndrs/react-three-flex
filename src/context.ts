@@ -10,7 +10,6 @@ export interface SharedFlexContext {
   updateBox(
     node: YogaNode,
     index: number | undefined,
-    flexProps: R3FlexProps,
     onUpdateTransformation: (x: number, y: number, width: number, height: number) => void,
     centerAnchor?: boolean
   ): void

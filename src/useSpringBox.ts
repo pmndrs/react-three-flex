@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { SpringConfig, useSpring } from 'react-spring'
+import { SpringConfig, useSpring } from '@react-spring/three'
 import { useBox } from './useBox'
 import { R3FlexProps } from '.'
 

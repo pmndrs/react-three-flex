@@ -25,8 +25,8 @@ export function useBox(
 
   //update box properties
   useLayoutEffect(
-    () => updateBox(node, index, flexProps ?? {}, onUpdateTransformation, centerAnchor),
-    [node, index, flexProps, centerAnchor, onUpdateTransformation, updateBox]
+    () => updateBox(node, index, onUpdateTransformation, centerAnchor),
+    [node, index, centerAnchor, onUpdateTransformation, updateBox]
   )
 
   return node

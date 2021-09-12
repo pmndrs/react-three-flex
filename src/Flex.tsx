@@ -5,6 +5,7 @@ import { setYogaProperties, rmUndefFromObj, Axis, getDepthAxis, getFlex2DSize, g
 import { boxNodeContext, flexContext, SharedFlexContext } from './context'
 import type { R3FlexProps, FlexYogaDirection, FlexPlane } from './props'
 import { Group } from 'three'
+import { useProps } from '.'
 
 export type FlexProps = PropsWithChildren<
   Partial<{
@@ -18,14 +19,13 @@ export type FlexProps = PropsWithChildren<
     maxUps?: number
     onReflow?: (totalWidth: number, totalHeight: number) => void
   }> &
-    R3FlexProps
+  R3FlexProps
 >
 interface BoxesItem {
   node: YogaNode
   parent: YogaNode
   yogaIndex: number
   reactIndex: number | undefined
-  flexProps?: R3FlexProps
   centerAnchor?: boolean
   onUpdateTransformation?: (x: number, y: number, width: number, height: number) => void
 }
@@ -43,174 +43,11 @@ export function Flex({
   onReflow,
   maxUps,
 
-  // flex props
-
-  flexDirection,
-  flexDir,
-  dir,
-
-  alignContent,
-  alignItems,
-  alignSelf,
-  align,
-
-  justifyContent,
-  justify,
-
-  flexBasis,
-  basis,
-  flexGrow,
-  grow,
-  flexShrink,
-  shrink,
-
-  flexWrap,
-  wrap,
-
-  margin,
-  m,
-  marginBottom,
-  marginLeft,
-  marginRight,
-  marginTop,
-  mb,
-  ml,
-  mr,
-  mt,
-
-  padding,
-  p,
-  paddingBottom,
-  paddingLeft,
-  paddingRight,
-  paddingTop,
-  pb,
-  pl,
-  pr,
-  pt,
-
-  height,
-  width,
-
-  maxHeight,
-  maxWidth,
-  minHeight,
-  minWidth,
-
-  measureFunc,
-  aspectRatio,
-
   // other
   ...props
 }: FlexProps) {
   // must memoize or the object literal will cause every dependent of flexProps to rerender everytime
-  const flexProps: R3FlexProps = useMemo(() => {
-    const _flexProps = {
-      flexDirection,
-      flexDir,
-      dir,
-
-      alignContent,
-      alignItems,
-      alignSelf,
-      align,
-
-      justifyContent,
-      justify,
-
-      flexBasis,
-      basis,
-      flexGrow,
-      grow,
-      flexShrink,
-      shrink,
-
-      flexWrap,
-      wrap,
-
-      margin,
-      m,
-      marginBottom,
-      marginLeft,
-      marginRight,
-      marginTop,
-      mb,
-      ml,
-      mr,
-      mt,
-
-      padding,
-      p,
-      paddingBottom,
-      paddingLeft,
-      paddingRight,
-      paddingTop,
-      pb,
-      pl,
-      pr,
-      pt,
-
-      height,
-      width,
-
-      maxHeight,
-      maxWidth,
-      minHeight,
-      minWidth,
-
-      measureFunc,
-      aspectRatio,
-    }
-
-    rmUndefFromObj(_flexProps)
-    return _flexProps
-  }, [
-    align,
-    alignContent,
-    alignItems,
-    alignSelf,
-    dir,
-    flexBasis,
-    basis,
-    flexDir,
-    flexDirection,
-    flexGrow,
-    grow,
-    flexShrink,
-    shrink,
-    flexWrap,
-    height,
-    justify,
-    justifyContent,
-    m,
-    margin,
-    marginBottom,
-    marginLeft,
-    marginRight,
-    marginTop,
-    maxHeight,
-    maxWidth,
-    mb,
-    minHeight,
-    minWidth,
-    ml,
-    mr,
-    mt,
-    p,
-    padding,
-    paddingBottom,
-    paddingLeft,
-    paddingRight,
-    paddingTop,
-    pb,
-    pl,
-    pr,
-    pt,
-    width,
-    wrap,
-    measureFunc,
-    aspectRatio,
-  ])
+  const flexProps = useProps(props)
 
   const rootGroup = useRef<Group>()
 
@@ -227,7 +64,6 @@ export function Flex({
     (
       node: YogaNode,
       index: number | undefined,
-      flexProps: R3FlexProps,
       onUpdateTransformation: (x: number, y: number, width: number, height: number) => void,
       centerAnchor?: boolean
     ) => {
@@ -236,7 +72,6 @@ export function Flex({
         boxesRef.current[i] = {
           ...boxesRef.current[i],
           reactIndex: index,
-          flexProps,
           onUpdateTransformation,
           centerAnchor,
         }
@@ -261,33 +96,79 @@ export function Flex({
     }
   }, [])
 
+  const reflowRef = useRef<() => void>(null as any)
+
   // Mechanism for invalidating and recalculating layout
   const reflowTimeout = useRef<number | undefined>(undefined)
 
   const requestReflow = useCallback(() => {
+    console.log("request reflow")
     if (reflowTimeout.current == null) {
-      reflowTimeout.current = setTimeout(() => {
+      reflowTimeout.current = window.setTimeout(() => {
+        reflowRef.current()
         reflowTimeout.current = undefined
-        reflow()
       }, 1000 / (maxUps ?? 10))
     }
   }, [maxUps])
 
+  useLayoutEffect(() => {
+    reflowRef.current = () => {
+      console.log("reflow")
+      // Common variables for reflow
+      const mainAxis = plane[0] as Axis
+      const crossAxis = plane[1] as Axis
+      const depthAxis = getDepthAxis(plane)
+      const [flexWidth, flexHeight] = getFlex2DSize(size, plane)
+      const yogaDirection_ =
+        yogaDirection === 'ltr' ? Yoga.DIRECTION_LTR : yogaDirection === 'rtl' ? Yoga.DIRECTION_RTL : yogaDirection
+
+
+      dirtyParents.current.forEach((parent) => updateRealBoxIndices(boxesRef.current, parent))
+      dirtyParents.current.clear()
+
+      // Perform yoga layout calculation
+      node.calculateLayout(flexWidth * scaleFactor, flexHeight * scaleFactor, yogaDirection_)
+
+      let minX = 0
+      let maxX = 0
+      let minY = 0
+      let maxY = 0
+
+      // Reposition after recalculation
+      boxesRef.current.forEach(({ node, centerAnchor, onUpdateTransformation }) => {
+        const { left, top, width, height } = node.getComputedLayout()
+
+        const axesValues = [left + (centerAnchor ? width / 2 : 0), -(top + (centerAnchor ? height / 2 : 0)), 0]
+        const axes: Array<Axis> = [mainAxis, crossAxis, depthAxis]
+
+        onUpdateTransformation &&
+          onUpdateTransformation(
+            NaNToZero(getAxis('x', axes, axesValues)) / scaleFactor,
+            NaNToZero(getAxis('y', axes, axesValues)) / scaleFactor,
+            NaNToZero(width) / scaleFactor,
+            NaNToZero(height) / scaleFactor
+          )
+
+        minX = Math.min(minX, left)
+        minY = Math.min(minY, top)
+        maxX = Math.max(maxX, left + width)
+        maxY = Math.max(maxY, top + height)
+      })
+
+      // Call the reflow event to update resulting size
+      onReflow && onReflow((maxX - minX) / scaleFactor, (maxY - minY) / scaleFactor)
+    }
+    requestReflow()
+  }, [requestReflow, onReflow, size, plane, yogaDirection, scaleFactor])
+
   // Reference to the yoga native node
   const node = useMemo(() => Yoga.Node.create(), [])
+
   useLayoutEffect(() => {
     setYogaProperties(node, flexProps, scaleFactor)
     // We need to reflow everything if flex props changes
     requestReflow()
-  }, [node, flexProps, scaleFactor])
-
-  // Common variables for reflow
-  const mainAxis = plane[0] as Axis
-  const crossAxis = plane[1] as Axis
-  const depthAxis = getDepthAxis(plane)
-  const [flexWidth, flexHeight] = getFlex2DSize(size, plane)
-  const yogaDirection_ =
-    yogaDirection === 'ltr' ? Yoga.DIRECTION_LTR : yogaDirection === 'rtl' ? Yoga.DIRECTION_RTL : yogaDirection
+  }, [node, flexProps, scaleFactor, requestReflow])
 
   // Shared context for flex and box
   const sharedFlexContext = useMemo<SharedFlexContext>(
@@ -301,44 +182,6 @@ export function Flex({
     }),
     [plane, requestReflow, registerBox, unregisterBox, scaleFactor]
   )
-
-  // Handles the reflow procedure
-  function reflow() {
-    dirtyParents.current.forEach((parent) => updateRealBoxIndices(boxesRef.current, parent))
-    dirtyParents.current.clear()
-
-    // Perform yoga layout calculation
-    node.calculateLayout(flexWidth * scaleFactor, flexHeight * scaleFactor, yogaDirection_)
-
-    let minX = 0
-    let maxX = 0
-    let minY = 0
-    let maxY = 0
-
-    // Reposition after recalculation
-    boxesRef.current.forEach(({ node, centerAnchor, onUpdateTransformation, flexProps }) => {
-      const { left, top, width, height } = node.getComputedLayout()
-
-      const axesValues = [left + (centerAnchor ? width / 2 : 0), -(top + (centerAnchor ? height / 2 : 0)), 0]
-      const axes: Array<Axis> = [mainAxis, crossAxis, depthAxis]
-
-      onUpdateTransformation &&
-        onUpdateTransformation(
-          NaNToZero(getAxis('x', axes, axesValues)) / scaleFactor,
-          NaNToZero(getAxis('y', axes, axesValues)) / scaleFactor,
-          NaNToZero(width) / scaleFactor,
-          NaNToZero(height) / scaleFactor
-        )
-
-      minX = Math.min(minX, left)
-      minY = Math.min(minY, top)
-      maxX = Math.max(maxX, left + width)
-      maxY = Math.max(maxY, top + height)
-    })
-
-    // Call the reflow event to update resulting size
-    onReflow && onReflow((maxX - minX) / scaleFactor, (maxY - minY) / scaleFactor)
-  }
 
   return (
     <flexContext.Provider value={sharedFlexContext}>
