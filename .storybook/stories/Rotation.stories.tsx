@@ -1,4 +1,4 @@
-import { Box, Flex } from '../../src'
+import { Box, BoxReferenceGroup, Flex } from '../../src'
 import React, { Suspense } from 'react'
 import { ComponentMeta, ComponentStory } from '@storybook/react'
 
@@ -25,28 +25,31 @@ const Rotation = ({
   const width = 3
   const height = 1
   return (
-    <Flex
-      size={[width, height, 0]}
-      flexDirection="row"
-      flexWrap="no-wrap"
-      alignItems="stretch"
-      justifyContent="flex-start"
-      position={[0, 0, 3]}
-      rotation={[degToRad(rotationX), degToRad(rotationY), degToRad(rotationZ)]}
-    >
-      <Box rotation={[degToRad(rotationXItems), degToRad(rotationYItems), degToRad(rotationZItems)]} centerAnchor>
-        <mesh scale={1}>
-          <boxGeometry args={[1, 1, 1]} />
-          <meshBasicMaterial color="red" wireframe />
-        </mesh>
-      </Box>
-      <Box rotation={[degToRad(rotationXItems), degToRad(rotationYItems), degToRad(rotationZItems)]} centerAnchor>
-        <mesh>
-          <boxGeometry args={[1, 1, 1]} />
-          <meshBasicMaterial color="orange" wireframe />
-        </mesh>
-      </Box>
-    </Flex>
+    <group position={[0, 0, 3]} rotation={[degToRad(rotationX), degToRad(rotationY), degToRad(rotationZ)]}>
+      <Flex
+        size={[width, height, 0]}
+        flexDirection="row"
+        flexWrap="no-wrap"
+        alignItems="stretch"
+        justifyContent="flex-start"
+      >
+        <BoxReferenceGroup>
+          <Box automaticSize centerAnchor>
+            <mesh rotation={[degToRad(rotationXItems), degToRad(rotationYItems), degToRad(rotationZItems)]}>
+              <boxGeometry args={[1, 1, 1]} />
+              <meshBasicMaterial color="red" wireframe />
+            </mesh>
+          </Box>
+
+          <Box automaticSize centerAnchor>
+            <mesh rotation={[degToRad(rotationXItems), degToRad(rotationYItems), degToRad(rotationZItems)]}>
+              <boxGeometry args={[1, 1, 1]} />
+              <meshBasicMaterial color="orange" wireframe />
+            </mesh>
+          </Box>
+        </BoxReferenceGroup>
+      </Flex>
+    </group>
   )
 }
 
