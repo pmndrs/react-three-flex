@@ -148,6 +148,15 @@ export function getFlex2DSize(sizes: [number, number, number], plane: FlexPlane)
 export const rmUndefFromObj = (obj: Record<string, any>) =>
   Object.keys(obj).forEach((key) => (obj[key] === undefined ? delete obj[key] : {}))
 
+/**
+ * Adapted code from https://github.com/mrdoob/three.js/issues/11967
+ * Calculates oriented bounding box size
+ * Essentially it negates flex root rotation to provide proper number
+ * E.g. if root flex group rotatet 45 degress, a cube box of size 1 will report sizes of sqrt(2)
+ * but it should still be 1
+ *
+ * NB: This doesn't work when object itself is rotated (well, for now)
+ */
 export const getOBBSize = (object: Object3D, root: Object3D | undefined, bb: Box3, size: Vector3) => {
   if (root == null) {
     bb.setFromObject(object).getSize(size)
@@ -169,4 +178,21 @@ export const getOBBSize = (object: Object3D, root: Object3D | undefined, bb: Box
     object.matrixAutoUpdate = oldMatrixAutoUpdate
     root.updateMatrixWorld()
   }
+}
+
+const getIsTopLevelChild = (node: YogaNode) => !node.getParent()?.getParent()
+
+/** @returns [mainAxisShift, crossAxisShift] */
+export const getRootShift = (
+  rootCenterAnchor: boolean | undefined,
+  rootWidth: number,
+  rootHeight: number,
+  node: YogaNode
+) => {
+  if (!rootCenterAnchor || !getIsTopLevelChild(node)) {
+    return [0, 0]
+  }
+  const mainAxisShift = -rootWidth / 2
+  const crossAxisShift = -rootHeight / 2
+  return [mainAxisShift, crossAxisShift] as const
 }

@@ -1,4 +1,5 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react'
+import React, { forwardRef, useCallback, useMemo, useRef, useState } from 'react'
+import mergeRefs from 'react-merge-refs'
 import { Axis, getOBBSize } from './util'
 import { boxNodeContext, flexContext } from './context'
 import { R3FlexProps, useProps, Value } from './props'
@@ -17,7 +18,13 @@ const vec = new Vector3()
  * Box container for 3D Objects.
  * For containing Boxes use `<Flex />`.
  */
-export function Box({
+export const Box = forwardRef<Group, {
+  automaticSize?: boolean,
+  onUpdateTransformation?: (x: number, y: number, width: number, height: number) => void
+  centerAnchor?: boolean
+  children: ((width: number, height: number) => React.ReactNode) | React.ReactNode
+  index?: number
+} & R3FlexProps>(({
   // Non-flex props
   children,
   centerAnchor,
@@ -28,13 +35,7 @@ export function Box({
 
   // other
   ...props
-}: {
-  automaticSize?: boolean,
-  onUpdateTransformation?: (x: number, y: number, width: number, height: number) => void
-  centerAnchor?: boolean
-  children: ((width: number, height: number) => React.ReactNode) | React.ReactNode
-  index?: number
-} & R3FlexProps) {
+}, ref) => {
   // must memoize or the object literal will cause every dependent of flexProps to rerender everytime
   const flexProps = useProps(props)
 
@@ -54,7 +55,7 @@ export function Box({
   const size = useMemoArray<[number, number]>([width, height])
 
   return (
-    <group ref={setRef} position-x={x} position-y={y}>
+    <group ref={mergeRefs([setRef,])} position-x={x} position-y={y}>
       <boxNodeContext.Provider value={node}>
         <boxSizeContext.Provider value={size}>
           {useMemo(() => (typeof children === 'function' ? children(width, height) : children), [width, height, children])}
@@ -62,7 +63,7 @@ export function Box({
       </boxNodeContext.Provider>
     </group>
   )
-}
+})
 
 export function useMemoArray<T extends Array<any>>(array: T): T {
   return useMemo(() => array, [array])
@@ -73,35 +74,37 @@ export function useBoundingBoxSize(enable: boolean | undefined, flexProps: FlexP
   const { plane, scaleFactor } = useContext(flexContext)
   const referenceGroup = useContext(boxReferenceContext)
   const overwrittenProps = useMemo(() => {
-    if (!enable && flexProps.width == null && flexProps.height == null && ref != null) {
-      getOBBSize(ref, referenceGroup.current, boundingBox, vec)
+    if (enable && flexProps.width == null && flexProps.height == null && ref != null) {
+      getOBBSize(ref, referenceGroup?.current, boundingBox, vec)
       const mainAxis = plane[0] as Axis
       const crossAxis = plane[1] as Axis
       return {
-        width: vec[mainAxis] * scaleFactor,
-        height: vec[crossAxis] * scaleFactor,
+        width: vec[mainAxis],
+        height: vec[crossAxis],
         ...flexProps
       }
     } else {
       return flexProps
     }
-  }, [enable, ref, flexProps, flexProps, children])
+  }, [enable, referenceGroup, ref, flexProps, flexProps, children])
   return [overwrittenProps, setRef]
 }
 
 const boxReferenceContext = createContext<React.MutableRefObject<Group | undefined>>(null as any)
 
-export function BoxReferenceGroup({ children, ...props }: GroupProps) {
-  const ref = useRef<Group>()
+export const BoxReferenceGroup = forwardRef<Group, GroupProps>(({ children, ...props }, ref) => {
+  const group = useRef<Group>()
   return (
-    <group ref={ref} {...props}>
-      <boxReferenceContext.Provider value={ref}>{children}</boxReferenceContext.Provider>
+    <group ref={mergeRefs([group, ref])} {...props}>
+      <boxReferenceContext.Provider value={group}>{children}</boxReferenceContext.Provider>
     </group>
   )
-}
+})
 
 export const boxSizeContext = createContext<[number | FrameValue<number>, number | FrameValue<number>]>(null as any)
 
 export function useFlexSize() {
   return useContext(boxSizeContext)
 }
+
+Box.displayName = 'Box'

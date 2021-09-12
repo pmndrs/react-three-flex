@@ -14,6 +14,7 @@ export interface SharedFlexContext {
     centerAnchor?: boolean
   ): void
   unregisterBox(node: YogaNode): void
+  notInitialized?: boolean
 }
 
 const initialSharedFlexContext: SharedFlexContext = {
@@ -32,6 +33,7 @@ const initialSharedFlexContext: SharedFlexContext = {
   unregisterBox() {
     console.warn('Flex not initialized! Please report')
   },
+  notInitialized: true,
 }
 
 export const flexContext = createContext<SharedFlexContext>(initialSharedFlexContext)

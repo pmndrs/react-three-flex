@@ -49,8 +49,6 @@ export function Flex({
   // must memoize or the object literal will cause every dependent of flexProps to rerender everytime
   const flexProps = useProps(props)
 
-  const rootGroup = useRef<Group>()
-
   // Keeps track of the yoga nodes of the children and the related wrapper groups
   const boxesRef = useRef<BoxesItem[]>([])
   const dirtyParents = useRef<Set<YogaNode>>(new Set())
@@ -236,3 +234,5 @@ function sortIndex(boxes: Array<BoxesItem>): Array<BoxesItem> {
 function NaNToZero(val: number) {
   return isNaN(val) ? 0 : val
 }
+
+Flex.displayName = 'Flex'
