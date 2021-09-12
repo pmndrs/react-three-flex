@@ -49,6 +49,8 @@ export function Flex({
   // must memoize or the object literal will cause every dependent of flexProps to rerender everytime
   const [flexProps] = useProps(props)
 
+  const rootGroup = useRef<THREE.Group>()
+
   // Keeps track of the yoga nodes of the children and the related wrapper groups
   const boxesRef = useRef<BoxesItem[]>([])
   const dirtyParents = useRef<Set<YogaNode>>(new Set())

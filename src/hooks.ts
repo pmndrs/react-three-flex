@@ -2,7 +2,7 @@ import { useCallback, useContext as useContextImpl, useMemo } from 'react'
 import { Mesh, Vector3 } from 'three'
 import { flexContext, boxNodeContext } from './context'
 
-export function useContext<T>(context: React.Context<T>) {
+export function useContext<T extends { notInitialized?: boolean }>(context: React.Context<T>) {
   let result = useContextImpl(context)
   if (result == null) {
     console.warn('You must place this hook/component under a <Flex/> component!')
