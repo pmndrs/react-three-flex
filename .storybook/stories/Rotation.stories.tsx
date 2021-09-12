@@ -34,15 +34,23 @@ const Rotation = ({
         justifyContent="flex-start"
       >
         <BoxReferenceGroup>
-          <Box automaticSize centerAnchor>
-            <mesh rotation={[degToRad(rotationXItems), degToRad(rotationYItems), degToRad(rotationZItems)]}>
+          <Box
+            rotation={[degToRad(rotationXItems), degToRad(rotationYItems), degToRad(rotationZItems)]}
+            automaticSize
+            centerAnchor
+          >
+            <mesh>
               <boxGeometry args={[1, 1, 1]} />
               <meshBasicMaterial color="red" wireframe />
             </mesh>
           </Box>
 
-          <Box automaticSize centerAnchor>
-            <mesh rotation={[degToRad(rotationXItems), degToRad(rotationYItems), degToRad(rotationZItems)]}>
+          <Box
+            rotation={[degToRad(rotationXItems), degToRad(rotationYItems), degToRad(rotationZItems)]}
+            automaticSize
+            centerAnchor
+          >
+            <mesh>
               <boxGeometry args={[1, 1, 1]} />
               <meshBasicMaterial color="orange" wireframe />
             </mesh>

@@ -167,6 +167,7 @@ export const getOBBSize = (object: Object3D, root: Object3D | undefined, bb: Box
 
     root.updateMatrixWorld()
     const m = new Matrix4().copy(root.matrixWorld).invert()
+    //this also inverts all transformations by "object"
     object.matrix = m
     // to prevent matrix being reassigned
     object.matrixAutoUpdate = false
@@ -178,21 +179,4 @@ export const getOBBSize = (object: Object3D, root: Object3D | undefined, bb: Box
     object.matrixAutoUpdate = oldMatrixAutoUpdate
     root.updateMatrixWorld()
   }
-}
-
-const getIsTopLevelChild = (node: YogaNode) => !node.getParent()?.getParent()
-
-/** @returns [mainAxisShift, crossAxisShift] */
-export const getRootShift = (
-  rootCenterAnchor: boolean | undefined,
-  rootWidth: number,
-  rootHeight: number,
-  node: YogaNode
-) => {
-  if (!rootCenterAnchor || !getIsTopLevelChild(node)) {
-    return [0, 0]
-  }
-  const mainAxisShift = -rootWidth / 2
-  const crossAxisShift = -rootHeight / 2
-  return [mainAxisShift, crossAxisShift] as const
 }

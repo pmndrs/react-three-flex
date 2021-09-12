@@ -19,7 +19,7 @@ export type FlexProps = PropsWithChildren<
     maxUps?: number
     onReflow?: (totalWidth: number, totalHeight: number) => void
   }> &
-  R3FlexProps
+    R3FlexProps
 >
 interface BoxesItem {
   node: YogaNode
@@ -47,7 +47,7 @@ export function Flex({
   ...props
 }: FlexProps) {
   // must memoize or the object literal will cause every dependent of flexProps to rerender everytime
-  const flexProps = useProps(props)
+  const [flexProps] = useProps(props)
 
   // Keeps track of the yoga nodes of the children and the related wrapper groups
   const boxesRef = useRef<BoxesItem[]>([])
@@ -100,7 +100,6 @@ export function Flex({
   const reflowTimeout = useRef<number | undefined>(undefined)
 
   const requestReflow = useCallback(() => {
-    console.log("request reflow")
     if (reflowTimeout.current == null) {
       reflowTimeout.current = window.setTimeout(() => {
         reflowRef.current()
@@ -111,7 +110,6 @@ export function Flex({
 
   useLayoutEffect(() => {
     reflowRef.current = () => {
-      console.log("reflow")
       // Common variables for reflow
       const mainAxis = plane[0] as Axis
       const crossAxis = plane[1] as Axis
@@ -119,7 +117,6 @@ export function Flex({
       const [flexWidth, flexHeight] = getFlex2DSize(size, plane)
       const yogaDirection_ =
         yogaDirection === 'ltr' ? Yoga.DIRECTION_LTR : yogaDirection === 'rtl' ? Yoga.DIRECTION_RTL : yogaDirection
-
 
       dirtyParents.current.forEach((parent) => updateRealBoxIndices(boxesRef.current, parent))
       dirtyParents.current.clear()
