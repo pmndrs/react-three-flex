@@ -63,5 +63,6 @@ export const AutomaticSpringBox = forwardRef<
     GroupProps
 >((props, ref) => {
   const [overwrittenProps, setRef] = usePropsSyncSize(props)
-  return <SpringBox ref={mergeRefs([ref, setRef])} {...overwrittenProps} />
+  const mergedReds = useMemo(() => mergeRefs([ref, setRef]), [ref, setRef])
+  return <SpringBox ref={mergedReds} {...overwrittenProps} />
 })

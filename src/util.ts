@@ -157,7 +157,7 @@ export const rmUndefFromObj = (obj: Record<string, any>) =>
  *
  * NB: This doesn't work when object itself is rotated (well, for now)
  */
-export const getOBBSize = (object: Object3D, root: Object3D | undefined, bb: Box3, size: Vector3) => {
+export const getOBBSize = (object: Object3D, root: Object3D | null, bb: Box3, size: Vector3) => {
   if (root == null) {
     bb.setFromObject(object).getSize(size)
   } else {

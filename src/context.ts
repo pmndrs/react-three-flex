@@ -41,4 +41,4 @@ export const flexContext = createContext<SharedFlexContext>(initialSharedFlexCon
 
 export const boxNodeContext = createContext<YogaNode | null>(null)
 
-export const boxReferenceContext = createContext<React.MutableRefObject<Group | undefined>>(null as any)
+export const referenceGroupContext = createContext<Group | null>(null as any)

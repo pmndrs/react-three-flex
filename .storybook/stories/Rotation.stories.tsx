@@ -1,4 +1,4 @@
-import { Box, BoxReferenceGroup, Flex } from '../../src'
+import { Box, AutomaticBox, ReferenceGroup, Flex } from '../../src'
 import React, { Suspense } from 'react'
 import { ComponentMeta, ComponentStory } from '@storybook/react'
 
@@ -33,29 +33,27 @@ const Rotation = ({
         alignItems="stretch"
         justifyContent="flex-start"
       >
-        <BoxReferenceGroup>
-          <Box
+        <ReferenceGroup>
+          <AutomaticBox
             rotation={[degToRad(rotationXItems), degToRad(rotationYItems), degToRad(rotationZItems)]}
-            automaticSize
             centerAnchor
           >
             <mesh>
               <boxGeometry args={[1, 1, 1]} />
               <meshBasicMaterial color="red" wireframe />
             </mesh>
-          </Box>
+          </AutomaticBox>
 
-          <Box
+          <AutomaticBox
             rotation={[degToRad(rotationXItems), degToRad(rotationYItems), degToRad(rotationZItems)]}
-            automaticSize
             centerAnchor
           >
             <mesh>
               <boxGeometry args={[1, 1, 1]} />
               <meshBasicMaterial color="orange" wireframe />
             </mesh>
-          </Box>
-        </BoxReferenceGroup>
+          </AutomaticBox>
+        </ReferenceGroup>
       </Flex>
     </group>
   )

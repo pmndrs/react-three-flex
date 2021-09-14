@@ -83,7 +83,8 @@ export const AutomaticBox = forwardRef<
     GroupProps
 >((props, ref) => {
   const [overwrittenProps, setRef] = usePropsSyncSize(props)
-  return <Box ref={mergeRefs([ref, setRef])} {...overwrittenProps} />
+  const mergedReds = useMemo(() => mergeRefs([ref, setRef]), [ref, setRef])
+  return <Box ref={mergedReds} {...overwrittenProps} />
 })
 
 export function useMemoArray<T extends Array<any>>(array: T): T {

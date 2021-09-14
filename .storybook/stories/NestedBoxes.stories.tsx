@@ -1,4 +1,4 @@
-import { Box, Flex } from '../../src'
+import { AutomaticBox, Box, Flex } from '../../src'
 import React, { Suspense } from 'react'
 import { ComponentMeta, ComponentStory } from '@storybook/react'
 import { Box as Cube } from '@react-three/drei'
@@ -9,16 +9,16 @@ import { Setup } from '../Setup'
 const Block = ({ color1, color2 }: { color1: Color; color2: Color }) => {
   return (
     <Box alignItems="flex-start" marginLeft={20} flexDirection="row">
-      <Box centerAnchor automaticSize>
+      <AutomaticBox centerAnchor>
         <Cube args={[100, 100, 1]}>
           <meshBasicMaterial toneMapped={false} color={color1} />
         </Cube>
-      </Box>
-      <Box centerAnchor automaticSize>
+      </AutomaticBox>
+      <AutomaticBox centerAnchor>
         <Cube args={[100, 100, 1]}>
           <meshBasicMaterial toneMapped={false} color={color2} />
         </Cube>
-      </Box>
+      </AutomaticBox>
     </Box>
   )
 }

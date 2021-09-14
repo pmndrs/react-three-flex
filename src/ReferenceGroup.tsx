@@ -1,14 +1,15 @@
 import { GroupProps } from '@react-three/fiber'
-import React, { forwardRef, useRef } from 'react'
+import React, { forwardRef, useMemo, useRef, useState } from 'react'
 import { Group } from 'three'
 import mergeRefs from 'react-merge-refs'
-import { boxReferenceContext } from './context'
+import { referenceGroupContext } from './context'
 
 export const ReferenceGroup = forwardRef<Group, GroupProps>(({ children, ...props }, ref) => {
-  const group = useRef<Group>()
+  const [group, setRef] = useState<Group | null>(null)
+  const mergedReds = useMemo(() => mergeRefs([ref, setRef]), [ref, setRef])
   return (
-    <group ref={mergeRefs([group, ref])} {...props}>
-      <boxReferenceContext.Provider value={group}>{children}</boxReferenceContext.Provider>
+    <group ref={mergedReds} {...props}>
+      <referenceGroupContext.Provider value={group}>{children}</referenceGroupContext.Provider>
     </group>
   )
 })

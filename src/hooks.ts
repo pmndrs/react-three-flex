@@ -1,6 +1,6 @@
 import { useCallback, useContext as useContextImpl, useMemo, useState } from 'react'
 import { Box3, Object3D, Vector3 } from 'three'
-import { flexContext, boxNodeContext, boxReferenceContext } from './context'
+import { flexContext, boxNodeContext, referenceGroupContext } from './context'
 import { Axis, getOBBSize } from './util'
 
 export function useContext<T>(context: React.Context<T>) {
@@ -23,13 +23,13 @@ export function usePropsSyncSize<T>(
 ): [T & { width?: number; height?: number }, (ref: Object3D | undefined) => void] {
   const [overwrittenProps, setSize] = usePropsSetSize(flexProps)
   const { plane } = useContext(flexContext)
-  const referenceGroup = useContext(boxReferenceContext)
+  const referenceGroup = useContextImpl(referenceGroupContext)
   const setRef = useCallback(
     (ref: Object3D | undefined) => {
       if (ref == null) {
         setSize([undefined, undefined])
       } else {
-        getOBBSize(ref, referenceGroup?.current, boundingBox, vec)
+        getOBBSize(ref, referenceGroup, boundingBox, vec)
         const mainAxis = plane[0] as Axis
         const crossAxis = plane[1] as Axis
         setSize([vec[mainAxis], vec[crossAxis]])
