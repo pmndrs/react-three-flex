@@ -198,7 +198,7 @@ export function useProps<T>({
 
   // other
   ...props
-}: R3FlexProps & T): [R3FlexProps, T] {
+}: R3FlexProps & T): [R3FlexProps, typeof props] {
   return [
     useMemo(() => {
       const result = {

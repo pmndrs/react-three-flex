@@ -10,11 +10,14 @@ export function useBox(
   index: number | undefined,
   onUpdateTransformation: (x: number, y: number, width: number, height: number) => void
 ): YogaNode {
-  const { registerBox, unregisterBox, updateBox, scaleFactor } = useContext(flexContext)
+  const { registerBox, unregisterBox, updateBox, scaleFactor, requestReflow } = useContext(flexContext)
   const parent = useFlexNode()
   const node = useMemo(() => Yoga.Node.create(), [])
 
-  useLayoutEffect(() => setYogaProperties(node, flexProps ?? {}, scaleFactor), [flexProps, node, scaleFactor])
+  useLayoutEffect(() => {
+    setYogaProperties(node, flexProps ?? {}, scaleFactor)
+    requestReflow()
+  }, [flexProps, node, scaleFactor, requestReflow])
 
   //register and unregister box
   useLayoutEffect(() => {

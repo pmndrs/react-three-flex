@@ -1,4 +1,5 @@
 import { createContext } from 'react'
+import { Group } from 'three'
 import { YogaNode } from 'yoga-layout-prebuilt'
 import { FlexPlane, R3FlexProps } from './props'
 
@@ -39,3 +40,5 @@ const initialSharedFlexContext: SharedFlexContext = {
 export const flexContext = createContext<SharedFlexContext>(initialSharedFlexContext)
 
 export const boxNodeContext = createContext<YogaNode | null>(null)
+
+export const boxReferenceContext = createContext<React.MutableRefObject<Group | undefined>>(null as any)
