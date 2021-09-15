@@ -49,17 +49,32 @@ export function Flex({
   // must memoize or the object literal will cause every dependent of flexProps to rerender everytime
   const [flexProps] = useProps(props)
 
-  const rootGroup = useRef<THREE.Group>()
+  const reflowRef = useRef<() => void>(null as any)
+
+  // Mechanism for invalidating and recalculating layout
+  const reflowTimeout = useRef<number | undefined>(undefined)
+
+  const requestReflow = useCallback(() => {
+    if (reflowTimeout.current == null) {
+      reflowTimeout.current = window.setTimeout(() => {
+        reflowRef.current()
+        reflowTimeout.current = undefined
+      }, 1000 / (maxUps ?? 10))
+    }
+  }, [maxUps])
 
   // Keeps track of the yoga nodes of the children and the related wrapper groups
   const boxesRef = useRef<BoxesItem[]>([])
   const dirtyParents = useRef<Set<YogaNode>>(new Set())
 
-  const registerBox = useCallback((node: YogaNode, parent: YogaNode) => {
-    boxesRef.current.push({ node, reactIndex: undefined, yogaIndex: -1, parent })
-    dirtyParents.current.add(parent)
-    requestReflow()
-  }, [])
+  const registerBox = useCallback(
+    (node: YogaNode, parent: YogaNode) => {
+      boxesRef.current.push({ node, reactIndex: undefined, yogaIndex: -1, parent })
+      dirtyParents.current.add(parent)
+      requestReflow()
+    },
+    [requestReflow]
+  )
   const updateBox = useCallback(
     (
       node: YogaNode,
@@ -81,34 +96,26 @@ export function Flex({
         console.warn(`unable to unregister box (node could not be found)`)
       }
     },
-    []
+    [requestReflow]
   )
-  const unregisterBox = useCallback((node: YogaNode) => {
-    const i = boxesRef.current.findIndex((b) => b.node === node)
-    if (i !== -1) {
-      const { parent, node } = boxesRef.current[i]
-      boxesRef.current.splice(i, 1)
-      parent.removeChild(node)
-      dirtyParents.current.add(parent)
-      requestReflow()
-    } else {
-      console.warn(`unable to unregister box (node could not be found)`)
-    }
-  }, [])
+  const unregisterBox = useCallback(
+    (node: YogaNode) => {
+      const i = boxesRef.current.findIndex((b) => b.node === node)
+      if (i !== -1) {
+        const { parent, node } = boxesRef.current[i]
+        boxesRef.current.splice(i, 1)
+        parent.removeChild(node)
+        dirtyParents.current.add(parent)
+        requestReflow()
+      } else {
+        console.warn(`unable to unregister box (node could not be found)`)
+      }
+    },
+    [requestReflow]
+  )
 
-  const reflowRef = useRef<() => void>(null as any)
-
-  // Mechanism for invalidating and recalculating layout
-  const reflowTimeout = useRef<number | undefined>(undefined)
-
-  const requestReflow = useCallback(() => {
-    if (reflowTimeout.current == null) {
-      reflowTimeout.current = window.setTimeout(() => {
-        reflowRef.current()
-        reflowTimeout.current = undefined
-      }, 1000 / (maxUps ?? 10))
-    }
-  }, [maxUps])
+  // Reference to the yoga native node
+  const node = useMemo(() => Yoga.Node.create(), [])
 
   useLayoutEffect(() => {
     reflowRef.current = () => {
@@ -156,10 +163,7 @@ export function Flex({
       onReflow && onReflow((maxX - minX) / scaleFactor, (maxY - minY) / scaleFactor)
     }
     requestReflow()
-  }, [requestReflow, onReflow, size, plane, yogaDirection, scaleFactor])
-
-  // Reference to the yoga native node
-  const node = useMemo(() => Yoga.Node.create(), [])
+  }, [requestReflow, node, onReflow, size, plane, yogaDirection, scaleFactor])
 
   useLayoutEffect(() => {
     setYogaProperties(node, flexProps, scaleFactor)
@@ -177,7 +181,7 @@ export function Flex({
       unregisterBox,
       scaleFactor,
     }),
-    [plane, requestReflow, registerBox, unregisterBox, scaleFactor]
+    [plane, requestReflow, registerBox, unregisterBox, scaleFactor, updateBox]
   )
 
   return (

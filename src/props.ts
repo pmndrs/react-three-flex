@@ -8,8 +8,6 @@ import {
 } from 'yoga-layout-prebuilt'
 import { rmUndefFromObj } from './util'
 import { useMemo } from 'react'
-import { GroupProps } from '@react-three/fiber'
-import { AnimatedProps } from '@react-spring/three'
 
 export type FlexYogaDirection = YogaDirection | 'ltr' | 'rtl'
 export type FlexPlane = 'xy' | 'yz' | 'xz'

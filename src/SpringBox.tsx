@@ -4,7 +4,7 @@ import { R3FlexProps, useProps } from './props'
 import { useMemoArray } from './Box'
 import { FrameValue, a, AnimatedProps } from '@react-spring/three'
 import { boxNodeContext } from './context'
-import { GroupProps } from '@react-three/fiber'
+import * as Fiber from '@react-three/fiber'
 import mergeRefs from 'react-merge-refs'
 
 export const SpringBox = forwardRef<
@@ -15,7 +15,7 @@ export const SpringBox = forwardRef<
     children: ((width: FrameValue<number>, height: FrameValue<number>) => React.ReactNode) | React.ReactNode
     index?: number
   } & R3FlexProps &
-    AnimatedProps<GroupProps>
+    AnimatedProps<Fiber.GroupProps>
 >(
   (
     {
@@ -31,7 +31,7 @@ export const SpringBox = forwardRef<
     },
     ref
   ) => {
-    const [flexProps, groupProps] = useProps<AnimatedProps<GroupProps>>(props)
+    const [flexProps, groupProps] = useProps<AnimatedProps<Fiber.GroupProps>>(props)
 
     const { node, x, y, width, height } = useSpringBox(flexProps, centerAnchor, index, onUpdateTransformation)
 
@@ -60,7 +60,7 @@ export const AutomaticSpringBox = forwardRef<
     children: ((width: number, height: number) => React.ReactNode) | React.ReactNode
     index?: number
   } & R3FlexProps &
-    GroupProps
+    Fiber.GroupProps
 >((props, ref) => {
   const [overwrittenProps, setRef] = usePropsSyncSize(props)
   const mergedReds = useMemo(() => mergeRefs([ref, setRef]), [ref, setRef])

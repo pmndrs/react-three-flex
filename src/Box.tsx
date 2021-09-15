@@ -1,13 +1,11 @@
-import React, { forwardRef, ReactNode, useCallback, useMemo, useState } from 'react'
+import React, { forwardRef, ReactNode, useCallback, useMemo, useState, useContext, createContext } from 'react'
 import mergeRefs from 'react-merge-refs'
 import { boxNodeContext } from './context'
 import { R3FlexProps, useProps } from './props'
-import { GroupProps } from '@react-three/fiber'
-import { Group } from 'three'
-import { useContext } from 'react'
-import { createContext } from 'react'
+
 import { useBox, usePropsSyncSize } from '.'
 import { FrameValue } from '@react-spring/core'
+import type * as Fiber from '@react-three/fiber'
 
 /**
  * Box container for 3D Objects.
@@ -21,7 +19,7 @@ export const Box = forwardRef<
     children: ((width: number, height: number) => React.ReactNode) | React.ReactNode
     index?: number
   } & R3FlexProps &
-    GroupProps
+    Fiber.GroupProps
 >(
   (
     {
@@ -38,7 +36,7 @@ export const Box = forwardRef<
     ref
   ) => {
     // must memoize or the object literal will cause every dependent of flexProps to rerender everytime
-    const [flexProps, groupProps] = useProps<GroupProps>(props)
+    const [flexProps, groupProps] = useProps<Fiber.GroupProps>(props)
 
     const [[x, y, width, height], setTransformation] = useState<[number, number, number, number]>([0, 0, 0, 0])
 
@@ -80,7 +78,7 @@ export const AutomaticBox = forwardRef<
     children: ((width: number, height: number) => React.ReactNode) | React.ReactNode
     index?: number
   } & R3FlexProps &
-    GroupProps
+    Fiber.GroupProps
 >((props, ref) => {
   const [overwrittenProps, setRef] = usePropsSyncSize(props)
   const mergedReds = useMemo(() => mergeRefs([ref, setRef]), [ref, setRef])
