@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import * as THREE from 'three'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
+import { YogaPrebuiltProvider } from '../src'
 
 export function Setup({
   children,
@@ -19,7 +20,9 @@ export function Setup({
 }) {
   return (
     <Canvas shadows camera={{ position: cameraPosition, fov: cameraFov }} dpr={window.devicePixelRatio} {...restProps}>
-      {children}
+      <Suspense fallback={null}>
+        <YogaPrebuiltProvider>{children}</YogaPrebuiltProvider>
+      </Suspense>
       {lights && (
         <>
           <ambientLight intensity={0.8} />

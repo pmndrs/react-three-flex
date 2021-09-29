@@ -1,0 +1,23 @@
+{
+  "name": "examples2",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "@react-three/fiber": "^7.0.7",
+    "@react-three/flex": "^0.7.0",
+    "react": "^17.0.0",
+    "react-dom": "^17.0.0",
+    "yoga-layout-wasm": "^1.9.3-alpha.7"
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "@vitejs/plugin-react": "^1.0.0",
+    "typescript": "^4.3.2",
+    "vite": "^2.5.4"
+  }
+}

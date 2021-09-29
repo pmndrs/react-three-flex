@@ -1,6 +1,5 @@
 import React, { useLayoutEffect, useRef, useMemo, useState } from 'react'
 import * as THREE from 'three'
-import Yoga from 'yoga-layout-prebuilt'
 import { ReactThreeFiber, useFrame } from '@react-three/fiber'
 import mergeRefs from 'react-merge-refs'
 
@@ -8,6 +7,7 @@ import { setYogaProperties, rmUndefFromObj } from './util'
 import { boxContext, flexContext, SharedBoxContext } from './context'
 import { R3FlexProps } from './props'
 import { useReflow, useContext } from './hooks'
+import { useYoga } from './YogaProvider'
 
 export type BoxProps = {
   centerAnchor?: boolean
@@ -184,6 +184,8 @@ function BoxImpl(
     wrap,
   ])
 
+  const Yoga = useYoga()
+
   const { registerBox, unregisterBox, scaleFactor } = useContext(flexContext)
   const { node: parent } = useContext(boxContext)
   const group = useRef<THREE.Group>()
@@ -191,8 +193,8 @@ function BoxImpl(
   const reflow = useReflow()
 
   useLayoutEffect(() => {
-    setYogaProperties(node, flexProps, scaleFactor)
-  }, [flexProps, node, scaleFactor])
+    setYogaProperties(Yoga, node, flexProps, scaleFactor)
+  }, [flexProps, node, scaleFactor, Yoga])
 
   // Make child known to the parents yoga instance *before* it calculates layout
   useLayoutEffect(() => {

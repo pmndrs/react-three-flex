@@ -1,5 +1,6 @@
 import React, { useLayoutEffect, useMemo, useCallback, PropsWithChildren, useRef } from 'react'
-import Yoga, { YogaNode } from 'yoga-layout-prebuilt'
+// eslint-disable-next-line import/no-unresolved
+import type { YogaNode } from 'yoga-layout'
 import * as THREE from 'three'
 import { useFrame, useThree, ReactThreeFiber } from '@react-three/fiber'
 import mergeRefs from 'react-merge-refs'
@@ -16,6 +17,7 @@ import {
 } from './util'
 import { boxContext, flexContext, SharedFlexContext, SharedBoxContext } from './context'
 import type { R3FlexProps, FlexYogaDirection, FlexPlane } from './props'
+import { useYoga } from './YogaProvider'
 
 export type FlexProps = PropsWithChildren<
   Partial<{
@@ -218,6 +220,8 @@ function FlexImpl(
     wrap,
   ])
 
+  const Yoga = useYoga()
+
   const rootGroup = useRef<THREE.Group>()
 
   // Keeps track of the yoga nodes of the children and the related wrapper groups
@@ -242,8 +246,8 @@ function FlexImpl(
   // Reference to the yoga native node
   const node = useMemo(() => Yoga.Node.create(), [])
   useLayoutEffect(() => {
-    setYogaProperties(node, flexProps, scaleFactor)
-  }, [node, flexProps, scaleFactor])
+    setYogaProperties(Yoga, node, flexProps, scaleFactor)
+  }, [node, flexProps, scaleFactor, Yoga])
 
   // Mechanism for invalidating and recalculating layout
   const { invalidate } = useThree()

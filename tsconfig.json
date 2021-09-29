@@ -14,7 +14,7 @@
     "removeComments": false,
     "baseUrl": ".",
     "paths": {
-      "@react-three/flex": ["./src/index.ts"]
+      "@react-three/flex": ["src/index.tsx"]
     }
   },
   "include": ["src"]

@@ -1,12 +1,15 @@
 import { Box3, Matrix4, Object3D, Vector3 } from 'three'
-import Yoga, { YogaNode } from 'yoga-layout-prebuilt'
+// eslint-disable-next-line import/no-unresolved
+import type { YogaNode } from 'yoga-layout'
 import { R3FlexProps, FlexPlane } from './props'
 
 export const capitalize = (s: string) => s[0].toUpperCase() + s.slice(1)
 
 export const jsxPropToYogaProp = (s: string) => s.toUpperCase().replace('-', '_')
 
-export const setYogaProperties = (node: YogaNode, props: R3FlexProps, scaleFactor: number) => {
+type YogaStatic = any
+
+export const setYogaProperties = (Yoga: YogaStatic, node: YogaNode, props: R3FlexProps, scaleFactor: number) => {
   return Object.keys(props).forEach((name) => {
     const value = props[name as keyof R3FlexProps]
 

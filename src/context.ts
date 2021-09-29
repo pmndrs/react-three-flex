@@ -1,5 +1,6 @@
 import { createContext } from 'react'
-import { YogaNode } from 'yoga-layout-prebuilt'
+// eslint-disable-next-line import/no-unresolved
+import type { YogaNode } from 'yoga-layout'
 import { Group } from 'three'
 import { R3FlexProps } from './props'
 

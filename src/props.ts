@@ -1,4 +1,11 @@
-import { YogaFlexDirection, YogaAlign, YogaJustifyContent, YogaFlexWrap, YogaDirection } from 'yoga-layout-prebuilt'
+import type {
+  YogaFlexDirection,
+  YogaAlign,
+  YogaJustifyContent,
+  YogaFlexWrap,
+  YogaDirection,
+  // eslint-disable-next-line import/no-unresolved
+} from 'yoga-layout'
 
 export type FlexYogaDirection = YogaDirection | 'ltr' | 'rtl'
 export type FlexPlane = 'xy' | 'yz' | 'xz'

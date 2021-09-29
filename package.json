@@ -31,7 +31,8 @@
       "import": "./dist/index.js"
     },
     "./package.json": "./package.json",
-    "./": "./"
+    "./": "./",
+    "./outerRuntime": "./dist/outerRuntime.js"
   },
   "files": [
     "dist"
@@ -58,6 +59,7 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
+    "use-asset": "^1.0.4",
     "yoga-layout-prebuilt": "^1.9.6"
   },
   "devDependencies": {

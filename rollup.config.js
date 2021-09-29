@@ -24,7 +24,7 @@ const getBabelOptions = ({ useESModules }, targets) => ({
 
 export default [
   {
-    input: `./src/index.ts`,
+    input: `./src/index.tsx`,
     output: { file: `dist/index.js`, format: 'esm' },
     external,
     plugins: [
@@ -32,19 +32,25 @@ export default [
       babel(getBabelOptions({ useESModules: true }, '>1%, not dead, not ie 11, not op_mini all')),
       resolve({ extensions }),
       terser(),
-      filesize()
+      filesize(),
     ],
   },
   {
-    input: `./src/index.ts`,
-    output: { file: `dist/index.cjs`, format: 'cjs' },
+    input: `./src/outerRuntime.ts`,
+    output: { file: `dist/outerRuntime.js`, format: 'esm' },
     external,
     plugins: [
       json(),
-      babel(getBabelOptions({ useESModules: false })),
+      babel(getBabelOptions({ useESModules: true }, '>1%, not dead, not ie 11, not op_mini all')),
       resolve({ extensions }),
       terser(),
-      filesize()
+      filesize(),
     ],
+  },
+  {
+    input: `./src/index.tsx`,
+    output: { file: `dist/index.cjs`, format: 'cjs' },
+    external,
+    plugins: [json(), babel(getBabelOptions({ useESModules: false })), resolve({ extensions }), terser(), filesize()],
   },
 ]

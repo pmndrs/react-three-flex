@@ -1,6 +1,8 @@
-import { useCallback, useContext as useContextImpl, useMemo } from 'react'
+import React, { useCallback, useContext as useContextImpl, useMemo } from 'react'
 import { Mesh, Vector3 } from 'three'
 import { flexContext, boxContext } from './context'
+// eslint-disable-next-line import/no-unresolved
+import type { YogaNode } from 'yoga-layout'
 
 export function useContext<T extends { notInitialized?: boolean }>(context: React.Context<T>) {
   let result = useContextImpl(context)
@@ -27,7 +29,7 @@ export function useFlexSize() {
   return value
 }
 
-export function useFlexNode() {
+export function useFlexNode(): YogaNode | null {
   const { node } = useContext(boxContext)
   return node
 }
