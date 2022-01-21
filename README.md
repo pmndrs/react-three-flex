@@ -194,7 +194,7 @@ function AnimatedBox() {
 
 Another important difference with DOM Flexbox is that you have to specify the plane of the container in 3D. The elements will be positioned in the 2D plane given by the two axes, using width and height calculated along the two axes.
 
-The 2D flex container width and height will be calculated by looking at the `size` prop with respect of the chosen axes (`100` for `xy` and `200` for `y` in this example).
+The 2D flex container width and height will be calculated by looking at the `size` prop with respect of the chosen axes (`100` for `x` and `200` for `y` in this example).
 
 The default plane is `xy`, the other possibilites are `yz` and `xz`.
 
