@@ -1,5 +1,5 @@
 import { Box3, Matrix4, Object3D, Vector3 } from 'three'
-import Yoga, { YogaNode } from 'yoga-layout-prebuilt'
+import Yoga, { YogaNode } from '@react-pdf/yoga'
 import { R3FlexProps, FlexPlane } from './props'
 
 export const capitalize = (s: string) => s[0].toUpperCase() + s.slice(1)

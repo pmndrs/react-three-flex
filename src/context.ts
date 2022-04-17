@@ -1,5 +1,5 @@
 import { createContext } from 'react'
-import { YogaNode } from 'yoga-layout-prebuilt'
+import { YogaNode } from '@react-pdf/yoga'
 import { Group } from 'three'
 import { R3FlexProps } from './props'
 

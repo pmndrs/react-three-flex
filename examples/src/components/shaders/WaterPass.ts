@@ -42,9 +42,15 @@ const WaterShader = {
 }
 
 class WaterPass extends Pass {
-  constructor(dt_size) {
+  uniforms = THREE.UniformsUtils.clone(WaterShader.uniforms)
+  factor = 0
+  time = 0
+  material: THREE.ShaderMaterial
+  camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1)
+  scene = new THREE.Scene()
+  quad = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 2))
+  constructor(dt_size?: number) {
     super()
-    this.uniforms = THREE.UniformsUtils.clone(WaterShader.uniforms)
     if (dt_size === undefined) dt_size = 64
     this.uniforms['resolution'].value = new THREE.Vector2(dt_size, dt_size)
     this.material = new THREE.ShaderMaterial({
@@ -52,16 +58,17 @@ class WaterPass extends Pass {
       vertexShader: WaterShader.vertexShader,
       fragmentShader: WaterShader.fragmentShader,
     })
-    this.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1)
-    this.scene = new THREE.Scene()
-    this.quad = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 2), null)
     this.quad.frustumCulled = false // Avoid getting clipped
     this.scene.add(this.quad)
-    this.factor = 0
-    this.time = 0
   }
 
-  render(renderer, writeBuffer, readBuffer, deltaTime, maskActive) {
+  render(
+    renderer: THREE.WebGLRenderer,
+    writeBuffer: THREE.WebGLRenderTarget,
+    readBuffer: THREE.WebGLRenderTarget,
+    deltaTime: number,
+    maskActive: boolean
+  ) {
     const factor = Math.max(0, this.factor)
     this.uniforms['byp'].value = factor ? 0 : 1
     this.uniforms['tex'].value = readBuffer.texture
