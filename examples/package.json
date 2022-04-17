@@ -12,8 +12,8 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-scripts": "5.0.1",
-    "three": "^0.138.3",
-    "troika-three-text": "^0.46.2",
+    "three": "^0.139.2",
+    "troika-three-text": "^0.46.4",
     "zustand": "3.7.2"
   },
   "scripts": {
