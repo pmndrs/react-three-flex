@@ -3,25 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@react-spring/web": "9.2.4",
-    "@react-three/drei": "7.4.0",
-    "@react-three/fiber": "^7.0.6",
-    "@react-three/flex": "0.6.1",
-    "@react-three/postprocessing": "2.0.5",
+    "@react-spring/web": "9.4.4",
+    "@react-three/drei": "9.4.3",
+    "@react-three/fiber": "^8.0.11",
+    "@react-three/postprocessing": "2.3.2",
     "lerp": "^1.0.3",
-    "postprocessing": "6.22.3",
-    "react": "^0.0.0-experimental-94c0244ba",
-    "react-dom": "^0.0.0-experimental-94c0244ba",
-    "react-scripts": "4.0.3",
-    "three": "0.131.3",
-    "troika-three-text": "^0.42.0",
-    "zustand": "3.5.8"
+    "postprocessing": "6.26.3",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-scripts": "5.0.1",
+    "three": "^0.138.3",
+    "troika-three-text": "^0.46.2",
+    "zustand": "3.7.2"
   },
   "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "react-app-rewired test",
-    "eject": "react-scripts eject"
+    "start": "vite"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -39,9 +35,7 @@
     ]
   },
   "devDependencies": {
-    "customize-cra": "^1.0.0",
-    "customize-cra-react-refresh": "^1.1.0",
-    "react-app-rewired": "^2.1.6",
-    "webpack-bundle-analyzer": "^4.4.2"
+    "typescript": "^4.6.3",
+    "vite": "^2.9.5"
   }
 }

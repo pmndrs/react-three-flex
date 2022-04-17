@@ -1,15 +1,16 @@
 import * as THREE from 'three'
 import React, { useRef } from 'react'
-import { useFrame } from '@react-three/fiber'
+import { GroupProps, useFrame } from '@react-three/fiber'
 import { Shadow, MeshDistortMaterial, useGLTF } from '@react-three/drei'
 import Text from './Text'
 import state from '../state'
 
-export default function Model(props) {
-  const group = useRef()
-  const shadow = useRef()
-  const { nodes } = useGLTF('/geo.min.glb')
+export default function Model(props: GroupProps) {
+  const group = useRef<THREE.Group>(null)
+  const shadow = useRef<THREE.Group>(null)
+  const { nodes } = useGLTF('/geo.min.glb') as any
   useFrame(({ clock }) => {
+    if (!group.current || !shadow.current) return
     const t = (1 + Math.sin(clock.getElapsedTime() * 1.5)) / 2
     group.current.position.y = t / 3
     shadow.current.scale.y = shadow.current.scale.z = 1 + t

@@ -1,3 +1,4 @@
+// @ts-ignore
 import lerp from 'lerp'
 
 //export { WebGLMultisampleRenderTarget } from 'three/src/renderers/WebGLMultisampleRenderTarget.js';
@@ -115,7 +116,6 @@ export class AnimationClip {}
 export { Uniform } from 'three/src/core/Uniform.js'
 export { InstancedBufferGeometry } from 'three/src/core/InstancedBufferGeometry.js'
 export { BufferGeometry } from 'three/src/core/BufferGeometry.js'
-export { Geometry } from 'three/src/core/Geometry.js'
 export { InterleavedBufferAttribute } from 'three/src/core/InterleavedBufferAttribute.js'
 export { InstancedInterleavedBuffer } from 'three/src/core/InstancedInterleavedBuffer.js'
 export { InterleavedBuffer } from 'three/src/core/InterleavedBuffer.js'

@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useMemo, useCallback, PropsWithChildren, useRef } from 'react'
-import Yoga, { YogaNode } from 'yoga-layout-prebuilt'
+import Yoga, { YogaNode } from '@react-pdf/yoga'
 import * as THREE from 'three'
 import { useFrame, useThree, ReactThreeFiber } from '@react-three/fiber'
 import mergeRefs from 'react-merge-refs'
