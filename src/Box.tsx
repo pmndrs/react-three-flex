@@ -189,7 +189,7 @@ function BoxImpl(
   const group = useRef<THREE.Group>()
   const node = useMemo(() => Yoga.Node.create(), [])
   const reflow = useReflow()
-  const position = useRef(parent?.getChildCount());
+  const position = useRef(parent?.getChildCount())
 
   useLayoutEffect(() => {
     setYogaProperties(node, flexProps, scaleFactor)
@@ -200,7 +200,7 @@ function BoxImpl(
     if (!group.current || !parent) return
 
     position.current = position.current || parent.getChildCount()
-    parent.insertChild(node, position.current);
+    parent.insertChild(node, position.current)
 
     registerBox(node, group.current, flexProps, centerAnchor)
 
